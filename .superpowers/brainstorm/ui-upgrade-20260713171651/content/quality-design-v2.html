@@ -1,0 +1,28 @@
+<h2>迁移、异常处理与验收标准</h2>
+<p class="subtitle">升级必须保证现有本地任务可继续使用，任何失败都不能静默丢数据</p>
+
+<div class="cards">
+  <div class="card"><div class="card-body"><h3>启动迁移</h3><p>读取 v1 后先在 backups 目录生成迁移备份，再将描述转换为 Tiptap 段落文档、补齐新字段并原子写入 v2。</p></div></div>
+  <div class="card"><div class="card-body"><h3>迁移失败</h3><p>保留原始 tasks.json，不覆盖数据；界面展示可操作错误，并允许用户重新选择工作区。</p></div></div>
+  <div class="card"><div class="card-body"><h3>自动保存失败</h3><p>草稿保留在当前界面，底栏显示“保存失败”；后续编辑或点击重试时继续提交，不回退到旧内容。</p></div></div>
+  <div class="card"><div class="card-body"><h3>附件失败</h3><p>单个文件复制失败不影响已有附件；缺失文件显示失效状态；系统打开失败给出明确提示。</p></div></div>
+  <div class="card"><div class="card-body"><h3>导入兼容</h3><p>v1/v2 包均先校验并解压到临时目录；完成迁移后再替换或合并，失败时恢复当前工作区。</p></div></div>
+  <div class="card"><div class="card-body"><h3>标签约束</h3><p>名称去空格后不能为空，同一工作区内忽略大小写去重；删除标签只解除任务引用，不删除任务。</p></div></div>
+</div>
+
+<div class="section">
+  <h3>验收清单</h3>
+  <div class="options" data-multiselect>
+    <div class="option"><div class="letter">1</div><div class="content"><h3>视觉一致</h3><p>1280 × 760 下三栏比例、行密度、控件层级与图 2 一致，无重叠和截断。</p></div></div>
+    <div class="option"><div class="letter">2</div><div class="content"><h3>核心任务流</h3><p>快速创建、筛选、分组、状态、标签、优先级、置顶、日期和删除均可完整操作。</p></div></div>
+    <div class="option"><div class="letter">3</div><div class="content"><h3>编辑与保存</h3><p>富文本工具栏可用；切换任务、切换筛选和关闭窗口前内容不会丢失。</p></div></div>
+    <div class="option"><div class="letter">4</div><div class="content"><h3>附件闭环</h3><p>图片预览、通用文件添加、删除、打开及导入导出后恢复均正常。</p></div></div>
+    <div class="option"><div class="letter">5</div><div class="content"><h3>兼容升级</h3><p>现有 v1 工作区直接启动并迁移，原任务、描述、日期和图片附件保持可用。</p></div></div>
+    <div class="option"><div class="letter">6</div><div class="content"><h3>工程校验</h3><p>TypeScript 类型检查通过；浏览器检查桌面主视图、最小宽度与主要交互状态。</p></div></div>
+  </div>
+</div>
+
+<div class="pros-cons">
+  <div class="pros"><h4>本次执行</h4><ul><li>必要的 TypeScript 类型检查</li><li>浏览器视觉与交互核验</li><li>控制台错误检查</li><li>检查实际文件差异</li></ul></div>
+  <div class="cons"><h4>按项目规则不执行</h4><ul><li>不新增测试用例</li><li>不运行完整 build</li><li>不修改 node_modules 源文件</li><li>不进行无关模块重构</li></ul></div>
+</div>

@@ -1,0 +1,95 @@
+<h2>easyNote 主面板布局</h2>
+<p class="subtitle">基于“悬浮入口 + 展开主面板”，下面比较三种任务管理布局。点击你更倾向的结构。</p>
+
+<div class="cards">
+  <div class="card" data-choice="a-list-detail" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:310px;background:#eef2f6;border:1px solid #d7dde8;border-radius:8px;padding:14px;box-sizing:border-box;">
+        <div style="height:280px;background:white;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 16px 38px rgba(15,23,42,.14);overflow:hidden;">
+          <div style="height:38px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12px;color:#334155;">
+            <strong>easyNote</strong><span>+ 新建　导入/导出　设置</span>
+          </div>
+          <div style="display:grid;grid-template-columns:86px 1fr 138px;height:241px;">
+            <div style="background:#f8fafc;border-right:1px solid #e2e8f0;padding:10px 8px;font-size:11px;color:#475569;line-height:2.35;">
+              收件箱<br><b style="color:#2563eb;">今天</b><br>本周<br>过期<br>已办
+            </div>
+            <div style="padding:10px;border-right:1px solid #e2e8f0;">
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <span style="height:20px;width:48px;background:#dbeafe;border-radius:4px;"></span>
+                <span style="height:20px;width:56px;background:#f1f5f9;border-radius:4px;"></span>
+                <span style="height:20px;width:48px;background:#f1f5f9;border-radius:4px;"></span>
+              </div>
+              <div style="height:45px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;margin-bottom:8px;padding:7px;box-sizing:border-box;">
+                <div style="height:9px;background:#60a5fa;border-radius:3px;width:66%;margin-bottom:8px;"></div>
+                <div style="height:7px;background:#bfdbfe;border-radius:3px;width:42%;"></div>
+              </div>
+              <div style="height:45px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:8px;padding:7px;box-sizing:border-box;">
+                <div style="height:9px;background:#94a3b8;border-radius:3px;width:72%;margin-bottom:8px;"></div>
+                <div style="height:7px;background:#cbd5e1;border-radius:3px;width:36%;"></div>
+              </div>
+              <div style="height:45px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:7px;box-sizing:border-box;">
+                <div style="height:9px;background:#fb923c;border-radius:3px;width:58%;margin-bottom:8px;"></div>
+                <div style="height:7px;background:#fed7aa;border-radius:3px;width:48%;"></div>
+              </div>
+            </div>
+            <div style="padding:10px;background:#fcfcfd;font-size:10px;color:#475569;">
+              <strong style="font-size:11px;color:#0f172a;">任务详情</strong>
+              <div style="height:18px;background:#e2e8f0;border-radius:4px;margin-top:10px;"></div>
+              <div style="height:54px;background:#f1f5f9;border-radius:5px;margin-top:8px;"></div>
+              <div style="height:34px;background:#e0f2fe;border:1px solid #bae6fd;border-radius:5px;margin-top:8px;"></div>
+              <div style="display:flex;gap:5px;margin-top:10px;"><span style="width:42px;height:20px;background:#2563eb;border-radius:4px;"></span><span style="width:42px;height:20px;background:#e2e8f0;border-radius:4px;"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 左筛选 + 中列表 + 右详情（推荐）</h3>
+      <p>常规管理效率最高：筛选、列表、编辑在一个窗口内完成，适合你的“任务管理面板”定位。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b-focused-list" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:310px;background:#eef2f6;border:1px solid #d7dde8;border-radius:8px;padding:14px;box-sizing:border-box;">
+        <div style="height:280px;background:white;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 16px 38px rgba(15,23,42,.14);overflow:hidden;">
+          <div style="height:38px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12px;color:#334155;"><strong>easyNote</strong><span>+ 新建　筛选　设置</span></div>
+          <div style="padding:12px;">
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <span style="height:24px;width:54px;background:#dbeafe;border-radius:5px;"></span>
+              <span style="height:24px;width:58px;background:#f1f5f9;border-radius:5px;"></span>
+              <span style="height:24px;width:48px;background:#f1f5f9;border-radius:5px;"></span>
+              <span style="height:24px;width:50px;background:#f1f5f9;border-radius:5px;"></span>
+            </div>
+            <div style="height:58px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:7px;margin-bottom:10px;"></div>
+            <div style="height:58px;background:#fff;border:1px solid #e2e8f0;border-radius:7px;margin-bottom:10px;"></div>
+            <div style="height:58px;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 单列表聚焦模式</h3>
+      <p>窗口更轻，适合快速扫任务；但编辑附件和详情时需要弹窗/抽屉，复杂操作路径更长。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c-kanban" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:310px;background:#eef2f6;border:1px solid #d7dde8;border-radius:8px;padding:14px;box-sizing:border-box;">
+        <div style="height:280px;background:white;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 16px 38px rgba(15,23,42,.14);overflow:hidden;">
+          <div style="height:38px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:12px;color:#334155;"><strong>easyNote</strong><span>日期：今天　+ 新建</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px;background:#f8fafc;height:221px;">
+            <div><div style="font-size:11px;color:#475569;margin-bottom:7px;">待办</div><div style="height:46px;background:white;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:8px;"></div><div style="height:46px;background:white;border:1px solid #e2e8f0;border-radius:6px;"></div></div>
+            <div><div style="font-size:11px;color:#475569;margin-bottom:7px;">进行中</div><div style="height:46px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;"></div></div>
+            <div><div style="font-size:11px;color:#475569;margin-bottom:7px;">已办</div><div style="height:46px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:6px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 三状态看板</h3>
+      <p>状态流转直观，未来团队化也顺；但日期筛选、附件详情和长任务文案会更挤。</p>
+    </div>
+  </div>
+</div>

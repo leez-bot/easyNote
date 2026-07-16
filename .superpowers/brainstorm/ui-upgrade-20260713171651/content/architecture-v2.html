@@ -1,0 +1,41 @@
+<h2>方案 A：Schema v2 与模块边界</h2>
+<p class="subtitle">保留 Electron 主进程安全边界，升级任务协议、编辑器文档与通用附件</p>
+
+<div class="mockup">
+  <div class="mockup-header">数据流</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:16px;align-items:center;text-align:center">
+      <div style="padding:20px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc"><strong>React Renderer</strong><br><small>工作台 / 分组列表 / Tiptap / 自动保存</small></div>
+      <div style="font-size:24px;color:#64748b">→</div>
+      <div style="padding:20px;border:1px solid #bfdbfe;border-radius:8px;background:#eff6ff"><strong>Preload + IPC</strong><br><small>类型化 API / 参数边界</small></div>
+      <div style="font-size:24px;color:#64748b">→</div>
+      <div style="padding:20px;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc"><strong>Electron Main</strong><br><small>Repository / Attachment / ImportExport</small></div>
+    </div>
+  </div>
+</div>
+
+<div class="cards">
+  <div class="card">
+    <div class="card-body"><h3>TaskDataFile v2</h3><p><code>tasks</code> + <code>tags</code>；旧 v1 首次读取时迁移并原子写回。</p></div>
+  </div>
+  <div class="card">
+    <div class="card-body"><h3>任务字段</h3><p>5 种状态、优先级、标签 ID、置顶、截止日期、Tiptap JSON、创建/更新/完成时间。</p></div>
+  </div>
+  <div class="card">
+    <div class="card-body"><h3>标签协议</h3><p>全局标签保存名称与颜色，任务只引用 ID；支持新增、重命名、改色和删除。</p></div>
+  </div>
+  <div class="card">
+    <div class="card-body"><h3>通用附件</h3><p>图片提供缩略图，其他文件显示类型与大小；支持添加、删除和系统打开。</p></div>
+  </div>
+  <div class="card">
+    <div class="card-body"><h3>导入导出</h3><p>导出包升级为 formatVersion 2；导入继续兼容 v1，并统一迁移到当前协议。</p></div>
+  </div>
+  <div class="card">
+    <div class="card-body"><h3>自动保存</h3><p>表单和编辑器变更在 600ms 空闲后保存；切换任务前冲刷当前草稿，底栏反馈保存状态。</p></div>
+  </div>
+</div>
+
+<div class="pros-cons">
+  <div class="pros"><h4>保持不变</h4><ul><li>JSON 本地优先存储</li><li>工作区目录结构</li><li>原子写入与导入前备份</li><li>渲染层不直接访问文件系统</li></ul></div>
+  <div class="cons"><h4>明确升级</h4><ul><li>任务数据版本从 1 升至 2</li><li>增加 Tiptap 依赖</li><li>附件不再限于图片</li><li>保存从手动切换为自动</li></ul></div>
+</div>

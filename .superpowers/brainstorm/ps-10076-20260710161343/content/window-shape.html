@@ -1,0 +1,85 @@
+<h2>easyNote 窗口形态选择</h2>
+<p class="subtitle">你当前选择的是“个人任务管理面板”，下面比较主面板与置顶悬浮入口的关系。点击你更倾向的方向。</p>
+
+<div class="cards">
+  <div class="card" data-choice="a-docked" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:260px;background:#f6f7f9;border:1px solid #d9dee8;border-radius:8px;position:relative;overflow:hidden;">
+        <div style="height:24px;background:#1f2937;color:white;font-size:11px;padding:5px 8px;">工作桌面</div>
+        <div style="position:absolute;right:10px;top:42px;width:210px;height:190px;background:white;border:1px solid #cbd5e1;box-shadow:0 12px 30px rgba(15,23,42,.16);border-radius:6px;">
+          <div style="display:flex;align-items:center;gap:6px;height:30px;border-bottom:1px solid #e5e7eb;padding:0 8px;font-size:11px;color:#334155;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;"></span> easyNote
+          </div>
+          <div style="display:grid;grid-template-columns:56px 1fr;height:160px;">
+            <div style="background:#f1f5f9;border-right:1px solid #e2e8f0;padding:8px 6px;font-size:10px;color:#475569;line-height:2.2;">今天<br>本周<br>已办</div>
+            <div style="padding:8px;">
+              <div style="height:14px;background:#e2e8f0;border-radius:3px;margin-bottom:7px;"></div>
+              <div style="height:36px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;margin-bottom:7px;"></div>
+              <div style="height:36px;background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;right:10px;top:238px;width:74px;height:16px;background:#111827;color:white;border-radius:4px 4px 0 0;font-size:9px;text-align:center;line-height:16px;">折叠条</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 侧边常驻面板</h3>
+      <p>应用主窗口始终作为置顶小面板悬在屏幕侧边，折叠后变成窄条。进入成本低，但容易占屏。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b-launcher" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:260px;background:#f6f7f9;border:1px solid #d9dee8;border-radius:8px;position:relative;overflow:hidden;">
+        <div style="height:24px;background:#1f2937;color:white;font-size:11px;padding:5px 8px;">工作桌面</div>
+        <div style="position:absolute;right:20px;top:105px;width:46px;height:46px;background:#2563eb;color:white;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 12px 24px rgba(37,99,235,.28);">EN</div>
+        <div style="position:absolute;right:78px;top:44px;width:290px;height:185px;background:white;border:1px solid #cbd5e1;box-shadow:0 16px 40px rgba(15,23,42,.18);border-radius:8px;">
+          <div style="height:32px;border-bottom:1px solid #e5e7eb;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#334155;">
+            <strong>easyNote</strong><span>今天 6 项</span>
+          </div>
+          <div style="display:grid;grid-template-columns:80px 1fr;height:152px;">
+            <div style="background:#f8fafc;border-right:1px solid #e2e8f0;padding:8px 7px;font-size:10px;color:#475569;line-height:2.15;">收件箱<br>今天<br>日期筛选<br>已办</div>
+            <div style="padding:8px;">
+              <div style="display:flex;gap:5px;margin-bottom:7px;">
+                <div style="height:18px;width:52px;background:#dbeafe;border-radius:4px;"></div>
+                <div style="height:18px;width:52px;background:#f1f5f9;border-radius:4px;"></div>
+              </div>
+              <div style="height:34px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;margin-bottom:6px;"></div>
+              <div style="height:34px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;margin-bottom:6px;"></div>
+              <div style="height:24px;background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 悬浮入口 + 展开主面板（推荐）</h3>
+      <p>平时只保留置顶小入口，点击后展开完整任务面板。更适合“管理面板”定位，也不持续遮挡工作区。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c-dashboard" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="height:260px;background:#f6f7f9;border:1px solid #d9dee8;border-radius:8px;position:relative;overflow:hidden;">
+        <div style="height:24px;background:#1f2937;color:white;font-size:11px;padding:5px 8px;">工作桌面</div>
+        <div style="position:absolute;left:26px;right:26px;top:42px;height:188px;background:white;border:1px solid #cbd5e1;box-shadow:0 16px 40px rgba(15,23,42,.18);border-radius:8px;">
+          <div style="height:34px;border-bottom:1px solid #e5e7eb;padding:0 12px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#334155;"><strong>easyNote 工作台</strong><span>导入/导出 设置</span></div>
+          <div style="display:grid;grid-template-columns:86px 1fr 86px;height:153px;">
+            <div style="background:#f8fafc;border-right:1px solid #e2e8f0;padding:8px;font-size:10px;color:#475569;line-height:2.1;">全部<br>今天<br>本周<br>已办</div>
+            <div style="padding:8px;">
+              <div style="height:26px;background:#f1f5f9;border-radius:5px;margin-bottom:8px;"></div>
+              <div style="height:34px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;margin-bottom:6px;"></div>
+              <div style="height:34px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;"></div>
+            </div>
+            <div style="background:#fafafa;border-left:1px solid #e2e8f0;padding:8px;font-size:10px;color:#475569;">详情<br><br><div style='height:44px;background:#e2e8f0;border-radius:4px;'></div></div>
+          </div>
+        </div>
+        <div style="position:absolute;right:14px;bottom:12px;width:34px;height:34px;background:#2563eb;color:white;border-radius:10px;font-size:10px;display:flex;align-items:center;justify-content:center;">EN</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 独立工作台 + 小入口</h3>
+      <p>更像完整桌面应用，适合复杂筛选和详情编辑；但第一屏重量更高，和“随手记录”距离稍远。</p>
+    </div>
+  </div>
+</div>

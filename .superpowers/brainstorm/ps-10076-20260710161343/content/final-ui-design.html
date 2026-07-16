@@ -1,0 +1,98 @@
+<h2>easyNote 第一版界面设计稿</h2>
+<p class="subtitle">已按方案 A：本地优先 MVP、悬浮入口展开主面板、三栏任务管理、清爽工具风。</p>
+
+<div class="section">
+  <h3>1. 首次启动：选择工作区目录</h3>
+  <div class="mockup">
+    <div class="mockup-header">首次启动</div>
+    <div class="mockup-body">
+      <div style="height:260px;background:#eef2f6;border:1px solid #d7dde8;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <div style="width:420px;background:white;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 18px 46px rgba(15,23,42,.16);padding:22px;box-sizing:border-box;font-family:Segoe UI,Arial,sans-serif;">
+          <div style="font-size:18px;font-weight:700;color:#111827;margin-bottom:8px;">选择 easyNote 数据目录</div>
+          <div style="font-size:12px;color:#64748b;line-height:1.7;margin-bottom:16px;">任务、附件和导入导出数据将保存在这个目录中。</div>
+          <div style="height:34px;border:1px solid #cbd5e1;border-radius:5px;background:#f8fafc;color:#64748b;font-size:12px;display:flex;align-items:center;padding:0 10px;margin-bottom:14px;">E:\workspaces\easyNote-data</div>
+          <div style="display:flex;justify-content:flex-end;gap:8px;">
+            <button class="mock-button" style="background:#f1f5f9;color:#334155;">选择目录</button>
+            <button class="mock-button" style="background:#2563eb;color:white;">开始使用</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. 常驻悬浮入口</h3>
+  <div class="mockup">
+    <div class="mockup-header">折叠状态</div>
+    <div class="mockup-body">
+      <div style="height:210px;background:#f6f7f9;border:1px solid #d9dee8;border-radius:8px;position:relative;overflow:hidden;">
+        <div style="height:28px;background:#1f2937;color:white;font-size:11px;padding:7px 10px;box-sizing:border-box;">Windows 工作桌面</div>
+        <div style="position:absolute;right:24px;top:82px;width:52px;height:52px;background:#2563eb;color:white;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 12px 26px rgba(37,99,235,.28);font-family:Segoe UI,Arial,sans-serif;">EN</div>
+        <div style="position:absolute;right:19px;top:138px;font-size:10px;color:#64748b;">今日 6 / 过期 1</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>3. 展开主面板</h3>
+  <div class="mockup">
+    <div class="mockup-header">任务管理面板</div>
+    <div class="mockup-body">
+      <div style="height:430px;background:#e9edf3;border:1px solid #d2d8e2;border-radius:8px;padding:16px;box-sizing:border-box;">
+        <div style="height:396px;background:#fbfcfe;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 18px 42px rgba(15,23,42,.14);overflow:hidden;font-family:Segoe UI,Arial,sans-serif;">
+          <div style="height:44px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:12px;color:#263445;background:#ffffff;">
+            <div style="display:flex;align-items:center;gap:10px;"><strong style="font-size:14px;">easyNote</strong><span style="color:#64748b;">今天 6 项 · 过期 1 项</span></div>
+            <div style="display:flex;align-items:center;gap:8px;"><span style="color:#64748b;">导入</span><span style="color:#64748b;">导出</span><span style="color:#64748b;">设置</span><span style="width:64px;height:26px;background:#2563eb;color:white;border-radius:5px;display:flex;align-items:center;justify-content:center;">新增</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:124px 1fr 248px;height:351px;">
+            <div style="background:#f6f8fb;border-right:1px solid #e2e8f0;padding:12px 10px;font-size:12px;color:#526174;line-height:2.3;">
+              <div style="font-size:10px;color:#94a3b8;margin-bottom:6px;">日期筛选</div>
+              <div>收件箱</div>
+              <div style="background:#e8f1ff;color:#1d4ed8;border-radius:5px;padding-left:8px;margin:3px 0;">今天</div>
+              <div>本周</div>
+              <div style="color:#dc2626;">过期</div>
+              <div>全部</div>
+              <div style="font-size:10px;color:#94a3b8;margin:14px 0 6px;">状态</div>
+              <div>待办</div>
+              <div>进行中</div>
+              <div>已办</div>
+            </div>
+            <div style="padding:12px;border-right:1px solid #e2e8f0;background:#ffffff;">
+              <div style="display:flex;gap:7px;margin-bottom:10px;">
+                <span style="height:24px;width:58px;background:#e8f1ff;border:1px solid #bfdbfe;border-radius:4px;"></span>
+                <span style="height:24px;width:66px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;"></span>
+                <span style="height:24px;width:54px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:4px;"></span>
+              </div>
+              <div style="height:64px;background:#ffffff;border:1px solid #bfdbfe;border-left:3px solid #2563eb;border-radius:6px;margin-bottom:9px;padding:9px;box-sizing:border-box;">
+                <div style="height:10px;background:#2563eb;border-radius:3px;width:65%;margin-bottom:10px;"></div>
+                <div style="height:8px;background:#cbd5e1;border-radius:3px;width:42%;"></div>
+              </div>
+              <div style="height:64px;background:#ffffff;border:1px solid #e2e8f0;border-left:3px solid #f59e0b;border-radius:6px;margin-bottom:9px;padding:9px;box-sizing:border-box;">
+                <div style="height:10px;background:#64748b;border-radius:3px;width:72%;margin-bottom:10px;"></div>
+                <div style="height:8px;background:#cbd5e1;border-radius:3px;width:36%;"></div>
+              </div>
+              <div style="height:64px;background:#ffffff;border:1px solid #e2e8f0;border-left:3px solid #10b981;border-radius:6px;padding:9px;box-sizing:border-box;">
+                <div style="height:10px;background:#64748b;border-radius:3px;width:58%;margin-bottom:10px;"></div>
+                <div style="height:8px;background:#cbd5e1;border-radius:3px;width:48%;"></div>
+              </div>
+            </div>
+            <div style="padding:12px;background:#ffffff;font-size:11px;color:#526174;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><strong style="font-size:13px;color:#111827;">任务详情</strong><span style="color:#1d4ed8;">进行中</span></div>
+              <div style="height:28px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:5px;margin-bottom:9px;"></div>
+              <div style="height:70px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:5px;margin-bottom:9px;"></div>
+              <div style="display:flex;gap:8px;margin-bottom:10px;"><div style="height:26px;flex:1;background:#f8fafc;border:1px solid #cbd5e1;border-radius:5px;"></div><div style="height:26px;flex:1;background:#f8fafc;border:1px solid #cbd5e1;border-radius:5px;"></div></div>
+              <div style="font-size:10px;color:#94a3b8;margin-bottom:6px;">图片附件</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                <div style="height:54px;background:#f0f7ff;border:1px solid #cfe3ff;border-radius:5px;"></div>
+                <div style="height:54px;background:#f8fafc;border:1px dashed #94a3b8;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#64748b;">+</div>
+              </div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;"><span style="width:58px;height:26px;background:#f1f5f9;border-radius:5px;"></span><span style="width:58px;height:26px;background:#2563eb;border-radius:5px;"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
