@@ -341,9 +341,8 @@ function registerIpcHandlers(services) {
   ipcMain.handle("window:close", () => {
     services.windows.closePanel();
   });
-  ipcMain.handle("window:moveLauncher", (_event, deltaX, deltaY) => {
-    services.windows.moveLauncher(Number(deltaX), Number(deltaY));
-  });
+  ipcMain.handle("window:beginLauncherDrag", () => services.windows.beginLauncherDrag());
+  ipcMain.handle("window:moveLauncher", () => services.windows.moveLauncher());
   ipcMain.handle("window:quit", () => {
     app.quit();
   });
@@ -542,9 +541,12 @@ function applyStatus(task, status) {
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const unpackagedIconPath = join(process.cwd(), "build", "icon.ico");
 const packagedIconPath = join(process.resourcesPath, "icon.ico");
+const LAUNCHER_WIDTH = 92;
+const LAUNCHER_HEIGHT = 52;
 class WindowManager {
   launcherWindow = null;
   panelWindow = null;
+  launcherDragOffset = null;
   statePath = join(app.getPath("userData"), "window-state.json");
   windowState = this.readWindowState();
   createLauncherWindow() {
@@ -557,8 +559,12 @@ class WindowManager {
       y: workArea.y + Math.round(workArea.height * 0.28)
     };
     this.launcherWindow = new BrowserWindow({
-      width: 72,
-      height: 52,
+      width: LAUNCHER_WIDTH,
+      height: LAUNCHER_HEIGHT,
+      minWidth: LAUNCHER_WIDTH,
+      minHeight: LAUNCHER_HEIGHT,
+      maxWidth: LAUNCHER_WIDTH,
+      maxHeight: LAUNCHER_HEIGHT,
       x: launcherPosition.x,
       y: launcherPosition.y,
       frame: false,
@@ -577,6 +583,8 @@ class WindowManager {
     });
     this.launcherWindow.setAlwaysOnTop(true, "floating");
     this.loadRenderer(this.launcherWindow, "launcher");
+    this.launcherWindow.on("show", () => this.enforceLauncherHitArea());
+    this.launcherWindow.on("ready-to-show", () => this.enforceLauncherHitArea());
     this.launcherWindow.on("moved", () => this.saveLauncherPosition());
     this.launcherWindow.on("closed", () => {
       this.saveLauncherPosition();
@@ -623,6 +631,7 @@ class WindowManager {
     if (this.panelWindow && !this.panelWindow.isDestroyed()) {
       this.panelWindow.hide();
     }
+    this.enforceLauncherHitArea();
     launcher.show();
     launcher.focus();
   }
@@ -651,15 +660,26 @@ class WindowManager {
   closePanel() {
     app.quit();
   }
-  moveLauncher(deltaX, deltaY) {
+  beginLauncherDrag() {
     if (!this.launcherWindow || this.launcherWindow.isDestroyed()) {
       return;
     }
-    if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY)) {
+    const bounds = this.launcherWindow.getBounds();
+    const cursor = screen.getCursorScreenPoint();
+    this.launcherDragOffset = { x: cursor.x - bounds.x, y: cursor.y - bounds.y };
+  }
+  moveLauncher() {
+    if (!this.launcherWindow || this.launcherWindow.isDestroyed() || !this.launcherDragOffset) {
       return;
     }
-    const [x, y] = this.launcherWindow.getPosition();
-    this.launcherWindow.setPosition(Math.round(x + deltaX), Math.round(y + deltaY));
+    const cursor = screen.getCursorScreenPoint();
+    this.launcherWindow.setBounds({
+      x: Math.round(cursor.x - this.launcherDragOffset.x),
+      y: Math.round(cursor.y - this.launcherDragOffset.y),
+      width: LAUNCHER_WIDTH,
+      height: LAUNCHER_HEIGHT
+    });
+    this.enforceLauncherHitArea();
     this.saveLauncherPosition();
   }
   getPanelWindow() {
@@ -704,6 +724,17 @@ class WindowManager {
     const [x, y] = this.launcherWindow.getPosition();
     this.windowState.launcher = { x, y };
     this.writeWindowState();
+  }
+  enforceLauncherHitArea() {
+    if (!this.launcherWindow || this.launcherWindow.isDestroyed()) {
+      return;
+    }
+    const bounds = this.launcherWindow.getBounds();
+    if (bounds.width !== LAUNCHER_WIDTH || bounds.height !== LAUNCHER_HEIGHT) {
+      this.launcherWindow.setBounds({ ...bounds, width: LAUNCHER_WIDTH, height: LAUNCHER_HEIGHT });
+    }
+    const shapedWindow = this.launcherWindow;
+    shapedWindow.setShape?.([{ x: 0, y: 0, width: LAUNCHER_WIDTH, height: LAUNCHER_HEIGHT }]);
   }
   savePanelBounds() {
     if (!this.panelWindow || this.panelWindow.isDestroyed()) {

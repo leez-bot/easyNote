@@ -11,6 +11,7 @@ interface TaskState {
   selectedTaskId: string | null
   pendingEditTaskId: string | null
   activeView: TaskView
+  bootstrapped: boolean
   loading: boolean
   savingTaskId: string | null
   lastSavedAt: string | null
@@ -68,6 +69,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   selectedTaskId: null,
   pendingEditTaskId: null,
   activeView: { type: 'quick' },
+  bootstrapped: false,
   loading: false,
   savingTaskId: null,
   lastSavedAt: null,
@@ -83,14 +85,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       const api = getApi()
       const workspace = await api.workspace.getCurrent()
       if (!workspace) {
-        set({ workspace: null, tasks: [], tags: [], selectedTaskId: null, pendingEditTaskId: null, loading: false })
+        set({ workspace: null, tasks: [], tags: [], selectedTaskId: null, pendingEditTaskId: null, bootstrapped: true, loading: false })
         return
       }
       const [tasks, tags] = await Promise.all([api.tasks.list(), api.tags.list()])
       const activeView = get().activeView
-      set({ workspace, tasks, tags, selectedTaskId: ensureSelection(tasks, get().selectedTaskId, activeView), loading: false })
+      set({ workspace, tasks, tags, selectedTaskId: ensureSelection(tasks, get().selectedTaskId, activeView), bootstrapped: true, loading: false })
     } catch (error) {
-      set({ error: getErrorMessage(error, '启动失败'), loading: false })
+      set({ error: getErrorMessage(error, '启动失败'), bootstrapped: true, loading: false })
     }
   },
 

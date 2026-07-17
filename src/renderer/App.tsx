@@ -7,6 +7,7 @@ import { useTaskStore } from './store/taskStore'
 export function App(): JSX.Element {
   const isLauncher = new URLSearchParams(window.location.search).get('mode') === 'launcher'
   const workspace = useTaskStore((state) => state.workspace)
+  const bootstrapped = useTaskStore((state) => state.bootstrapped)
   const bootstrap = useTaskStore((state) => state.bootstrap)
 
   useEffect(() => {
@@ -15,6 +16,10 @@ export function App(): JSX.Element {
 
   if (isLauncher) {
     return <LauncherView />
+  }
+
+  if (!bootstrapped) {
+    return <main className="app-bootstrap" />
   }
 
   if (!workspace) {

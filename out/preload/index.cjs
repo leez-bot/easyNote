@@ -33,7 +33,8 @@ const api = {
     collapseToLauncher: () => electron.ipcRenderer.invoke("window:collapseToLauncher"),
     toggleMaximize: () => electron.ipcRenderer.invoke("window:toggleMaximize"),
     close: () => electron.ipcRenderer.invoke("window:close"),
-    moveLauncher: (deltaX, deltaY) => electron.ipcRenderer.invoke("window:moveLauncher", deltaX, deltaY),
+    beginLauncherDrag: () => electron.ipcRenderer.invoke("window:beginLauncherDrag"),
+    moveLauncher: () => electron.ipcRenderer.invoke("window:moveLauncher"),
     quit: () => electron.ipcRenderer.invoke("window:quit")
   }
 };

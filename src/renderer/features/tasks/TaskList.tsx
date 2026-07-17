@@ -1,4 +1,5 @@
-import { Checkbox, Dropdown, Tooltip, type MenuProps } from 'antd'
+import { Checkbox, DatePicker, Dropdown, Tooltip, type MenuProps } from 'antd'
+import dayjs, { type Dayjs } from 'dayjs'
 import {
   CheckCircle2,
   ChevronDown,
@@ -42,18 +43,20 @@ export function TaskList(): JSX.Element {
   const setTaskStatus = useTaskStore((state) => state.setTaskStatus)
   const removeTask = useTaskStore((state) => state.removeTask)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null)
   const [taskOrders, setTaskOrders] = useState<Record<string, string[]>>(() => readTaskOrders())
   const [dragState, setDragState] = useState<DragState | null>(null)
   const groups = useMemo(() => groupTasks(tasks, activeView), [activeView, tasks])
   const tagMap = useMemo(() => new Map(tags.map((tag) => [tag.id, tag])), [tags])
   const viewKey = useMemo(() => getViewOrderKey(activeView), [activeView])
   const workspaceId = workspace?.id ?? 'default'
+  const supportsDateRange = activeView.type === 'date' && (activeView.value === 'done' || activeView.value === 'all')
   const orderedGroups = useMemo(
     () => groups.map((group) => ({
       ...group,
-      tasks: applySavedOrder(group.tasks, taskOrders[getOrderKey(workspaceId, viewKey, group.id)]),
+      tasks: applySavedOrder(filterTasksByDateRange(group.tasks, dateRange, activeView), taskOrders[getOrderKey(workspaceId, viewKey, group.id)]),
     })),
-    [groups, taskOrders, viewKey, workspaceId],
+    [activeView, dateRange, groups, taskOrders, viewKey, workspaceId],
   )
 
   useEffect(() => {
@@ -85,10 +88,13 @@ export function TaskList(): JSX.Element {
       <div className="task-groups">
         {orderedGroups.map((group) => group.tasks.length > 0 ? (
           <section className="task-group" key={group.id}>
-            <button className="task-group-title" type="button" onClick={() => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] }))}>
-              <ChevronDown className={collapsed[group.id] ? 'collapsed' : ''} size={15} />
-              <span>{group.label}</span><small>{group.tasks.length}</small>
-            </button>
+            <div className="task-group-heading">
+              <button className="task-group-title" type="button" onClick={() => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] }))}>
+                <ChevronDown className={collapsed[group.id] ? 'collapsed' : ''} size={15} />
+                <span>{group.label}</span><small>{group.tasks.length}</small>
+              </button>
+              {supportsDateRange ? <DatePicker.RangePicker className="task-date-range" size="small" allowClear format="YY/MM/DD" placeholder={['开始', '结束']} value={dateRange} onChange={(value) => setDateRange(value?.[0] && value[1] ? [value[0], value[1]] : null)} /> : null}
+            </div>
             {!collapsed[group.id] ? group.tasks.map((task) => {
               const taskTags = task.tagIds.map((tagId) => tagMap.get(tagId)).filter((tag): tag is NonNullable<typeof tag> => Boolean(tag))
               const firstTag = taskTags[0]
@@ -203,6 +209,16 @@ function readTaskOrders(): Record<string, string[]> {
   } catch {
     return {}
   }
+}
+
+function filterTasksByDateRange(tasks: Task[], dateRange: [Dayjs, Dayjs] | null, view: TaskView): Task[] {
+  if (!dateRange || view.type !== 'date' || (view.value !== 'done' && view.value !== 'all')) return tasks
+  const [start, end] = dateRange
+  return tasks.filter((task) => {
+    const timestamp = view.value === 'done' ? task.completedAt ?? task.updatedAt : task.createdAt
+    const date = dayjs(timestamp)
+    return !date.isBefore(start, 'day') && !date.isAfter(end, 'day')
+  })
 }
 
 function formatTaskTime(task: Task): string {

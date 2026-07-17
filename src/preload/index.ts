@@ -34,7 +34,8 @@ const api: EasyNoteApi = {
     collapseToLauncher: () => ipcRenderer.invoke('window:collapseToLauncher'),
     toggleMaximize: () => ipcRenderer.invoke('window:toggleMaximize'),
     close: () => ipcRenderer.invoke('window:close'),
-    moveLauncher: (deltaX, deltaY) => ipcRenderer.invoke('window:moveLauncher', deltaX, deltaY),
+    beginLauncherDrag: () => ipcRenderer.invoke('window:beginLauncherDrag'),
+    moveLauncher: () => ipcRenderer.invoke('window:moveLauncher'),
     quit: () => ipcRenderer.invoke('window:quit'),
   },
 }

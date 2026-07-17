@@ -28,9 +28,9 @@ export function registerIpcHandlers(services: MainServices): void {
     services.windows.closePanel()
   })
 
-  ipcMain.handle('window:moveLauncher', (_event, deltaX, deltaY) => {
-    services.windows.moveLauncher(Number(deltaX), Number(deltaY))
-  })
+  ipcMain.handle('window:beginLauncherDrag', () => services.windows.beginLauncherDrag())
+
+  ipcMain.handle('window:moveLauncher', () => services.windows.moveLauncher())
 
   ipcMain.handle('window:quit', () => {
     app.quit()

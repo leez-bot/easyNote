@@ -42,7 +42,8 @@ export interface EasyNoteApi {
     collapseToLauncher: () => Promise<void>
     toggleMaximize: () => Promise<boolean>
     close: () => Promise<void>
-    moveLauncher: (deltaX: number, deltaY: number) => Promise<void>
+    beginLauncherDrag: () => Promise<void>
+    moveLauncher: () => Promise<void>
     quit: () => Promise<void>
   }
 }

@@ -288,9 +288,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .workspace-alert { margin-bottom: 10px; }
 .dialog-actions { display: flex; justify-content: flex-end; }
 
-.launcher-view { position: relative; width: 72px; height: 52px; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 8px; border: 1px solid #d6e0ec; border-radius: 11px; background: #fff; color: #1e293b; box-shadow: 0 12px 26px rgba(15,23,42,.16); cursor: move; user-select: none; touch-action: none; }
+.launcher-view { position: relative; width: 92px; height: 52px; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 8px; border: 1px solid #d6e0ec; border-radius: 11px; background: #fff; color: #1e293b; cursor: move; user-select: none; touch-action: none; }
 .launcher-mark { width: 29px; height: 29px; display: grid; place-items: center; border-radius: 8px; background: var(--color-primary); color: #fff; }
-.launcher-counts { display: flex; flex-direction: column; gap: 2px; color: #475569; font-size: 10px; line-height: 1.15; }
+.launcher-counts { display: flex; flex-direction: column; gap: 2px; color: #475569; font-size: 10px; line-height: 1.15; white-space: nowrap; }
 .launcher-danger { color: var(--color-danger); }
 .launcher-error { position: absolute; right: -3px; top: -4px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-danger); color: #fff; font-size: 10px; line-height: 14px; }
 
@@ -360,7 +360,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .quick-capture button:hover { background: #f0f3f7; }
 .task-groups { grid-row: 2; height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; padding: 10px 22px 14px; }
 .task-group { margin-bottom: 13px; }
-.task-group-title { width: 100%; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 2px; border: 0; background: transparent; color: #4d5666; font-size: 13px; text-align: left; }
+.task-group-heading { min-width: 0; height: 34px; display: flex; align-items: center; gap: 8px; }
+.task-group-title { min-width: 0; flex: 1; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 2px; border: 0; background: transparent; color: #4d5666; font-size: 13px; text-align: left; }
+.task-date-range { flex: 0 0 172px; }
 .task-group-title svg { transition: transform .16s ease; }
 .task-group-title svg.collapsed { transform: rotate(-90deg); }
 .task-group-title span { font-weight: 600; }
@@ -383,6 +385,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .task-row-icons { display: flex; align-items: center; justify-content: flex-end; gap: 4px; color: #8a94a3; }
 .danger-icon { color: var(--color-danger); }
 .empty-state { height: 100%; display: grid; place-items: center; color: #9aa3b1; font-size: 13px; }
+.app-bootstrap { width: 100%; height: 100%; background: #fff; }
 .task-list-total { grid-row: 3; height: 44px; flex: 0 0 44px; display: flex; align-items: center; justify-content: center; border-top: 1px solid var(--color-border); background: #fff; color: #5f6978; font-size: 12px; }
 
 .task-detail { width: 100%; height: 100%; min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; padding: 0 28px 26px; background: #fff; }
@@ -398,12 +401,15 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .detail-title-actions .ant-btn-dangerous { color: var(--color-danger); }
 .detail-title-actions .ant-btn-dangerous:hover { background: #fef2f2; color: #dc2626; }
 .detail-fields { display: grid; grid-template-columns: minmax(300px,1fr) minmax(280px,1fr); gap: 10px 24px; padding-bottom: 12px; }
-.detail-fields label, .detail-time { min-width: 0; min-height: 36px; display: grid; grid-template-columns: 74px minmax(0,1fr); align-items: center; gap: 8px; }
+.detail-fields > label, .detail-time { min-width: 0; min-height: 36px; display: grid; grid-template-columns: 74px minmax(0,1fr); align-items: center; gap: 8px; }
 .detail-fields label > span:first-child, .detail-time > span { color: #697386; font-size: 12px; }
-.detail-fields .ant-picker, .detail-fields .ant-select, .detail-fields .ant-segmented { width: 100%; }
+.detail-fields .ant-picker, .detail-fields .ant-segmented { width: 100%; }
 .detail-fields .ant-checkbox-wrapper { min-height: 30px; display: inline-flex; align-items: center; }
-.detail-fields .ant-segmented { min-width: 0; overflow: hidden; }
-.detail-fields .ant-segmented-item-label { padding-inline: 6px; overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.detail-fields .ant-segmented { min-width: 0; }
+.detail-fields .ant-segmented-item-label { padding-inline: 2px; overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.priority-radio-group { min-width: 0; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.priority-radio-group .ant-radio-wrapper { display: inline-flex; align-items: center; gap: 4px; margin-inline-end: 0; font-size: 12px; }
+.priority-radio-group .ant-radio-wrapper > span:last-child { padding-inline: 0; }
 .detail-tag-field { grid-column: 1 / -1; }
 .inline-tag-trigger { min-height: 30px; display: inline-flex; align-items: center; gap: 6px; padding: 0 9px; border: 0; border-radius: 5px; background: #f2f5f9; color: var(--color-primary); font-size: 12px; }
 .detail-tag-control { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
@@ -443,6 +449,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .tiptap-content ul[data-type="taskList"] { padding-left: 0; list-style: none; }
 .tiptap-content ul[data-type="taskList"] li { display: flex; gap: 7px; }
 .tiptap-content img { max-width: 100%; height: auto; border-radius: 6px; }
+.rich-editor.readonly .tiptap-content img { cursor: zoom-in; }
+.rich-editor-preview-image { display: none; }
 .rich-editor-fullscreen { position: fixed; inset: 20px; z-index: 1000; display: grid; grid-template-rows: auto minmax(0,1fr); box-shadow: 0 18px 60px rgba(15,23,42,.24); }
 .rich-editor-fullscreen .tiptap-content { height: 100%; overflow-y: auto; }
 .rich-editor.loading { min-height: 260px; display: grid; place-items: center; color: var(--color-muted); }

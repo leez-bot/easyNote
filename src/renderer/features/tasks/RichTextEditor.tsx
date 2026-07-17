@@ -8,7 +8,7 @@ import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { Button, Input, Modal, Space } from 'antd'
+import { Button, Image as AntImage, Input, Modal, Space } from 'antd'
 import { Bold, Braces, CheckSquare, Code2, Expand, Heading2, ImageIcon, Italic, Link2, List, ListOrdered, Maximize2, Quote, Table2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { EditorDocument } from '../../../shared/models'
@@ -17,6 +17,7 @@ export function RichTextEditor({ value, onChange, readOnly = false }: { value: E
   const [fullscreen, setFullscreen] = useState(false)
   const [linkOpen, setLinkOpen] = useState(false)
   const [linkHref, setLinkHref] = useState('')
+  const [previewImageSrc, setPreviewImageSrc] = useState<string>()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const editor = useEditor({
     extensions: [
@@ -90,8 +91,13 @@ export function RichTextEditor({ value, onChange, readOnly = false }: { value: E
     { title: '引用', icon: Quote, active: editor.isActive('blockquote'), run: () => editor.chain().focus().toggleBlockquote().run() },
   ]
 
+  const previewImage = (event: React.MouseEvent<HTMLDivElement>): void => {
+    if (!readOnly || !(event.target instanceof HTMLImageElement)) return
+    setPreviewImageSrc(event.target.currentSrc || event.target.src)
+  }
+
   return (
-    <div className={`rich-editor ${readOnly ? 'readonly' : ''} ${fullscreen ? 'rich-editor-fullscreen' : ''}`}>
+    <div className={`rich-editor ${readOnly ? 'readonly' : ''} ${fullscreen ? 'rich-editor-fullscreen' : ''}`} onClick={previewImage}>
       {!readOnly ? <div className="rich-editor-toolbar">
         {buttons.map(({ title, icon: Icon, active, run }) => <button className={active ? 'active' : ''} type="button" title={title} key={title} onClick={run}><Icon size={16} /></button>)}
         <span className="toolbar-divider" />
@@ -104,6 +110,7 @@ export function RichTextEditor({ value, onChange, readOnly = false }: { value: E
         <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={(event) => { addImageFiles(event.target.files); event.target.value = '' }} />
       </div> : null}
       <EditorContent editor={editor} />
+      {readOnly ? <AntImage className="rich-editor-preview-image" src={previewImageSrc} preview={{ visible: Boolean(previewImageSrc), onVisibleChange: (visible) => { if (!visible) setPreviewImageSrc(undefined) } }} /> : null}
       <Modal title="设置链接" open={linkOpen} width={420} onCancel={() => setLinkOpen(false)} footer={null}>
         <Space.Compact block>
           <Input autoFocus value={linkHref} placeholder="https://example.com" onChange={(event) => setLinkHref(event.target.value)} onPressEnter={applyLink} />

@@ -7,6 +7,8 @@ import { app } from 'electron'
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const unpackagedIconPath = join(process.cwd(), 'build', 'icon.ico')
 const packagedIconPath = join(process.resourcesPath, 'icon.ico')
+const LAUNCHER_WIDTH = 92
+const LAUNCHER_HEIGHT = 52
 
 interface WindowState {
   launcher?: { x: number; y: number }
@@ -16,6 +18,7 @@ interface WindowState {
 export class WindowManager {
   private launcherWindow: BrowserWindow | null = null
   private panelWindow: BrowserWindow | null = null
+  private launcherDragOffset: { x: number; y: number } | null = null
   private readonly statePath = join(app.getPath('userData'), 'window-state.json')
   private windowState: WindowState = this.readWindowState()
 
@@ -31,8 +34,12 @@ export class WindowManager {
     }
 
     this.launcherWindow = new BrowserWindow({
-      width: 72,
-      height: 52,
+      width: LAUNCHER_WIDTH,
+      height: LAUNCHER_HEIGHT,
+      minWidth: LAUNCHER_WIDTH,
+      minHeight: LAUNCHER_HEIGHT,
+      maxWidth: LAUNCHER_WIDTH,
+      maxHeight: LAUNCHER_HEIGHT,
       x: launcherPosition.x,
       y: launcherPosition.y,
       frame: false,
@@ -52,6 +59,8 @@ export class WindowManager {
 
     this.launcherWindow.setAlwaysOnTop(true, 'floating')
     this.loadRenderer(this.launcherWindow, 'launcher')
+    this.launcherWindow.on('show', () => this.enforceLauncherHitArea())
+    this.launcherWindow.on('ready-to-show', () => this.enforceLauncherHitArea())
     this.launcherWindow.on('moved', () => this.saveLauncherPosition())
     this.launcherWindow.on('closed', () => {
       this.saveLauncherPosition()
@@ -105,6 +114,7 @@ export class WindowManager {
     if (this.panelWindow && !this.panelWindow.isDestroyed()) {
       this.panelWindow.hide()
     }
+    this.enforceLauncherHitArea()
     launcher.show()
     launcher.focus()
   }
@@ -140,17 +150,29 @@ export class WindowManager {
     app.quit()
   }
 
-  moveLauncher(deltaX: number, deltaY: number): void {
+  beginLauncherDrag(): void {
     if (!this.launcherWindow || this.launcherWindow.isDestroyed()) {
       return
     }
 
-    if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY)) {
+    const bounds = this.launcherWindow.getBounds()
+    const cursor = screen.getCursorScreenPoint()
+    this.launcherDragOffset = { x: cursor.x - bounds.x, y: cursor.y - bounds.y }
+  }
+
+  moveLauncher(): void {
+    if (!this.launcherWindow || this.launcherWindow.isDestroyed() || !this.launcherDragOffset) {
       return
     }
 
-    const [x, y] = this.launcherWindow.getPosition()
-    this.launcherWindow.setPosition(Math.round(x + deltaX), Math.round(y + deltaY))
+    const cursor = screen.getCursorScreenPoint()
+    this.launcherWindow.setBounds({
+      x: Math.round(cursor.x - this.launcherDragOffset.x),
+      y: Math.round(cursor.y - this.launcherDragOffset.y),
+      width: LAUNCHER_WIDTH,
+      height: LAUNCHER_HEIGHT,
+    })
+    this.enforceLauncherHitArea()
     this.saveLauncherPosition()
   }
 
@@ -202,6 +224,20 @@ export class WindowManager {
     const [x, y] = this.launcherWindow.getPosition()
     this.windowState.launcher = { x, y }
     this.writeWindowState()
+  }
+
+  private enforceLauncherHitArea(): void {
+    if (!this.launcherWindow || this.launcherWindow.isDestroyed()) {
+      return
+    }
+
+    const bounds = this.launcherWindow.getBounds()
+    if (bounds.width !== LAUNCHER_WIDTH || bounds.height !== LAUNCHER_HEIGHT) {
+      this.launcherWindow.setBounds({ ...bounds, width: LAUNCHER_WIDTH, height: LAUNCHER_HEIGHT })
+    }
+
+    const shapedWindow = this.launcherWindow as BrowserWindow & { setShape?: (rectangles: Rectangle[]) => void }
+    shapedWindow.setShape?.([{ x: 0, y: 0, width: LAUNCHER_WIDTH, height: LAUNCHER_HEIGHT }])
   }
 
   private savePanelBounds(): void {

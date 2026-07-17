@@ -1,7 +1,7 @@
-import { Button, Checkbox, DatePicker, Empty, Input, Popconfirm, Segmented, Select, Tooltip } from 'antd'
+import { Button, Checkbox, DatePicker, Empty, Input, Popconfirm, Radio, Segmented, Tooltip } from 'antd'
 import dayjs from 'dayjs'
-import { Check, Flag, Pencil, Save, Tag, Trash2, X } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { Check, Pencil, Save, Tag, Trash2, X } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Task, TaskInput, TaskPriority, TaskStatus } from '../../../shared/models'
 import { getDocumentStats } from '../../shared/editor'
 import { useTaskStore } from '../../store/taskStore'
@@ -46,19 +46,22 @@ export function TaskDetail(): JSX.Element {
   const task = useMemo(() => tasks.find((item) => item.id === selectedTaskId) ?? null, [selectedTaskId, tasks])
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState<TaskInput | null>(() => task ? toDraft(task) : null)
+  const previousTaskIdRef = useRef<string | null>(null)
   const selectedTags = useMemo(() => {
     const tagIds = draft?.tagIds ?? []
     return tagIds.map((id) => tags.find((tag) => tag.id === id)).filter((tag): tag is NonNullable<typeof tag> => Boolean(tag))
   }, [draft?.tagIds, tags])
 
   useEffect(() => {
+    const previousTaskId = previousTaskIdRef.current
+    previousTaskIdRef.current = task?.id ?? null
     setDraft(task ? toDraft(task) : null)
     if (task && pendingEditTaskId === task.id) {
       setIsEditing(true)
       clearPendingEditTask()
       return
     }
-    setIsEditing(false)
+    if (previousTaskId !== task?.id) setIsEditing(false)
   }, [clearPendingEditTask, pendingEditTaskId, task])
 
   useEffect(() => {
@@ -108,7 +111,7 @@ export function TaskDetail(): JSX.Element {
       {isEditing ? (
         <>
           <div className="detail-fields">
-            <label><span>状态</span><Segmented value={draft.status} options={statusOptions} onChange={(value) => updateDraft({ status: value as TaskStatus })} /></label>
+            <label><span>状态</span><Segmented block value={draft.status} options={statusOptions} onChange={(value) => updateDraft({ status: value as TaskStatus })} /></label>
             <label><span>截止日期</span><DatePicker allowClear value={draft.dueDate ? dayjs(draft.dueDate) : null} onChange={(date) => updateDraft({ dueDate: date?.format('YYYY-MM-DD') })} /></label>
             <label className="detail-tag-field">
               <span>标签</span>
@@ -123,12 +126,12 @@ export function TaskDetail(): JSX.Element {
                 ) : <span className="selected-tag-empty">未选择标签</span>}
               </div>
             </label>
-            <label><span>优先级</span><Select<TaskPriority> value={draft.priority ?? 'none'} onChange={(priority) => updateDraft({ priority })} options={[
-              { value: 'none', label: '无' },
-              { value: 'low', label: '低' },
-              { value: 'medium', label: '中' },
-              { value: 'high', label: '高' },
-            ]} suffixIcon={<Flag size={14} />} /></label>
+            <label><span>优先级</span><Radio.Group className="priority-radio-group" value={draft.priority ?? 'none'} onChange={(event) => updateDraft({ priority: event.target.value as TaskPriority })}>
+              <Radio value="none">无</Radio>
+              <Radio value="low">低</Radio>
+              <Radio value="medium">中</Radio>
+              <Radio value="high">高</Radio>
+            </Radio.Group></label>
             <label><span>置顶</span><Checkbox checked={Boolean(draft.pinned)} onChange={(event) => updateDraft({ pinned: event.target.checked })} /></label>
           </div>
           <div className="editor-section"><div className="editor-label">描述</div><RichTextEditor value={draft.content ?? task.content} onChange={(content) => updateDraft({ content })} /></div>
