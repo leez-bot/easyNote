@@ -51506,7 +51506,7 @@ const useStyle$2 = genStyleHooks(["Input", "Search"], (token2) => {
   const inputToken = merge(token2, initInputToken(token2));
   return genSearchStyle(inputToken);
 }, initComponentToken);
-const Search = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+const Search$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
     prefixCls: customizePrefixCls,
     inputPrefixCls: customizeInputPrefixCls,
@@ -51910,7 +51910,7 @@ const TextArea = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
 });
 const Input = Input$1;
 Input.Group = Group;
-Input.Search = Search;
+Input.Search = Search$1;
 Input.TextArea = TextArea;
 Input.Password = Password;
 Input.OTP = OTP;
@@ -53159,6 +53159,16 @@ const Save = createLucideIcon("Save", [
   ],
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Search = createLucideIcon("Search", [
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
+  ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -82034,6 +82044,10 @@ function TaskList() {
   const removeTask = useTaskStore((state) => state.removeTask);
   const [collapsed, setCollapsed] = reactExports.useState({});
   const [dateRange, setDateRange] = reactExports.useState(null);
+  const [searchKeyword, setSearchKeyword] = reactExports.useState("");
+  const [searchOpen, setSearchOpen] = reactExports.useState(false);
+  const searchInputRef = reactExports.useRef(null);
+  const searchTriggerRef = reactExports.useRef(null);
   const [taskOrders, setTaskOrders] = reactExports.useState(() => readTaskOrders());
   const [dragState, setDragState] = reactExports.useState(null);
   const groups = reactExports.useMemo(() => groupTasks(tasks, activeView), [activeView, tasks]);
@@ -82044,9 +82058,12 @@ function TaskList() {
   const orderedGroups = reactExports.useMemo(
     () => groups.map((group) => ({
       ...group,
-      tasks: applySavedOrder(filterTasksByDateRange(group.tasks, dateRange, activeView), taskOrders[getOrderKey(workspaceId, viewKey, group.id)])
+      tasks: applySavedOrder(
+        filterTasks(group.tasks, supportsDateRange ? dateRange : null, activeView, supportsDateRange ? searchKeyword : ""),
+        taskOrders[getOrderKey(workspaceId, viewKey, group.id)]
+      )
     })),
-    [activeView, dateRange, groups, taskOrders, viewKey, workspaceId]
+    [activeView, dateRange, groups, searchKeyword, supportsDateRange, taskOrders, viewKey, workspaceId]
   );
   reactExports.useEffect(() => {
     localStorage.setItem(TASK_ORDER_STORAGE_KEY, JSON.stringify(taskOrders));
@@ -82055,6 +82072,14 @@ function TaskList() {
     if (!selectedTaskId) return;
     document.querySelector(`[data-task-id="${selectedTaskId}"]`)?.scrollIntoView({ block: "nearest" });
   }, [selectedTaskId]);
+  reactExports.useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus();
+  }, [searchOpen]);
+  const closeSearch = (restoreFocus = false) => {
+    setSearchKeyword("");
+    setSearchOpen(false);
+    if (restoreFocus) requestAnimationFrame(() => searchTriggerRef.current?.focus());
+  };
   const moveTaskInGroup = (groupId, targetTaskId, currentTasks) => {
     if (!dragState || dragState.groupId !== groupId || dragState.taskId === targetTaskId) return;
     const fromIndex = currentTasks.findIndex((task) => task.id === dragState.taskId);
@@ -82069,94 +82094,151 @@ function TaskList() {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "task-list-pane", "aria-label": "任务列表", children: [
     activeView.type === "quick" ? /* @__PURE__ */ jsxRuntimeExports.jsx(QuickCapture, {}) : null,
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "task-groups", children: [
-      orderedGroups.map((group) => group.tasks.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "task-group", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "task-group-heading", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "task-group-title", type: "button", onClick: () => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] })), children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: collapsed[group.id] ? "collapsed" : "", size: 15 }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: group.label }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("small", { children: group.tasks.length })
-          ] }),
-          supportsDateRange ? /* @__PURE__ */ jsxRuntimeExports.jsx(DatePicker.RangePicker, { className: "task-date-range", size: "small", allowClear: true, format: "YY/MM/DD", placeholder: ["开始", "结束"], value: dateRange, onChange: (value) => setDateRange(value?.[0] && value[1] ? [value[0], value[1]] : null) }) : null
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "task-groups", children: orderedGroups.map((group) => /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "task-group", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "task-group-heading", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "task-group-title", type: "button", "aria-expanded": Boolean(!collapsed[group.id]), onClick: () => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] })), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: collapsed[group.id] ? "collapsed" : "", size: 15 }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: group.label }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("small", { children: group.tasks.length })
         ] }),
-        !collapsed[group.id] ? group.tasks.map((task) => {
-          const taskTags = task.tagIds.map((tagId) => tagMap.get(tagId)).filter((tag) => Boolean(tag));
-          const firstTag = taskTags[0];
-          const moreTags = taskTags.slice(1);
-          const menuItems = [
+        supportsDateRange ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "task-group-filters", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `task-search-filter ${searchOpen ? "is-open" : ""}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "task-search-input-wrap", style: { pointerEvents: searchOpen ? "auto" : "none" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                ref: searchInputRef,
+                size: "small",
+                allowClear: true,
+                "aria-label": "搜索任务",
+                value: searchKeyword,
+                onBlur: () => {
+                  if (!searchKeyword.trim()) setSearchOpen(false);
+                },
+                onChange: (event) => {
+                  const keyword = event.target.value;
+                  setSearchKeyword(keyword);
+                  if (!keyword) setSearchOpen(false);
+                },
+                onKeyDown: (event) => {
+                  if (event.key === "Escape") {
+                    closeSearch(true);
+                  }
+                }
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("button", { ref: searchTriggerRef, className: "task-filter-icon", type: "button", title: "搜索", "aria-label": "搜索任务", onClick: () => setSearchOpen(true), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { size: 15 }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Popover,
             {
-              key: "status",
-              label: "变更状态",
-              children: statusOptions.map((status) => ({
-                key: `status:${status.value}`,
-                icon: status.icon,
-                label: status.label,
-                disabled: task.status === status.value,
-                onClick: () => void setTaskStatus(task.id, status.value)
-              }))
-            },
-            { type: "divider" },
-            {
-              key: "delete",
-              danger: true,
-              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 }),
-              label: "删除",
-              onClick: () => void removeTask(task.id)
-            }
-          ];
-          return /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown, { trigger: ["contextMenu"], menu: { items: menuItems }, destroyPopupOnHide: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            "button",
-            {
-              className: `compact-task-row ${task.id === selectedTaskId ? "selected" : ""} ${task.status === "done" ? "done" : ""} ${dragState?.taskId === task.id ? "dragging" : ""}`,
-              type: "button",
-              draggable: true,
-              "data-task-id": task.id,
-              onClick: () => selectTask(task.id),
-              onContextMenu: () => selectTask(task.id),
-              onDragStart: (event) => {
-                event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("text/plain", task.id);
-                setDragState({ groupId: group.id, taskId: task.id });
-                selectTask(task.id);
-              },
-              onDragOver: (event) => {
-                if (dragState?.groupId === group.id) event.preventDefault();
-              },
-              onDrop: (event) => {
-                event.preventDefault();
-                moveTaskInGroup(group.id, task.id, group.tasks);
-              },
-              onDragEnd: () => setDragState(null),
-              children: [
+              trigger: "click",
+              destroyOnHidden: true,
+              classNames: { root: "task-date-filter-popover" },
+              content: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Checkbox,
+                  DatePicker.RangePicker,
                   {
-                    checked: task.status === "done",
-                    onClick: (event) => event.stopPropagation(),
-                    onChange: (event) => void setTaskStatus(task.id, event.target.checked ? "done" : "todo")
+                    size: "small",
+                    allowClear: false,
+                    format: "YY/MM/DD",
+                    value: dateRange,
+                    onChange: (value) => setDateRange(value?.[0] && value[1] ? [value[0], value[1]] : null)
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: task.title, mouseEnterDelay: 0.35, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "compact-task-title", children: task.title }) }),
-                firstTag ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "task-tag-cell", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: firstTag.name, mouseEnterDelay: 0.35, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "task-tag", style: { color: firstTag.color, backgroundColor: `${firstTag.color}12` }, children: firstTag.name }) }),
-                  moreTags.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: taskTags.map((tag) => tag.name).join("、"), children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "task-tag-more", children: [
-                    "+",
-                    moreTags.length
-                  ] }) }) : null
-                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", {}),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "compact-task-time", children: formatTaskTime(task) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "task-row-icons", children: [
-                  task.priority === "high" || isOverdue(task) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { size: 14, className: "danger-icon", fill: "currentColor" }) : null,
-                  task.attachments.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Paperclip, { size: 14 }) : null,
-                  task.pinned ? /* @__PURE__ */ jsxRuntimeExports.jsx(Pin, { size: 14 }) : null
-                ] })
-              ]
+                /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "task-filter-clear", type: "button", onClick: () => setDateRange(null), children: "清空" })
+              ] }),
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  className: `task-filter-icon ${dateRange ? "active" : ""}`,
+                  type: "button",
+                  title: "日期范围",
+                  "aria-label": "按日期范围筛选",
+                  onClick: (event) => event.stopPropagation(),
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(CalendarDays, { size: 15 })
+                }
+              )
             }
-          ) }, task.id);
-        }) : null
-      ] }, group.id) : null),
-      orderedGroups.every((group) => group.tasks.length === 0) ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "empty-state", children: "当前视图暂无任务" }) : null
-    ] }),
+          )
+        ] }) : null
+      ] }),
+      !collapsed[group.id] && group.tasks.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "task-group-empty", children: "当前筛选条件下暂无任务" }) : null,
+      !collapsed[group.id] ? group.tasks.map((task) => {
+        const taskTags = task.tagIds.map((tagId) => tagMap.get(tagId)).filter((tag) => Boolean(tag));
+        const firstTag = taskTags[0];
+        const moreTags = taskTags.slice(1);
+        const menuItems = [
+          {
+            key: "status",
+            label: "变更状态",
+            children: statusOptions.map((status) => ({
+              key: `status:${status.value}`,
+              icon: status.icon,
+              label: status.label,
+              disabled: task.status === status.value,
+              onClick: () => void setTaskStatus(task.id, status.value)
+            }))
+          },
+          { type: "divider" },
+          {
+            key: "delete",
+            danger: true,
+            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 }),
+            label: "删除",
+            onClick: () => void removeTask(task.id)
+          }
+        ];
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown, { trigger: ["contextMenu"], menu: { items: menuItems }, destroyPopupOnHide: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            className: `compact-task-row ${task.id === selectedTaskId ? "selected" : ""} ${task.status === "done" ? "done" : ""} ${dragState?.taskId === task.id ? "dragging" : ""}`,
+            type: "button",
+            draggable: true,
+            "data-task-id": task.id,
+            onClick: () => selectTask(task.id),
+            onContextMenu: () => selectTask(task.id),
+            onDragStart: (event) => {
+              event.dataTransfer.effectAllowed = "move";
+              event.dataTransfer.setData("text/plain", task.id);
+              setDragState({ groupId: group.id, taskId: task.id });
+              selectTask(task.id);
+            },
+            onDragOver: (event) => {
+              if (dragState?.groupId === group.id) event.preventDefault();
+            },
+            onDrop: (event) => {
+              event.preventDefault();
+              moveTaskInGroup(group.id, task.id, group.tasks);
+            },
+            onDragEnd: () => setDragState(null),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Checkbox,
+                {
+                  checked: task.status === "done",
+                  onClick: (event) => event.stopPropagation(),
+                  onChange: (event) => void setTaskStatus(task.id, event.target.checked ? "done" : "todo")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: task.title, mouseEnterDelay: 0.35, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "compact-task-title", children: task.title }) }),
+              firstTag ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "task-tag-cell", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: firstTag.name, mouseEnterDelay: 0.35, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "task-tag", style: { color: firstTag.color, backgroundColor: `${firstTag.color}12` }, children: firstTag.name }) }),
+                moreTags.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: taskTags.map((tag) => tag.name).join("、"), children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "task-tag-more", children: [
+                  "+",
+                  moreTags.length
+                ] }) }) : null
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "compact-task-time", children: formatTaskTime(task) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "task-row-icons", children: [
+                task.priority === "high" || isOverdue(task) ? /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { size: 14, className: "danger-icon", fill: "currentColor" }) : null,
+                task.attachments.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Paperclip, { size: 14 }) : null,
+                task.pinned ? /* @__PURE__ */ jsxRuntimeExports.jsx(Pin, { size: 14 }) : null
+              ] })
+            ]
+          }
+        ) }, task.id);
+      }) : null
+    ] }, group.id)) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "task-list-total", children: [
       orderedGroups.reduce((total, group) => total + group.tasks.length, 0),
       " 项任务"
@@ -82186,14 +82268,15 @@ function readTaskOrders() {
     return {};
   }
 }
-function filterTasksByDateRange(tasks, dateRange, view) {
-  if (!dateRange || view.type !== "date" || view.value !== "done" && view.value !== "all") return tasks;
-  const [start, end] = dateRange;
-  return tasks.filter((task) => {
+function filterTasks(tasks, dateRange, view, searchKeyword) {
+  const dateFilteredTasks = !dateRange || view.type !== "date" || view.value !== "done" && view.value !== "all" ? tasks : tasks.filter((task) => {
+    const [start, end] = dateRange;
     const timestamp = view.value === "done" ? task.completedAt ?? task.updatedAt : task.createdAt;
     const date2 = dayjs(timestamp);
     return !date2.isBefore(start, "day") && !date2.isAfter(end, "day");
   });
+  const normalizedKeyword = searchKeyword.trim().toLocaleLowerCase();
+  return normalizedKeyword ? dateFilteredTasks.filter((task) => task.title.toLocaleLowerCase().includes(normalizedKeyword)) : dateFilteredTasks;
 }
 function formatTaskTime(task) {
   if (!task.dueDate) return "无日期";

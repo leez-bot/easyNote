@@ -1,18 +1,20 @@
-import { Checkbox, DatePicker, Dropdown, Tooltip, type MenuProps } from 'antd'
+import { Checkbox, DatePicker, Dropdown, Input, Popover, Tooltip, type InputRef, type MenuProps } from 'antd'
 import dayjs, { type Dayjs } from 'dayjs'
 import {
   CheckCircle2,
+  CalendarDays,
   ChevronDown,
   CirclePause,
   Flag,
   ListTodo,
   Paperclip,
   Pin,
+  Search,
   Timer,
   Trash2,
   XCircle,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Task, TaskStatus } from '../../../shared/models'
 import { groupTasks, isOverdue, type TaskView } from '../../shared/taskViews'
 import { useTaskStore } from '../../store/taskStore'
@@ -44,6 +46,10 @@ export function TaskList(): JSX.Element {
   const removeTask = useTaskStore((state) => state.removeTask)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null)
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
+  const searchInputRef = useRef<InputRef>(null)
+  const searchTriggerRef = useRef<HTMLButtonElement>(null)
   const [taskOrders, setTaskOrders] = useState<Record<string, string[]>>(() => readTaskOrders())
   const [dragState, setDragState] = useState<DragState | null>(null)
   const groups = useMemo(() => groupTasks(tasks, activeView), [activeView, tasks])
@@ -54,9 +60,12 @@ export function TaskList(): JSX.Element {
   const orderedGroups = useMemo(
     () => groups.map((group) => ({
       ...group,
-      tasks: applySavedOrder(filterTasksByDateRange(group.tasks, dateRange, activeView), taskOrders[getOrderKey(workspaceId, viewKey, group.id)]),
+      tasks: applySavedOrder(
+        filterTasks(group.tasks, supportsDateRange ? dateRange : null, activeView, supportsDateRange ? searchKeyword : ''),
+        taskOrders[getOrderKey(workspaceId, viewKey, group.id)],
+      ),
     })),
-    [activeView, dateRange, groups, taskOrders, viewKey, workspaceId],
+    [activeView, dateRange, groups, searchKeyword, supportsDateRange, taskOrders, viewKey, workspaceId],
   )
 
   useEffect(() => {
@@ -67,6 +76,16 @@ export function TaskList(): JSX.Element {
     if (!selectedTaskId) return
     document.querySelector(`[data-task-id="${selectedTaskId}"]`)?.scrollIntoView({ block: 'nearest' })
   }, [selectedTaskId])
+
+  useEffect(() => {
+    if (searchOpen) searchInputRef.current?.focus()
+  }, [searchOpen])
+
+  const closeSearch = (restoreFocus = false): void => {
+    setSearchKeyword('')
+    setSearchOpen(false)
+    if (restoreFocus) requestAnimationFrame(() => searchTriggerRef.current?.focus())
+  }
 
   const moveTaskInGroup = (groupId: string, targetTaskId: string, currentTasks: Task[]): void => {
     if (!dragState || dragState.groupId !== groupId || dragState.taskId === targetTaskId) return
@@ -86,15 +105,73 @@ export function TaskList(): JSX.Element {
     <section className="task-list-pane" aria-label="任务列表">
       {activeView.type === 'quick' ? <QuickCapture /> : null}
       <div className="task-groups">
-        {orderedGroups.map((group) => group.tasks.length > 0 ? (
+        {orderedGroups.map((group) => (
           <section className="task-group" key={group.id}>
             <div className="task-group-heading">
-              <button className="task-group-title" type="button" onClick={() => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] }))}>
+              <button className="task-group-title" type="button" aria-expanded={Boolean(!collapsed[group.id])} onClick={() => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] }))}>
                 <ChevronDown className={collapsed[group.id] ? 'collapsed' : ''} size={15} />
                 <span>{group.label}</span><small>{group.tasks.length}</small>
               </button>
-              {supportsDateRange ? <DatePicker.RangePicker className="task-date-range" size="small" allowClear format="YY/MM/DD" placeholder={['开始', '结束']} value={dateRange} onChange={(value) => setDateRange(value?.[0] && value[1] ? [value[0], value[1]] : null)} /> : null}
+              {supportsDateRange ? (
+                <div className="task-group-filters">
+                  <div className={`task-search-filter ${searchOpen ? 'is-open' : ''}`}>
+                    <div className="task-search-input-wrap" style={{ pointerEvents: searchOpen ? 'auto' : 'none' }}>
+                      <Input
+                        ref={searchInputRef}
+                        size="small"
+                        allowClear
+                        aria-label="搜索任务"
+                        value={searchKeyword}
+                        onBlur={() => {
+                          if (!searchKeyword.trim()) setSearchOpen(false)
+                        }}
+                        onChange={(event) => {
+                          const keyword = event.target.value
+                          setSearchKeyword(keyword)
+                          if (!keyword) setSearchOpen(false)
+                        }}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Escape') {
+                            closeSearch(true)
+                          }
+                        }}
+                      />
+                    </div>
+                    <button ref={searchTriggerRef} className="task-filter-icon" type="button" title="搜索" aria-label="搜索任务" onClick={() => setSearchOpen(true)}>
+                      <Search size={15} />
+                    </button>
+                  </div>
+                  <Popover
+                    trigger="click"
+                    destroyOnHidden
+                    classNames={{ root: 'task-date-filter-popover' }}
+                    content={(
+                      <div>
+                        <DatePicker.RangePicker
+                          size="small"
+                          allowClear={false}
+                          format="YY/MM/DD"
+                          value={dateRange}
+                          onChange={(value) => setDateRange(value?.[0] && value[1] ? [value[0], value[1]] : null)}
+                        />
+                        <button className="task-filter-clear" type="button" onClick={() => setDateRange(null)}>清空</button>
+                      </div>
+                    )}
+                  >
+                    <button
+                      className={`task-filter-icon ${dateRange ? 'active' : ''}`}
+                      type="button"
+                      title="日期范围"
+                      aria-label="按日期范围筛选"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <CalendarDays size={15} />
+                    </button>
+                  </Popover>
+                </div>
+              ) : null}
             </div>
+            {!collapsed[group.id] && group.tasks.length === 0 ? <div className="task-group-empty">当前筛选条件下暂无任务</div> : null}
             {!collapsed[group.id] ? group.tasks.map((task) => {
               const taskTags = task.tagIds.map((tagId) => tagMap.get(tagId)).filter((tag): tag is NonNullable<typeof tag> => Boolean(tag))
               const firstTag = taskTags[0]
@@ -176,8 +253,7 @@ export function TaskList(): JSX.Element {
               )
             }) : null}
           </section>
-        ) : null)}
-        {orderedGroups.every((group) => group.tasks.length === 0) ? <div className="empty-state">当前视图暂无任务</div> : null}
+        ))}
       </div>
       <div className="task-list-total">{orderedGroups.reduce((total, group) => total + group.tasks.length, 0)} 项任务</div>
     </section>
@@ -211,14 +287,17 @@ function readTaskOrders(): Record<string, string[]> {
   }
 }
 
-function filterTasksByDateRange(tasks: Task[], dateRange: [Dayjs, Dayjs] | null, view: TaskView): Task[] {
-  if (!dateRange || view.type !== 'date' || (view.value !== 'done' && view.value !== 'all')) return tasks
-  const [start, end] = dateRange
-  return tasks.filter((task) => {
-    const timestamp = view.value === 'done' ? task.completedAt ?? task.updatedAt : task.createdAt
-    const date = dayjs(timestamp)
-    return !date.isBefore(start, 'day') && !date.isAfter(end, 'day')
-  })
+function filterTasks(tasks: Task[], dateRange: [Dayjs, Dayjs] | null, view: TaskView, searchKeyword: string): Task[] {
+  const dateFilteredTasks = !dateRange || view.type !== 'date' || (view.value !== 'done' && view.value !== 'all')
+    ? tasks
+    : tasks.filter((task) => {
+      const [start, end] = dateRange
+      const timestamp = view.value === 'done' ? task.completedAt ?? task.updatedAt : task.createdAt
+      const date = dayjs(timestamp)
+      return !date.isBefore(start, 'day') && !date.isAfter(end, 'day')
+    })
+  const normalizedKeyword = searchKeyword.trim().toLocaleLowerCase()
+  return normalizedKeyword ? dateFilteredTasks.filter((task) => task.title.toLocaleLowerCase().includes(normalizedKeyword)) : dateFilteredTasks
 }
 
 function formatTaskTime(task: Task): string {
