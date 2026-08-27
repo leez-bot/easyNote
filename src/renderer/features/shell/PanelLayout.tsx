@@ -33,6 +33,8 @@ export function PanelLayout(): JSX.Element {
   const lastSavedAt = useTaskStore((state) => state.lastSavedAt)
   const editorStats = useTaskStore((state) => state.editorStats)
   const flushPendingSave = useTaskStore((state) => state.flushPendingSave)
+  const advanceDate = useTaskStore((state) => state.advanceDate)
+  const dateRevision = useTaskStore((state) => state.dateRevision)
   const createTask = useTaskStore((state) => state.createTask)
   const exportData = useTaskStore((state) => state.exportData)
   const importData = useTaskStore((state) => state.importData)
@@ -72,6 +74,13 @@ export function PanelLayout(): JSX.Element {
   useEffect(() => {
     localStorage.setItem(LIST_WIDTH_KEY, String(listWidth))
   }, [listWidth])
+
+  useEffect(() => {
+    const now = new Date()
+    const nextDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+    const timer = window.setTimeout(() => advanceDate(), nextDay.getTime() - now.getTime() + 50)
+    return () => window.clearTimeout(timer)
+  }, [advanceDate, dateRevision])
 
   const create = async (today: boolean): Promise<void> => {
     await createTask({ title: '新任务', content: EMPTY_DOCUMENT, status: 'todo', dueDate: today ? todayAsLocalDateString() : undefined })

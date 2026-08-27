@@ -35,7 +35,9 @@ export interface Task {
   priority: TaskPriority
   tagIds: string[]
   pinned: boolean
+  startDate: string
   dueDate?: string
+  relatedTaskIds: string[]
   attachments: Attachment[]
   createdAt: string
   updatedAt: string
@@ -54,7 +56,9 @@ export interface TaskInput {
   priority?: TaskPriority
   tagIds?: string[]
   pinned?: boolean
+  startDate?: string
   dueDate?: string
+  relatedTaskIds?: string[]
 }
 
 export interface TagInput {

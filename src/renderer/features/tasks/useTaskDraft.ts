@@ -77,6 +77,8 @@ function toDraft(task: Task): TaskInput {
     priority: task.priority,
     tagIds: task.tagIds,
     pinned: task.pinned,
+    startDate: task.startDate || task.createdAt.slice(0, 10),
     dueDate: task.dueDate,
+    relatedTaskIds: task.relatedTaskIds ?? [],
   }
 }

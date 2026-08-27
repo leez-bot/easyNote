@@ -20,6 +20,8 @@ interface TaskState {
   notice: string | null
   editorStats: { characters: number; paragraphs: number }
   flushPendingSave: (() => Promise<void>) | null
+  dateRevision: number
+  advanceDate: () => void
   bootstrap: () => Promise<void>
   chooseWorkspace: () => Promise<void>
   reloadData: () => Promise<void>
@@ -78,6 +80,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   notice: null,
   editorStats: { characters: 0, paragraphs: 0 },
   flushPendingSave: null,
+  dateRevision: 0,
+  advanceDate: () => set((state) => ({ dateRevision: state.dateRevision + 1 })),
 
   bootstrap: async () => {
     set({ loading: true, error: null })

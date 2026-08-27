@@ -115,7 +115,7 @@ export class ImportExportService {
     if (await pathExists(importedAttachmentsDir)) await cp(importedAttachmentsDir, attachmentsDir, { recursive: true })
 
     const normalizedTasks = importedData.tasks.map((task) => ({
-      ...task,
+      ...normalizeTaskFields(task),
       workspaceId: workspace.id,
       source: 'local' as const,
       attachments: normalizeImportedAttachments(task.id, task.attachments),
@@ -147,14 +147,21 @@ export class ImportExportService {
       existingIds.add(finalTaskId)
       const attachments = await this.copyImportedAttachments(tempDir, importedTask.id, finalTaskId, importedTask.attachments)
       mergedTasks.push({
-        ...importedTask,
+      ...normalizeTaskFields(importedTask),
         id: finalTaskId,
         attachments,
         tagIds: importedTask.tagIds.map((id) => tagIdMap.get(id)).filter((id): id is string => Boolean(id)),
+        relatedTaskIds: [],
         workspaceId,
         source: 'local',
         updatedAt: new Date().toISOString(),
       })
+    }
+    const importedIdMap = new Map(importedData.tasks.map((task, index) => [task.id, mergedTasks[currentTasks.length + index]?.id]))
+    for (let index = 0; index < importedData.tasks.length; index += 1) {
+      const source = importedData.tasks[index]
+      const target = mergedTasks[currentTasks.length + index]
+      if (target) target.relatedTaskIds = source.relatedTaskIds.map((id) => importedIdMap.get(id)).filter((id): id is string => Boolean(id))
     }
     await this.tasks.replaceData(mergedTags, mergedTasks)
     return importedData.tasks.length
@@ -187,4 +194,10 @@ function normalizeImportedAttachments(taskId: string, attachments: Attachment[])
       kind: attachment.mimeType.startsWith('image/') ? 'image' : 'file',
     }]
   })
+}
+
+function normalizeTaskFields(task: Task): Task {
+  const created = new Date(task.createdAt)
+  const startDate = task.startDate || (Number.isNaN(created.getTime()) ? new Date().toISOString().slice(0, 10) : `${created.getFullYear()}-${String(created.getMonth() + 1).padStart(2, '0')}-${String(created.getDate()).padStart(2, '0')}`)
+  return { ...task, startDate, relatedTaskIds: Array.isArray(task.relatedTaskIds) ? task.relatedTaskIds : [] }
 }

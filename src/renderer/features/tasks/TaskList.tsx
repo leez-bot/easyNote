@@ -16,7 +16,8 @@ import {
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Task, TaskStatus } from '../../../shared/models'
-import { groupTasks, isOverdue, type TaskView } from '../../shared/taskViews'
+import { groupTasks, type TaskView } from '../../shared/taskViews'
+import { todayAsLocalDateString } from '../../shared/date'
 import { useTaskStore } from '../../store/taskStore'
 import { QuickCapture } from './QuickCapture'
 
@@ -44,6 +45,7 @@ export function TaskList(): JSX.Element {
   const selectTask = useTaskStore((state) => state.selectTask)
   const setTaskStatus = useTaskStore((state) => state.setTaskStatus)
   const removeTask = useTaskStore((state) => state.removeTask)
+  useTaskStore((state) => state.dateRevision)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null)
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -201,7 +203,7 @@ export function TaskList(): JSX.Element {
               return (
                 <Dropdown key={task.id} trigger={['contextMenu']} menu={{ items: menuItems }} destroyPopupOnHide>
                   <button
-                    className={`compact-task-row ${task.id === selectedTaskId ? 'selected' : ''} ${task.status === 'done' ? 'done' : ''} ${dragState?.taskId === task.id ? 'dragging' : ''}`}
+                    className={`compact-task-row priority-${task.priority} ${task.id === selectedTaskId ? 'selected' : ''} ${task.status === 'done' ? 'done' : ''} ${dragState?.taskId === task.id ? 'dragging' : ''}`}
                     type="button"
                     draggable
                     data-task-id={task.id}
@@ -244,7 +246,7 @@ export function TaskList(): JSX.Element {
                     ) : <span />}
                     <span className="compact-task-time">{formatTaskTime(task)}</span>
                     <span className="task-row-icons">
-                      {task.priority === 'high' || isOverdue(task) ? <Flag size={14} className="danger-icon" fill="currentColor" /> : null}
+                      {task.priority === 'high' ? <Flag size={14} className="priority-icon priority-high" fill="currentColor" /> : null}
                       {task.attachments.length > 0 ? <Paperclip size={14} /> : null}
                       {task.pinned ? <Pin size={14} /> : null}
                     </span>
@@ -302,7 +304,7 @@ function filterTasks(tasks: Task[], dateRange: [Dayjs, Dayjs] | null, view: Task
 
 function formatTaskTime(task: Task): string {
   if (!task.dueDate) return '无日期'
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayAsLocalDateString()
   if (task.dueDate === today) return new Date(task.updatedAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
   return task.dueDate.slice(5).replace('-', '/')
 }

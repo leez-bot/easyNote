@@ -1,4 +1,4 @@
-import { Button, Checkbox, DatePicker, Empty, Input, Popconfirm, Radio, Segmented, Tooltip } from 'antd'
+import { Button, Checkbox, DatePicker, Empty, Input, Popconfirm, Radio, Segmented, Select, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import { Check, Pencil, Save, Tag, Trash2, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -43,6 +43,7 @@ export function TaskDetail(): JSX.Element {
   const clearPendingEditTask = useTaskStore((state) => state.clearPendingEditTask)
   const setEditorStats = useTaskStore((state) => state.setEditorStats)
   const setFlushPendingSave = useTaskStore((state) => state.setFlushPendingSave)
+  const selectTask = useTaskStore((state) => state.selectTask)
   const task = useMemo(() => tasks.find((item) => item.id === selectedTaskId) ?? null, [selectedTaskId, tasks])
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState<TaskInput | null>(() => task ? toDraft(task) : null)
@@ -112,6 +113,7 @@ export function TaskDetail(): JSX.Element {
         <>
           <div className="detail-fields">
             <label><span>状态</span><Segmented block value={draft.status} options={statusOptions} onChange={(value) => updateDraft({ status: value as TaskStatus })} /></label>
+            <label><span>开始日期</span><DatePicker value={dayjs(draft.startDate || task.createdAt)} onChange={(date) => updateDraft({ startDate: date?.format('YYYY-MM-DD') ?? task.createdAt.slice(0, 10) })} /></label>
             <label><span>截止日期</span><DatePicker allowClear value={draft.dueDate ? dayjs(draft.dueDate) : null} onChange={(date) => updateDraft({ dueDate: date?.format('YYYY-MM-DD') })} /></label>
             <label className="detail-tag-field">
               <span>标签</span>
@@ -133,6 +135,7 @@ export function TaskDetail(): JSX.Element {
               <Radio value="high">高</Radio>
             </Radio.Group></label>
             <label><span>置顶</span><Checkbox checked={Boolean(draft.pinned)} onChange={(event) => updateDraft({ pinned: event.target.checked })} /></label>
+            <label className="detail-related-field"><span>关联任务</span><Select mode="multiple" showSearch optionFilterProp="label" value={draft.relatedTaskIds ?? []} options={tasks.filter((item) => item.id !== task.id).map((item) => ({ value: item.id, label: item.title }))} onChange={(relatedTaskIds) => updateDraft({ relatedTaskIds })} placeholder="搜索并选择任务" /></label>
           </div>
           <div className="editor-section"><div className="editor-label">描述</div><RichTextEditor value={draft.content ?? task.content} onChange={(content) => updateDraft({ content })} /></div>
           <AttachmentGrid task={task} editable />
@@ -141,11 +144,21 @@ export function TaskDetail(): JSX.Element {
         <>
           <div className="detail-readonly-fields">
             <ReadField label="状态"><span className={`readonly-status status-${task.status}`}><Check size={12} />{statusText[task.status]}</span></ReadField>
+            <ReadField label="开始日期">{task.startDate || task.createdAt.slice(0, 10)}</ReadField>
             <ReadField label="截止日期">{task.dueDate || '未设置'}</ReadField>
             <ReadField label="标签">{task.tagIds.length ? <div className="readonly-tags">{task.tagIds.map((id) => { const tag = tags.find((item) => item.id === id); return tag ? <span key={id} style={{ color: tag.color, backgroundColor: `${tag.color}12` }}>{tag.name}</span> : null })}</div> : '无标签'}</ReadField>
             <ReadField label="优先级">{priorityText[task.priority]}</ReadField>
             <ReadField label="创建时间">{formatDateTime(task.createdAt)}</ReadField>
             <ReadField label="更新时间">{formatDateTime(task.updatedAt)}</ReadField>
+            <ReadField label="关联任务">
+              <div className="related-task-list">
+                {(task.relatedTaskIds ?? []).map((id) => {
+                  const related = tasks.find((item) => item.id === id)
+                  return related ? <button className="related-task-link" type="button" key={id} onClick={() => selectTask(id)}>{related.title}</button> : <span className="related-task-missing" key={id}>关联任务已删除 <button type="button" onClick={() => void updateTask(task.id, { relatedTaskIds: (task.relatedTaskIds ?? []).filter((item) => item !== id) })}>清理</button></span>
+                })}
+                {(task.relatedTaskIds ?? []).length === 0 ? '无关联任务' : null}
+              </div>
+            </ReadField>
           </div>
           <div className="editor-section readonly-section"><div className="editor-label">描述</div><RichTextEditor value={task.content} readOnly /></div>
           <AttachmentGrid task={task} />
@@ -160,7 +173,7 @@ function ReadField({ label, children }: { label: string; children: React.ReactNo
 }
 
 function toDraft(task: Task): TaskInput {
-  return { title: task.title, content: task.content, status: task.status, priority: task.priority, tagIds: task.tagIds, pinned: task.pinned, dueDate: task.dueDate }
+  return { title: task.title, content: task.content, status: task.status, priority: task.priority, tagIds: task.tagIds, pinned: task.pinned, startDate: task.startDate || task.createdAt.slice(0, 10), dueDate: task.dueDate, relatedTaskIds: task.relatedTaskIds ?? [] }
 }
 
 function formatDateTime(value: string): string {

@@ -46,7 +46,9 @@ export class TaskRepository {
       priority: input.priority ?? 'none',
       tagIds: input.tagIds ?? [],
       pinned: input.pinned ?? false,
+      startDate: input.startDate || localDateKey(now),
       dueDate: input.dueDate || undefined,
+      relatedTaskIds: this.normalizeRelatedTaskIds(data, input.relatedTaskIds ?? [], undefined),
       attachments: [],
       createdAt: now,
       updatedAt: now,
@@ -55,6 +57,10 @@ export class TaskRepository {
       source: 'local',
     }
     data.tasks.push(task)
+    task.relatedTaskIds.forEach((relatedId) => {
+      const related = data.tasks.find((item) => item.id === relatedId)
+      if (related && !related.relatedTaskIds.includes(task.id)) related.relatedTaskIds.push(task.id)
+    })
     await this.writeData(data)
     return task
   }
@@ -70,11 +76,28 @@ export class TaskRepository {
     }
     if (input.content !== undefined) task.content = input.content
     if (input.dueDate !== undefined) task.dueDate = input.dueDate || undefined
+    if (input.startDate !== undefined) task.startDate = input.startDate || localDateKey(task.createdAt)
     if (input.priority !== undefined) task.priority = input.priority
     if (input.pinned !== undefined) task.pinned = input.pinned
     if (input.tagIds !== undefined) {
       this.assertTagIds(data, input.tagIds)
       task.tagIds = [...new Set(input.tagIds)]
+    }
+    if (input.relatedTaskIds !== undefined) {
+      const nextIds = this.normalizeRelatedTaskIds(data, input.relatedTaskIds, id)
+      const previousIds = new Set(task.relatedTaskIds ?? [])
+      const nextSet = new Set(nextIds)
+      task.relatedTaskIds = nextIds
+      for (const relatedId of previousIds) {
+        if (!nextSet.has(relatedId)) {
+          const related = data.tasks.find((item) => item.id === relatedId)
+          if (related) related.relatedTaskIds = (related.relatedTaskIds ?? []).filter((item) => item !== id)
+        }
+      }
+      for (const relatedId of nextSet) {
+        const related = data.tasks.find((item) => item.id === relatedId)
+        if (related && !related.relatedTaskIds.includes(id)) related.relatedTaskIds.push(id)
+      }
     }
     if (input.status !== undefined) applyStatus(task, input.status)
 
@@ -87,6 +110,7 @@ export class TaskRepository {
     const data = await this.readData()
     const nextTasks = data.tasks.filter((task) => task.id !== id)
     if (nextTasks.length === data.tasks.length) throw new Error('任务不存在')
+    nextTasks.forEach((task) => { task.relatedTaskIds = (task.relatedTaskIds ?? []).filter((relatedId) => relatedId !== id) })
     data.tasks = nextTasks
     await this.writeData(data)
   }
@@ -143,7 +167,12 @@ export class TaskRepository {
   async replaceData(tags: TaskTag[], tasks: Task[]): Promise<void> {
     const data = await this.readData()
     data.tags = tags
-    data.tasks = tasks
+    data.tasks = tasks.map((task) => ({ ...task, startDate: task.startDate || localDateKey(task.createdAt), relatedTaskIds: [...new Set((task.relatedTaskIds ?? []).filter((id) => id !== task.id && tasks.some((item) => item.id === id)))] }))
+    const taskMap = new Map(data.tasks.map((task) => [task.id, task]))
+    data.tasks.forEach((task) => task.relatedTaskIds.forEach((id) => {
+      const related = taskMap.get(id)
+      if (related && !related.relatedTaskIds.includes(task.id)) related.relatedTaskIds.push(task.id)
+    }))
     await this.writeData(data)
   }
 
@@ -156,7 +185,10 @@ export class TaskRepository {
     }
 
     const data = await readJsonFile<TaskDataFile | TaskDataFileV1>(filePath)
-    if (data.schemaVersion === 2 && Array.isArray(data.tasks) && Array.isArray(data.tags)) return data
+    if (data.schemaVersion === 2 && Array.isArray(data.tasks) && Array.isArray(data.tags)) {
+      data.tasks = data.tasks.map((task) => ({ ...task, startDate: task.startDate || localDateKey(task.createdAt), relatedTaskIds: Array.isArray(task.relatedTaskIds) ? task.relatedTaskIds : [] }))
+      return data
+    }
     if (data.schemaVersion === 1 && Array.isArray(data.tasks)) {
       const backupDir = join(await this.workspace.getBackupsDir(), `migration-${Date.now()}`)
       await ensureDir(backupDir)
@@ -184,6 +216,14 @@ export class TaskRepository {
     if (tagIds.some((id) => !existing.has(id))) throw new Error('任务包含无效标签')
   }
 
+  private normalizeRelatedTaskIds(data: TaskDataFile, ids: string[], currentId?: string): string[] {
+    const unique = [...new Set(ids)]
+    if (unique.some((id) => id === currentId)) throw new Error('任务不能关联自身')
+    const existing = new Set(data.tasks.map((task) => task.id))
+    if (unique.some((id) => !existing.has(id))) throw new Error('任务包含无效关联')
+    return unique
+  }
+
   private normalizeTagName(data: TaskDataFile, value: string, currentId?: string): string {
     const name = value.trim()
     if (!name) throw new Error('标签名称不能为空')
@@ -191,6 +231,14 @@ export class TaskRepository {
     if (duplicate) throw new Error('标签名称已存在')
     return name
   }
+}
+
+function localDateKey(value: string): string {
+  const date = new Date(value)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 function compareTasks(a: Task, b: Task): number {

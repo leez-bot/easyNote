@@ -179,12 +179,22 @@ function migrateV1Data(data, now = (/* @__PURE__ */ new Date()).toISOString()) {
       priority: "none",
       tagIds: [],
       pinned: false,
+      startDate: localDateFromIso(task.createdAt, now),
+      relatedTaskIds: [],
       attachments: task.attachments.map((attachment) => ({
         ...attachment,
         kind: attachment.mimeType.startsWith("image/") ? "image" : "file"
       }))
     }))
   };
+}
+function localDateFromIso(value, fallback) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return fallback.slice(0, 10);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 class ImportExportService {
   constructor(workspace, tasks) {
@@ -267,7 +277,7 @@ class ImportExportService {
     const importedAttachmentsDir = join(tempDir, "attachments");
     if (await pathExists(importedAttachmentsDir)) await cp(importedAttachmentsDir, attachmentsDir, { recursive: true });
     const normalizedTasks = importedData.tasks.map((task) => ({
-      ...task,
+      ...normalizeTaskFields(task),
       workspaceId: workspace.id,
       source: "local",
       attachments: normalizeImportedAttachments(task.id, task.attachments)
@@ -296,14 +306,21 @@ class ImportExportService {
       existingIds.add(finalTaskId);
       const attachments = await this.copyImportedAttachments(tempDir, importedTask.id, finalTaskId, importedTask.attachments);
       mergedTasks.push({
-        ...importedTask,
+        ...normalizeTaskFields(importedTask),
         id: finalTaskId,
         attachments,
         tagIds: importedTask.tagIds.map((id) => tagIdMap.get(id)).filter((id) => Boolean(id)),
+        relatedTaskIds: [],
         workspaceId,
         source: "local",
         updatedAt: (/* @__PURE__ */ new Date()).toISOString()
       });
+    }
+    const importedIdMap = new Map(importedData.tasks.map((task, index) => [task.id, mergedTasks[currentTasks.length + index]?.id]));
+    for (let index = 0; index < importedData.tasks.length; index += 1) {
+      const source = importedData.tasks[index];
+      const target = mergedTasks[currentTasks.length + index];
+      if (target) target.relatedTaskIds = source.relatedTaskIds.map((id) => importedIdMap.get(id)).filter((id) => Boolean(id));
     }
     await this.tasks.replaceData(mergedTags, mergedTasks);
     return importedData.tasks.length;
@@ -329,6 +346,11 @@ function normalizeImportedAttachments(taskId, attachments) {
       kind: attachment.mimeType.startsWith("image/") ? "image" : "file"
     }];
   });
+}
+function normalizeTaskFields(task) {
+  const created = new Date(task.createdAt);
+  const startDate = task.startDate || (Number.isNaN(created.getTime()) ? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) : `${created.getFullYear()}-${String(created.getMonth() + 1).padStart(2, "0")}-${String(created.getDate()).padStart(2, "0")}`);
+  return { ...task, startDate, relatedTaskIds: Array.isArray(task.relatedTaskIds) ? task.relatedTaskIds : [] };
 }
 function registerIpcHandlers(services) {
   ipcMain.handle("window:showPanel", () => {
@@ -395,7 +417,9 @@ class TaskRepository {
       priority: input.priority ?? "none",
       tagIds: input.tagIds ?? [],
       pinned: input.pinned ?? false,
+      startDate: input.startDate || localDateKey(now),
       dueDate: input.dueDate || void 0,
+      relatedTaskIds: this.normalizeRelatedTaskIds(data, input.relatedTaskIds ?? [], void 0),
       attachments: [],
       createdAt: now,
       updatedAt: now,
@@ -404,6 +428,10 @@ class TaskRepository {
       source: "local"
     };
     data.tasks.push(task);
+    task.relatedTaskIds.forEach((relatedId) => {
+      const related = data.tasks.find((item) => item.id === relatedId);
+      if (related && !related.relatedTaskIds.includes(task.id)) related.relatedTaskIds.push(task.id);
+    });
     await this.writeData(data);
     return task;
   }
@@ -417,11 +445,28 @@ class TaskRepository {
     }
     if (input.content !== void 0) task.content = input.content;
     if (input.dueDate !== void 0) task.dueDate = input.dueDate || void 0;
+    if (input.startDate !== void 0) task.startDate = input.startDate || localDateKey(task.createdAt);
     if (input.priority !== void 0) task.priority = input.priority;
     if (input.pinned !== void 0) task.pinned = input.pinned;
     if (input.tagIds !== void 0) {
       this.assertTagIds(data, input.tagIds);
       task.tagIds = [...new Set(input.tagIds)];
+    }
+    if (input.relatedTaskIds !== void 0) {
+      const nextIds = this.normalizeRelatedTaskIds(data, input.relatedTaskIds, id);
+      const previousIds = new Set(task.relatedTaskIds ?? []);
+      const nextSet = new Set(nextIds);
+      task.relatedTaskIds = nextIds;
+      for (const relatedId of previousIds) {
+        if (!nextSet.has(relatedId)) {
+          const related = data.tasks.find((item) => item.id === relatedId);
+          if (related) related.relatedTaskIds = (related.relatedTaskIds ?? []).filter((item) => item !== id);
+        }
+      }
+      for (const relatedId of nextSet) {
+        const related = data.tasks.find((item) => item.id === relatedId);
+        if (related && !related.relatedTaskIds.includes(id)) related.relatedTaskIds.push(id);
+      }
     }
     if (input.status !== void 0) applyStatus(task, input.status);
     task.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
@@ -432,6 +477,9 @@ class TaskRepository {
     const data = await this.readData();
     const nextTasks = data.tasks.filter((task) => task.id !== id);
     if (nextTasks.length === data.tasks.length) throw new Error("任务不存在");
+    nextTasks.forEach((task) => {
+      task.relatedTaskIds = (task.relatedTaskIds ?? []).filter((relatedId) => relatedId !== id);
+    });
     data.tasks = nextTasks;
     await this.writeData(data);
   }
@@ -482,7 +530,12 @@ class TaskRepository {
   async replaceData(tags, tasks) {
     const data = await this.readData();
     data.tags = tags;
-    data.tasks = tasks;
+    data.tasks = tasks.map((task) => ({ ...task, startDate: task.startDate || localDateKey(task.createdAt), relatedTaskIds: [...new Set((task.relatedTaskIds ?? []).filter((id) => id !== task.id && tasks.some((item) => item.id === id)))] }));
+    const taskMap = new Map(data.tasks.map((task) => [task.id, task]));
+    data.tasks.forEach((task) => task.relatedTaskIds.forEach((id) => {
+      const related = taskMap.get(id);
+      if (related && !related.relatedTaskIds.includes(task.id)) related.relatedTaskIds.push(task.id);
+    }));
     await this.writeData(data);
   }
   async readData() {
@@ -493,7 +546,10 @@ class TaskRepository {
       return emptyData;
     }
     const data = await readJsonFile(filePath);
-    if (data.schemaVersion === 2 && Array.isArray(data.tasks) && Array.isArray(data.tags)) return data;
+    if (data.schemaVersion === 2 && Array.isArray(data.tasks) && Array.isArray(data.tags)) {
+      data.tasks = data.tasks.map((task) => ({ ...task, startDate: task.startDate || localDateKey(task.createdAt), relatedTaskIds: Array.isArray(task.relatedTaskIds) ? task.relatedTaskIds : [] }));
+      return data;
+    }
     if (data.schemaVersion === 1 && Array.isArray(data.tasks)) {
       const backupDir = join(await this.workspace.getBackupsDir(), `migration-${Date.now()}`);
       await ensureDir(backupDir);
@@ -517,6 +573,13 @@ class TaskRepository {
     const existing = new Set(data.tags.map((tag) => tag.id));
     if (tagIds.some((id) => !existing.has(id))) throw new Error("任务包含无效标签");
   }
+  normalizeRelatedTaskIds(data, ids, currentId) {
+    const unique = [...new Set(ids)];
+    if (unique.some((id) => id === currentId)) throw new Error("任务不能关联自身");
+    const existing = new Set(data.tasks.map((task) => task.id));
+    if (unique.some((id) => !existing.has(id))) throw new Error("任务包含无效关联");
+    return unique;
+  }
   normalizeTagName(data, value, currentId) {
     const name = value.trim();
     if (!name) throw new Error("标签名称不能为空");
@@ -524,6 +587,13 @@ class TaskRepository {
     if (duplicate) throw new Error("标签名称已存在");
     return name;
   }
+}
+function localDateKey(value) {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 function compareTasks(a, b) {
   if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
