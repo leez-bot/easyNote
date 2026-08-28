@@ -42,8 +42,8 @@ export function PanelLayout(): JSX.Element {
   const [sidebarWidth, setSidebarWidth] = useState(() => getStoredWidth(SIDEBAR_WIDTH_KEY, 182, 148, 280))
   const [listWidth, setListWidth] = useState(() => getStoredWidth(LIST_WIDTH_KEY, 468, 390, 760))
   const [resizing, setResizing] = useState<ResizeState | null>(null)
-  const counts = useMemo(() => getTaskCounts(tasks), [tasks])
-  const visibleCount = useMemo(() => getVisibleTasks(tasks, activeView).length, [activeView, tasks])
+  const counts = useMemo(() => getTaskCounts(tasks), [tasks, dateRevision])
+  const visibleCount = useMemo(() => getVisibleTasks(tasks, activeView).length, [activeView, tasks, dateRevision])
 
   useEffect(() => {
     if (!resizing) return

@@ -25,7 +25,7 @@ const statusViews: Array<{ value: TaskStatus; label: string; icon: typeof ListTo
 
 export function TaskSidebar(): JSX.Element {
   const tasks = useTaskStore((state) => state.tasks)
-  useTaskStore((state) => state.dateRevision)
+  const dateRevision = useTaskStore((state) => state.dateRevision)
   const tags = useTaskStore((state) => state.tags)
   const workspace = useTaskStore((state) => state.workspace)
   const activeView = useTaskStore((state) => state.activeView)
@@ -33,7 +33,7 @@ export function TaskSidebar(): JSX.Element {
   const chooseWorkspace = useTaskStore((state) => state.chooseWorkspace)
   const exportData = useTaskStore((state) => state.exportData)
   const importData = useTaskStore((state) => state.importData)
-  const counts = useMemo(() => getTaskCounts(tasks), [tasks])
+  const counts = useMemo(() => getTaskCounts(tasks), [tasks, dateRevision])
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   return (
