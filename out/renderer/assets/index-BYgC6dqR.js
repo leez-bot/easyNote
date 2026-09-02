@@ -8027,6 +8027,20 @@ function pickAttrs(props, ariaOnly = false) {
   });
   return attrs;
 }
+function proxyObject(obj, extendProps) {
+  if (typeof Proxy !== "undefined" && obj) {
+    return new Proxy(obj, {
+      get(target, prop) {
+        if (extendProps[prop]) {
+          return extendProps[prop];
+        }
+        const originProp = target[prop];
+        return typeof originProp === "function" ? originProp.bind(target) : originProp;
+      }
+    });
+  }
+  return obj;
+}
 function toArray$5(children, option = {}) {
   let ret = [];
   React$2.Children.forEach(children, (child) => {
@@ -8297,8 +8311,8 @@ function SingleObserver(props, ref) {
   }) : mergedChildren;
 }
 const RefSingleObserver = /* @__PURE__ */ reactExports.forwardRef(SingleObserver);
-function _extends$1n() {
-  _extends$1n = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1q() {
+  _extends$1q = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -8309,7 +8323,7 @@ function _extends$1n() {
     }
     return target;
   };
-  return _extends$1n.apply(this, arguments);
+  return _extends$1q.apply(this, arguments);
 }
 const INTERNAL_PREFIX_KEY = "rc-observer-key";
 function ResizeObserver$1(props, ref) {
@@ -8319,7 +8333,7 @@ function ResizeObserver$1(props, ref) {
   const childNodes = typeof children === "function" ? [children] : toArray$5(children);
   return childNodes.map((child, index) => {
     const key = child?.key || `${INTERNAL_PREFIX_KEY}-${index}`;
-    return /* @__PURE__ */ reactExports.createElement(RefSingleObserver, _extends$1n({}, props, {
+    return /* @__PURE__ */ reactExports.createElement(RefSingleObserver, _extends$1q({}, props, {
       key,
       ref: index === 0 ? ref : void 0
     }), child);
@@ -12277,7 +12291,7 @@ const useResetIconStyle = (iconPrefixCls, csp) => {
 var CheckCircleFilled$2 = {};
 Object.defineProperty(CheckCircleFilled$2, "__esModule", { value: true });
 var CheckCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm193.5 301.7l-210.6 292a31.8 31.8 0 01-51.7 0L318.5 484.9c-3.8-5.3 0-12.7 6.5-12.7h46.9c10.2 0 19.9 4.9 25.9 13.3l71.2 98.8 157.2-218c6-8.3 15.6-13.3 25.9-13.3H699c6.5 0 10.3 7.4 6.5 12.7z" } }] }, "name": "check-circle", "theme": "filled" };
-var _default$m = CheckCircleFilled$2.default = CheckCircleFilled$1;
+var _default$o = CheckCircleFilled$2.default = CheckCircleFilled$1;
 const IconContext = /* @__PURE__ */ reactExports.createContext({});
 const APPEND_ORDER = "data-rc-order";
 const APPEND_PRIORITY = "data-rc-priority";
@@ -12582,8 +12596,8 @@ const IconBase = (props) => {
   });
 };
 IconBase.displayName = "IconReact";
-function _extends$1m() {
-  _extends$1m = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1p() {
+  _extends$1p = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -12594,7 +12608,7 @@ function _extends$1m() {
     }
     return target;
   };
-  return _extends$1m.apply(this, arguments);
+  return _extends$1p.apply(this, arguments);
 }
 const Icon$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -12626,7 +12640,7 @@ const Icon$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     msTransform: `rotate(${rotate}deg)`,
     transform: `rotate(${rotate}deg)`
   } : void 0;
-  return /* @__PURE__ */ reactExports.createElement("span", _extends$1m({
+  return /* @__PURE__ */ reactExports.createElement("span", _extends$1p({
     role: "img",
     "aria-label": icon.name
   }, restProps, {
@@ -12639,6 +12653,75 @@ const Icon$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     style: svgStyle
   }));
 });
+function _extends$1o() {
+  _extends$1o = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$1o.apply(this, arguments);
+}
+const CheckCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1o({}, props, {
+  ref,
+  icon: _default$o
+}));
+const RefIcon$o = /* @__PURE__ */ reactExports.forwardRef(CheckCircleFilled);
+var CloseCircleFilled$2 = {};
+Object.defineProperty(CloseCircleFilled$2, "__esModule", { value: true });
+var CloseCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z" } }] }, "name": "close-circle", "theme": "filled" };
+var _default$n = CloseCircleFilled$2.default = CloseCircleFilled$1;
+function _extends$1n() {
+  _extends$1n = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$1n.apply(this, arguments);
+}
+const CloseCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1n({}, props, {
+  ref,
+  icon: _default$n
+}));
+const RefIcon$n = /* @__PURE__ */ reactExports.forwardRef(CloseCircleFilled);
+var CloseOutlined$2 = {};
+Object.defineProperty(CloseOutlined$2, "__esModule", { value: true });
+var CloseOutlined$1 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z" } }] }, "name": "close", "theme": "outlined" };
+var _default$m = CloseOutlined$2.default = CloseOutlined$1;
+function _extends$1m() {
+  _extends$1m = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$1m.apply(this, arguments);
+}
+const CloseOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1m({}, props, {
+  ref,
+  icon: _default$m
+}));
+const RefIcon$m = /* @__PURE__ */ reactExports.forwardRef(CloseOutlined);
+var ExclamationCircleFilled$2 = {};
+Object.defineProperty(ExclamationCircleFilled$2, "__esModule", { value: true });
+var ExclamationCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "exclamation-circle", "theme": "filled" };
+var _default$l = ExclamationCircleFilled$2.default = ExclamationCircleFilled$1;
 function _extends$1l() {
   _extends$1l = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -12653,15 +12736,15 @@ function _extends$1l() {
   };
   return _extends$1l.apply(this, arguments);
 }
-const CheckCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1l({}, props, {
+const ExclamationCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1l({}, props, {
   ref,
-  icon: _default$m
+  icon: _default$l
 }));
-const RefIcon$m = /* @__PURE__ */ reactExports.forwardRef(CheckCircleFilled);
-var CloseCircleFilled$2 = {};
-Object.defineProperty(CloseCircleFilled$2, "__esModule", { value: true });
-var CloseCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z" } }] }, "name": "close-circle", "theme": "filled" };
-var _default$l = CloseCircleFilled$2.default = CloseCircleFilled$1;
+const RefIcon$l = /* @__PURE__ */ reactExports.forwardRef(ExclamationCircleFilled);
+var InfoCircleFilled$2 = {};
+Object.defineProperty(InfoCircleFilled$2, "__esModule", { value: true });
+var InfoCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "info-circle", "theme": "filled" };
+var _default$k = InfoCircleFilled$2.default = InfoCircleFilled$1;
 function _extends$1k() {
   _extends$1k = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -12676,80 +12759,11 @@ function _extends$1k() {
   };
   return _extends$1k.apply(this, arguments);
 }
-const CloseCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1k({}, props, {
-  ref,
-  icon: _default$l
-}));
-const RefIcon$l = /* @__PURE__ */ reactExports.forwardRef(CloseCircleFilled);
-var CloseOutlined$2 = {};
-Object.defineProperty(CloseOutlined$2, "__esModule", { value: true });
-var CloseOutlined$1 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z" } }] }, "name": "close", "theme": "outlined" };
-var _default$k = CloseOutlined$2.default = CloseOutlined$1;
-function _extends$1j() {
-  _extends$1j = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$1j.apply(this, arguments);
-}
-const CloseOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1j({}, props, {
+const InfoCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1k({}, props, {
   ref,
   icon: _default$k
 }));
-const RefIcon$k = /* @__PURE__ */ reactExports.forwardRef(CloseOutlined);
-var ExclamationCircleFilled$2 = {};
-Object.defineProperty(ExclamationCircleFilled$2, "__esModule", { value: true });
-var ExclamationCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "exclamation-circle", "theme": "filled" };
-var _default$j = ExclamationCircleFilled$2.default = ExclamationCircleFilled$1;
-function _extends$1i() {
-  _extends$1i = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$1i.apply(this, arguments);
-}
-const ExclamationCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1i({}, props, {
-  ref,
-  icon: _default$j
-}));
-const RefIcon$j = /* @__PURE__ */ reactExports.forwardRef(ExclamationCircleFilled);
-var InfoCircleFilled$2 = {};
-Object.defineProperty(InfoCircleFilled$2, "__esModule", { value: true });
-var InfoCircleFilled$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "info-circle", "theme": "filled" };
-var _default$i = InfoCircleFilled$2.default = InfoCircleFilled$1;
-function _extends$1h() {
-  _extends$1h = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$1h.apply(this, arguments);
-}
-const InfoCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1h({}, props, {
-  ref,
-  icon: _default$i
-}));
-const RefIcon$i = /* @__PURE__ */ reactExports.forwardRef(InfoCircleFilled);
+const RefIcon$k = /* @__PURE__ */ reactExports.forwardRef(InfoCircleFilled);
 const Context$1 = /* @__PURE__ */ reactExports.createContext({});
 const MotionProvider = (props) => {
   const {
@@ -13319,8 +13333,8 @@ function diffKeys(prevKeys = [], currentKeys = []) {
   });
   return list;
 }
-function _extends$1g() {
-  _extends$1g = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1j() {
+  _extends$1j = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -13331,7 +13345,7 @@ function _extends$1g() {
     }
     return target;
   };
-  return _extends$1g.apply(this, arguments);
+  return _extends$1j.apply(this, arguments);
 }
 const MOTION_PROP_NAMES = ["eventProps", "visible", "children", "motionName", "motionAppear", "motionEnter", "motionLeave", "motionLeaveImmediately", "motionDeadline", "removeOnLeave", "leavedClassName", "onAppearPrepare", "onAppearStart", "onAppearActive", "onAppearEnd", "onEnterStart", "onEnterActive", "onEnterEnd", "onLeaveStart", "onLeaveActive", "onLeaveEnd"];
 function genCSSMotionList(transitionSupport, CSSMotion$1 = CSSMotion) {
@@ -13409,7 +13423,7 @@ function genCSSMotionList(transitionSupport, CSSMotion$1 = CSSMotion) {
         ...eventProps
       }, index) => {
         const visible = status === STATUS_ADD || status === STATUS_KEEP;
-        return /* @__PURE__ */ reactExports.createElement(CSSMotion$1, _extends$1g({}, motionProps, {
+        return /* @__PURE__ */ reactExports.createElement(CSSMotion$1, _extends$1j({}, motionProps, {
           key: eventProps.key,
           visible,
           eventProps,
@@ -13718,7 +13732,7 @@ const genActionStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$i = (token2) => {
+const prepareComponentToken$j = (token2) => {
   const paddingHorizontal = 12;
   return {
     withDescriptionIconSize: token2.fontSizeHeading3,
@@ -13726,7 +13740,7 @@ const prepareComponentToken$i = (token2) => {
     withDescriptionPadding: `${token2.paddingMD}px ${token2.paddingContentHorizontalLG}px`
   };
 };
-const useStyle$r = genStyleHooks("Alert", (token2) => [genBaseStyle$6(token2), genTypeStyle(token2), genActionStyle(token2)], prepareComponentToken$i);
+const useStyle$s = genStyleHooks("Alert", (token2) => [genBaseStyle$6(token2), genTypeStyle(token2), genActionStyle(token2)], prepareComponentToken$j);
 const IconNode = (props) => {
   const {
     icon,
@@ -13739,10 +13753,10 @@ const IconNode = (props) => {
     errorIcon
   } = props;
   const iconMapFilled = {
-    success: successIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
-    info: infoIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$i, null),
-    error: errorIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
-    warning: warningIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$j, null)
+    success: successIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$o, null),
+    info: infoIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$k, null),
+    error: errorIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$n, null),
+    warning: warningIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$l, null)
   };
   return /* @__PURE__ */ reactExports.createElement("span", {
     className,
@@ -13759,7 +13773,7 @@ const CloseIconNode = (props) => {
     className,
     style: style2
   } = props;
-  const mergedCloseIcon = closeIcon === true || closeIcon === void 0 ? /* @__PURE__ */ reactExports.createElement(RefIcon$k, null) : closeIcon;
+  const mergedCloseIcon = closeIcon === true || closeIcon === void 0 ? /* @__PURE__ */ reactExports.createElement(RefIcon$m, null) : closeIcon;
   return isClosable ? /* @__PURE__ */ reactExports.createElement("button", {
     type: "button",
     onClick: handleClose,
@@ -13815,7 +13829,7 @@ const Alert$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     errorIcon
   } = useComponentConfig("alert");
   const prefixCls = getPrefixCls("alert", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$r(prefixCls);
+  const [hashId, cssVarCls] = useStyle$s(prefixCls);
   const {
     onClose: closableOnClose,
     afterClose: closableAfterClose
@@ -14555,8 +14569,8 @@ function Arrow(props) {
     }
   }, content);
 }
-function _extends$1f() {
-  _extends$1f = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1i() {
+  _extends$1i = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -14567,7 +14581,7 @@ function _extends$1f() {
     }
     return target;
   };
-  return _extends$1f.apply(this, arguments);
+  return _extends$1i.apply(this, arguments);
 }
 function Mask$1(props) {
   const {
@@ -14581,7 +14595,7 @@ function Mask$1(props) {
   if (!mask) {
     return null;
   }
-  return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1f({}, motion2, {
+  return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1i({}, motion2, {
     motionAppear: true,
     visible: open,
     removeOnLeave: true
@@ -14629,8 +14643,8 @@ function useOffsetStyle(isMobile2, ready, open, align, offsetR, offsetB, offsetX
   }
   return offsetStyle;
 }
-function _extends$1e() {
-  _extends$1e = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1h() {
+  _extends$1h = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -14641,7 +14655,7 @@ function _extends$1e() {
     }
     return target;
   };
-  return _extends$1e.apply(this, arguments);
+  return _extends$1h.apply(this, arguments);
 }
 const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -14749,7 +14763,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onResize: onInternalResize,
     disabled: !open
   }, (resizeObserverRef) => {
-    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1e({
+    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1h({
       motionAppear: true,
       motionEnter: true,
       motionLeave: true,
@@ -15492,8 +15506,8 @@ function useTargetState() {
   });
   return [trigger, open, options, onVisibleChanged];
 }
-function _extends$1d() {
-  _extends$1d = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1g() {
+  _extends$1g = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -15504,7 +15518,7 @@ function _extends$1d() {
     }
     return target;
   };
-  return _extends$1d.apply(this, arguments);
+  return _extends$1g.apply(this, arguments);
 }
 const UniqueContainer = (props) => {
   const {
@@ -15535,7 +15549,7 @@ const UniqueContainer = (props) => {
     sizeStyle.width = popupSize.width;
     sizeStyle.height = popupSize.height;
   }
-  return /* @__PURE__ */ React$2.createElement(CSSMotion, _extends$1d({
+  return /* @__PURE__ */ React$2.createElement(CSSMotion, _extends$1g({
     motionAppear: true,
     motionEnter: true,
     motionLeave: true,
@@ -16870,8 +16884,8 @@ const Progress$1 = ({
   value: percent,
   style: style2
 });
-function _extends$1c() {
-  _extends$1c = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1f() {
+  _extends$1f = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -16882,7 +16896,7 @@ function _extends$1c() {
     }
     return target;
   };
-  return _extends$1c.apply(this, arguments);
+  return _extends$1f.apply(this, arguments);
 }
 const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -17006,7 +17020,7 @@ const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     mergedStyle["--notification-y"] = `${mergedOffset}px`;
   }
   const mergedRole = role ?? rootProps?.role ?? "alert";
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$1c({}, rootProps, {
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$1f({}, rootProps, {
     ref,
     role: mergedRole,
     "data-notification-index": mergedNotificationIndex,
@@ -17018,7 +17032,7 @@ const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onClick,
     onMouseEnter: onInternalMouseEnter,
     onMouseLeave: onInternalMouseLeave
-  }), contentNode, actionsNode, mergedClosable && /* @__PURE__ */ reactExports.createElement("button", _extends$1c({
+  }), contentNode, actionsNode, mergedClosable && /* @__PURE__ */ reactExports.createElement("button", _extends$1f({
     className: clsx(`${noticePrefixCls}-close`, classNames?.close),
     "aria-label": "Close"
   }, closeBtnAriaProps, {
@@ -17042,8 +17056,8 @@ const NotificationProvider = ({
     value: context
   }, children);
 };
-function _extends$1b() {
-  _extends$1b = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1e() {
+  _extends$1e = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -17054,7 +17068,7 @@ function _extends$1b() {
     }
     return target;
   };
-  return _extends$1b.apply(this, arguments);
+  return _extends$1e.apply(this, arguments);
 }
 const Content$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -17077,14 +17091,14 @@ const Content$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     "--top-notificiation-height": `${topNoticeHeight}px`,
     "--top-notificiation-width": `${topNoticeWidth}px`
   };
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$1b({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$1e({}, restProps, {
     className: clsx(contentPrefixCls, `${contentPrefixCls}-${heightStatus}`, className),
     style: contentStyle,
     ref
   }));
 });
-function _extends$1a() {
-  _extends$1a = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1d() {
+  _extends$1d = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -17095,7 +17109,7 @@ function _extends$1a() {
     }
     return target;
   };
-  return _extends$1a.apply(this, arguments);
+  return _extends$1d.apply(this, arguments);
 }
 const noticeSlotKeys = ["wrapper", "root", "icon", "section", "title", "description", "actions", "close", "progress"];
 function fillClassNames(classNamesList) {
@@ -17145,7 +17159,7 @@ const NotificationListItem = (props) => {
     setNodeSize(strKey, node2);
   }, [setNodeSize, strKey]);
   const ref = useComposeRef(nodeRef, setItemRef);
-  return /* @__PURE__ */ reactExports.createElement(Notification, _extends$1a({}, notificationConfig, restProps, {
+  return /* @__PURE__ */ reactExports.createElement(Notification, _extends$1d({}, notificationConfig, restProps, {
     ref,
     className: clsx(contextClassNames?.notice, config.className, className),
     style: {
@@ -17246,7 +17260,7 @@ const NotificationList = (props) => {
     className: classNames?.listContent,
     style: styles?.listContent,
     ref: contentRef
-  }, /* @__PURE__ */ reactExports.createElement(CSSMotionList, _extends$1a({
+  }, /* @__PURE__ */ reactExports.createElement(CSSMotionList, _extends$1d({
     component: false,
     keys: keys2,
     motionAppear: true
@@ -17547,9 +17561,9 @@ function getCloseIconConfig(closeIcon, notificationConfig, notification) {
 var LoadingOutlined$2 = {};
 Object.defineProperty(LoadingOutlined$2, "__esModule", { value: true });
 var LoadingOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "0 0 1024 1024", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z" } }] }, "name": "loading", "theme": "outlined" };
-var _default$h = LoadingOutlined$2.default = LoadingOutlined$1;
-function _extends$19() {
-  _extends$19 = Object.assign ? Object.assign.bind() : function(target) {
+var _default$j = LoadingOutlined$2.default = LoadingOutlined$1;
+function _extends$1c() {
+  _extends$1c = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -17560,13 +17574,13 @@ function _extends$19() {
     }
     return target;
   };
-  return _extends$19.apply(this, arguments);
+  return _extends$1c.apply(this, arguments);
 }
-const LoadingOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$19({}, props, {
+const LoadingOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1c({}, props, {
   ref,
-  icon: _default$h
+  icon: _default$j
 }));
-const RefIcon$h = /* @__PURE__ */ reactExports.forwardRef(LoadingOutlined);
+const RefIcon$j = /* @__PURE__ */ reactExports.forwardRef(LoadingOutlined);
 function fallbackProp(...args) {
   return args.find((arg) => arg !== void 0);
 }
@@ -17585,7 +17599,7 @@ const useAllowClear$1 = (options) => {
       return false;
     }
     return {
-      clearIcon: fallbackProp(isPlainObject$1(allowClear) ? allowClear?.clearIcon : clearIcon, isPlainObject$1(contextAllowClear) ? contextAllowClear?.clearIcon : contextClearIcon, /* @__PURE__ */ React$2.createElement(RefIcon$l, null)),
+      clearIcon: fallbackProp(isPlainObject$1(allowClear) ? allowClear?.clearIcon : clearIcon, isPlainObject$1(contextAllowClear) ? contextAllowClear?.clearIcon : contextClearIcon, /* @__PURE__ */ React$2.createElement(RefIcon$n, null)),
       disabled: (isPlainObject$1(allowClear) ? allowClear?.disabled : void 0) ?? (isPlainObject$1(contextAllowClear) ? contextAllowClear?.disabled : void 0)
     };
   }, [allowClear, clearIcon, contextAllowClear, contextClearIcon, defaultAllowClear]);
@@ -17666,7 +17680,7 @@ const computeClosable = (propCloseCollection, contextCloseCollection, fallbackCl
   const propConfig = computeClosableConfig(propCloseCollection?.closable, propCloseCollection?.closeIcon);
   const contextConfig = computeClosableConfig(contextCloseCollection?.closable, contextCloseCollection?.closeIcon);
   const mergedFallback = {
-    closeIcon: /* @__PURE__ */ React$2.createElement(RefIcon$k, null),
+    closeIcon: /* @__PURE__ */ React$2.createElement(RefIcon$m, null),
     ...fallbackCloseCollection
   };
   const mergedConfig = mergeClosableConfigs(propConfig, contextConfig, mergedFallback);
@@ -17681,7 +17695,7 @@ const useClosable = (propCloseCollection, contextCloseCollection, fallbackCloseC
   const [contextLocale] = useLocale$1("global", localeValues$1.global);
   return React$2.useMemo(() => {
     return computeClosable(propCloseCollection, contextCloseCollection, {
-      closeIcon: /* @__PURE__ */ React$2.createElement(RefIcon$k, null),
+      closeIcon: /* @__PURE__ */ React$2.createElement(RefIcon$m, null),
       ...fallbackCloseCollection
     }, contextLocale.close);
   }, [propCloseCollection, contextCloseCollection, fallbackCloseCollection, contextLocale.close]);
@@ -18201,7 +18215,7 @@ const genNotificationPlacementStyle = (token2) => {
   };
 };
 const DEFAULT_COLLAPSED_STACK_VISIBLE_COUNT = 3;
-const prepareComponentToken$h = (token2) => ({
+const prepareComponentToken$i = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + CONTAINER_MAX_OFFSET + 50,
   width: 384,
   progressBg: `linear-gradient(90deg, ${token2.colorPrimaryBorderHover}, ${token2.colorPrimary})`,
@@ -18335,17 +18349,17 @@ const genNotificationListStyle = (token2, config) => {
     }
   };
 };
-genSubStyleComponent(["Notification", "PurePanel"], (token2) => genPurePanelStyle(prepareNotificationToken(token2)), prepareComponentToken$h);
+genSubStyleComponent(["Notification", "PurePanel"], (token2) => genPurePanelStyle(prepareNotificationToken(token2)), prepareComponentToken$i);
 const sharedGenerateStyle = (token2, config) => {
   const itemStyle = config.itemStyle ?? genNotificationStyle;
   return [genNotificationListStyle(token2, config), itemStyle(token2), genNotificationPlacementStyle(token2)];
 };
-const useStyle$q = genStyleHooks("Notification", (token2) => {
+const useStyle$r = genStyleHooks("Notification", (token2) => {
   const notificationToken = prepareNotificationToken(token2);
   return sharedGenerateStyle(notificationToken, {
     listWidthKey: "width"
   });
-}, prepareComponentToken$h);
+}, prepareComponentToken$i);
 const prepareMessageToken = (token2) => {
   const messagePaddingVertical = token2.calc(token2.controlHeightLG).sub(token2.calc(token2.fontSize).mul(token2.lineHeight)).div(2).equal();
   const messagePaddingHorizontal = token2.paddingSM;
@@ -18356,7 +18370,7 @@ const prepareMessageToken = (token2) => {
     notificationPaddingHorizontal: messagePaddingHorizontal
   });
 };
-const prepareComponentToken$g = (token2) => ({
+const prepareComponentToken$h = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + CONTAINER_MAX_OFFSET + 10,
   contentBg: token2.colorBgElevated,
   contentPadding: `${(token2.controlHeightLG - token2.fontSize * token2.lineHeight) / 2}px ${token2.paddingSM}px`
@@ -18457,23 +18471,23 @@ const generateMessagePurePanelStyle = (token2) => {
     }
   };
 };
-genSubStyleComponent(["Message", "PurePanel"], (token2) => generateMessagePurePanelStyle(prepareMessageToken(token2)), prepareComponentToken$g);
+genSubStyleComponent(["Message", "PurePanel"], (token2) => generateMessagePurePanelStyle(prepareMessageToken(token2)), prepareComponentToken$h);
 const generateMessageStyle = (token2) => ({
   [token2.componentCls]: genMessageItemStyle(token2)
 });
-const useStyle$p = genStyleHooks("Message", (token2) => {
+const useStyle$q = genStyleHooks("Message", (token2) => {
   const messageToken = prepareMessageToken(token2);
   return [sharedGenerateStyle(messageToken, {
     stackVisibleCount: 1,
     itemStyle: generateMessageStyle
   }), generateMessageStackStyle(messageToken)];
-}, prepareComponentToken$g);
+}, prepareComponentToken$h);
 const TypeIcon$1 = {
-  info: /* @__PURE__ */ reactExports.createElement(RefIcon$i, null),
-  success: /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
-  error: /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
-  warning: /* @__PURE__ */ reactExports.createElement(RefIcon$j, null),
-  loading: /* @__PURE__ */ reactExports.createElement(RefIcon$h, null)
+  info: /* @__PURE__ */ reactExports.createElement(RefIcon$k, null),
+  success: /* @__PURE__ */ reactExports.createElement(RefIcon$o, null),
+  error: /* @__PURE__ */ reactExports.createElement(RefIcon$n, null),
+  warning: /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
+  loading: /* @__PURE__ */ reactExports.createElement(RefIcon$j, null)
 };
 const getMessageIcon = (type2, icon) => icon || type2 && TypeIcon$1[type2] || null;
 function getMotion$1(prefixCls, transitionName) {
@@ -18503,7 +18517,7 @@ const Wrapper$1 = ({
   prefixCls
 }) => {
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$p(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$q(prefixCls, rootCls);
   return /* @__PURE__ */ reactExports.createElement(NotificationProvider, {
     classNames: {
       list: clsx(hashId, cssVarCls, rootCls)
@@ -18779,7 +18793,7 @@ const genWaveStyle = (token2) => {
     }
   };
 };
-const useStyle$o = genComponentStyleHook("Wave", genWaveStyle);
+const useStyle$p = genComponentStyleHook("Wave", genWaveStyle);
 const TARGET_CLS = `${defaultPrefixCls}-wave-target`;
 const isValidWaveColor = (color) => {
   if (!color) {
@@ -18971,7 +18985,7 @@ const Wave = (props) => {
   } = reactExports.useContext(ConfigContext);
   const containerRef = reactExports.useRef(null);
   const prefixCls = getPrefixCls("wave");
-  const hashId = useStyle$o(prefixCls);
+  const hashId = useStyle$p(prefixCls);
   const showWave = useWave(containerRef, clsx(prefixCls, hashId), component, colorSource);
   React$2.useEffect(() => {
     const node2 = containerRef.current;
@@ -19035,7 +19049,7 @@ const genSpaceCompactStyle = (token2) => {
     }
   };
 };
-const useStyle$n = genStyleHooks(["Space", "Compact"], genSpaceCompactStyle, () => ({}), {
+const useStyle$o = genStyleHooks(["Space", "Compact"], genSpaceCompactStyle, () => ({}), {
   // Space component don't apply extra font style
   // https://github.com/ant-design/ant-design/issues/40315
   resetStyle: false
@@ -19102,7 +19116,7 @@ const Compact$1 = (props) => {
   const [mergedOrientation, mergedVertical] = useOrientation(orientation, vertical, direction);
   const mergedSize = useSize((ctx) => size ?? ctx);
   const prefixCls = getPrefixCls("space-compact", customizePrefixCls);
-  const [hashId] = useStyle$n(prefixCls);
+  const [hashId] = useStyle$o(prefixCls);
   const clx = clsx(prefixCls, hashId, {
     [`${prefixCls}-rtl`]: directionConfig === "rtl",
     [`${prefixCls}-block`]: block,
@@ -19263,7 +19277,7 @@ const InnerLoadingIcon = /* @__PURE__ */ reactExports.forwardRef((props, ref) =>
     className: mergedIconCls,
     style: style2,
     ref
-  }, /* @__PURE__ */ React$2.createElement(RefIcon$h, {
+  }, /* @__PURE__ */ React$2.createElement(RefIcon$j, {
     className: iconClassName
   }));
 });
@@ -20109,9 +20123,9 @@ let AggregationColor = /* @__PURE__ */ function() {
 var RightOutlined$2 = {};
 Object.defineProperty(RightOutlined$2, "__esModule", { value: true });
 var RightOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z" } }] }, "name": "right", "theme": "outlined" };
-var _default$g = RightOutlined$2.default = RightOutlined$1;
-function _extends$18() {
-  _extends$18 = Object.assign ? Object.assign.bind() : function(target) {
+var _default$i = RightOutlined$2.default = RightOutlined$1;
+function _extends$1b() {
+  _extends$1b = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -20122,21 +20136,21 @@ function _extends$18() {
     }
     return target;
   };
-  return _extends$18.apply(this, arguments);
+  return _extends$1b.apply(this, arguments);
 }
-const RightOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$18({}, props, {
+const RightOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$1b({}, props, {
   ref,
-  icon: _default$g
+  icon: _default$i
 }));
-const RefIcon$g = /* @__PURE__ */ reactExports.forwardRef(RightOutlined);
-function _extends$17() {
-  return _extends$17 = Object.assign ? Object.assign.bind() : function(n2) {
+const RefIcon$i = /* @__PURE__ */ reactExports.forwardRef(RightOutlined);
+function _extends$1a() {
+  return _extends$1a = Object.assign ? Object.assign.bind() : function(n2) {
     for (var e = 1; e < arguments.length; e++) {
       var t2 = arguments[e];
       for (var r2 in t2) ({}).hasOwnProperty.call(t2, r2) && (n2[r2] = t2[r2]);
     }
     return n2;
-  }, _extends$17.apply(null, arguments);
+  }, _extends$1a.apply(null, arguments);
 }
 const generateColor = (color) => {
   if (color instanceof AggregationColor) {
@@ -20171,7 +20185,7 @@ const prepareToken$1 = (token2) => {
   });
   return buttonToken;
 };
-const prepareComponentToken$f = (token2) => {
+const prepareComponentToken$g = (token2) => {
   const contentFontSize = token2.contentFontSize ?? token2.fontSize;
   const contentFontSizeSM = token2.contentFontSizeSM ?? token2.fontSize;
   const contentFontSizeLG = token2.contentFontSizeLG ?? token2.fontSizeLG;
@@ -20701,7 +20715,7 @@ const genBlockButtonStyle = (token2) => {
     }
   };
 };
-const useStyle$m = genStyleHooks("Button", (token2) => {
+const useStyle$n = genStyleHooks("Button", (token2) => {
   const buttonToken = prepareToken$1(token2);
   return [
     // Shared
@@ -20717,7 +20731,7 @@ const useStyle$m = genStyleHooks("Button", (token2) => {
     // Button Group
     genGroupStyle$1(buttonToken)
   ];
-}, prepareComponentToken$f, {
+}, prepareComponentToken$g, {
   unitless: {
     fontWeight: true,
     contentLineHeight: true,
@@ -20905,7 +20919,7 @@ const Compact = genSubStyleComponent(["Button", "compact"], (token2) => {
     genCompactItemVerticalStyle(buttonToken),
     genButtonCompactStyle(buttonToken)
   ];
-}, prepareComponentToken$f);
+}, prepareComponentToken$g);
 function getLoadingConfig(loading) {
   if (isPlainObject$1(loading)) {
     let delay = loading?.delay;
@@ -21005,7 +21019,7 @@ const InternalCompoundedButton = /* @__PURE__ */ React$2.forwardRef((props, ref)
   const mergedColorText = isDanger ? "dangerous" : mergedColor;
   const mergedInsertSpace = autoInsertSpace ?? contextAutoInsertSpace ?? true;
   const prefixCls = getPrefixCls("btn", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$m(prefixCls);
+  const [hashId, cssVarCls] = useStyle$n(prefixCls);
   const disabled = reactExports.useContext(DisabledContext);
   const mergedDisabled = customDisabled ?? disabled;
   const groupSize = reactExports.useContext(GroupSizeContext);
@@ -21352,8 +21366,8 @@ const MemoChildren = /* @__PURE__ */ reactExports.memo(({
 }) => children, (_, {
   shouldUpdate
 }) => !shouldUpdate);
-function _extends$16() {
-  _extends$16 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$19() {
+  _extends$19 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -21364,7 +21378,7 @@ function _extends$16() {
     }
     return target;
   };
-  return _extends$16.apply(this, arguments);
+  return _extends$19.apply(this, arguments);
 }
 const Panel = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   const {
@@ -21446,7 +21460,7 @@ const Panel = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   }, [closable, closeIcon, prefixCls]);
   const ariaProps = pickAttrs(closableObj, true);
   const closeBtnIsDisabled = typeof closable === "object" && closable.disabled;
-  const closerNode = closable ? /* @__PURE__ */ React$2.createElement("button", _extends$16({
+  const closerNode = closable ? /* @__PURE__ */ React$2.createElement("button", _extends$19({
     type: "button",
     onClick: onClose,
     "aria-label": "Close"
@@ -21458,7 +21472,7 @@ const Panel = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   const content = /* @__PURE__ */ React$2.createElement("div", {
     className: clsx(`${prefixCls}-container`, modalClassNames?.container),
     style: modalStyles?.container
-  }, closerNode, headerNode, /* @__PURE__ */ React$2.createElement("div", _extends$16({
+  }, closerNode, headerNode, /* @__PURE__ */ React$2.createElement("div", _extends$19({
     className: clsx(`${prefixCls}-body`, modalClassNames?.body),
     style: {
       ...bodyStyle,
@@ -21486,8 +21500,8 @@ const Panel = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
     shouldUpdate: visible || forceRender
   }, modalRender ? modalRender(content) : content));
 });
-function _extends$15() {
-  _extends$15 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$18() {
+  _extends$18 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -21498,7 +21512,7 @@ function _extends$15() {
     }
     return target;
   };
-  return _extends$15.apply(this, arguments);
+  return _extends$18.apply(this, arguments);
 }
 const Content = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -21545,7 +21559,7 @@ const Content = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, ({
     className: motionClassName,
     style: motionStyle
-  }, motionRef) => /* @__PURE__ */ reactExports.createElement(Panel, _extends$15({}, props, {
+  }, motionRef) => /* @__PURE__ */ reactExports.createElement(Panel, _extends$18({}, props, {
     ref: panelRef,
     title,
     ariaId,
@@ -21559,8 +21573,8 @@ const Content = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     className: clsx(className, motionClassName)
   })));
 });
-function _extends$14() {
-  _extends$14 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$17() {
+  _extends$17 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -21571,7 +21585,7 @@ function _extends$14() {
     }
     return target;
   };
-  return _extends$14.apply(this, arguments);
+  return _extends$17.apply(this, arguments);
 }
 const Mask = (props) => {
   const {
@@ -21590,7 +21604,7 @@ const Mask = (props) => {
   }, ({
     className: motionClassName,
     style: motionStyle
-  }, ref) => /* @__PURE__ */ reactExports.createElement("div", _extends$14({
+  }, ref) => /* @__PURE__ */ reactExports.createElement("div", _extends$17({
     ref,
     style: {
       ...motionStyle,
@@ -21599,8 +21613,8 @@ const Mask = (props) => {
     className: clsx(`${prefixCls}-mask`, motionClassName, className)
   }, maskProps)));
 };
-function _extends$13() {
-  _extends$13 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$16() {
+  _extends$16 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -21611,7 +21625,7 @@ function _extends$13() {
     }
     return target;
   };
-  return _extends$13.apply(this, arguments);
+  return _extends$16.apply(this, arguments);
 }
 const Dialog = (props) => {
   const {
@@ -21714,7 +21728,7 @@ const Dialog = (props) => {
     ...modalStyles?.wrapper,
     display: !animatedVisible ? "none" : null
   };
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$13({
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$16({
     className: clsx(`${prefixCls}-root`, rootClassName),
     style: rootStyle
   }, pickAttrs(props, {
@@ -21730,13 +21744,13 @@ const Dialog = (props) => {
     },
     maskProps,
     className: modalClassNames?.mask
-  }), /* @__PURE__ */ reactExports.createElement("div", _extends$13({
+  }), /* @__PURE__ */ reactExports.createElement("div", _extends$16({
     className: clsx(`${prefixCls}-wrap`, wrapClassName, modalClassNames?.wrapper),
     ref: wrapperRef,
     onClick: onWrapperClick,
     onMouseDown: onWrapperMouseDown,
     style: mergedStyle
-  }, wrapProps), /* @__PURE__ */ reactExports.createElement(Content, _extends$13({}, props, {
+  }, wrapProps), /* @__PURE__ */ reactExports.createElement(Content, _extends$16({}, props, {
     isFixedPos,
     ref: contentRef,
     closable,
@@ -21748,8 +21762,8 @@ const Dialog = (props) => {
     motionName: getMotionName(prefixCls, transitionName, animation)
   }))));
 };
-function _extends$12() {
-  _extends$12 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$15() {
+  _extends$15 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -21760,7 +21774,7 @@ function _extends$12() {
     }
     return target;
   };
-  return _extends$12.apply(this, arguments);
+  return _extends$15.apply(this, arguments);
 }
 const DialogWrap = (props) => {
   const {
@@ -21809,7 +21823,7 @@ const DialogWrap = (props) => {
     autoDestroy: false,
     getContainer: getContainer2,
     autoLock: scrollLock && (visible || animatedVisible)
-  }, /* @__PURE__ */ reactExports.createElement(Dialog, _extends$12({}, restProps, {
+  }, /* @__PURE__ */ reactExports.createElement(Dialog, _extends$15({}, restProps, {
     destroyOnHidden,
     afterClose: () => {
       const closableObj = closable && typeof closable === "object" ? closable : {};
@@ -23175,8 +23189,8 @@ async function delayFrame() {
     });
   });
 }
-function _extends$11() {
-  _extends$11 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$14() {
+  _extends$14 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -23187,7 +23201,7 @@ function _extends$11() {
     }
     return target;
   };
-  return _extends$11.apply(this, arguments);
+  return _extends$14.apply(this, arguments);
 }
 const EMPTY_ERRORS = [];
 const EMPTY_WARNINGS = [];
@@ -23671,7 +23685,7 @@ function WrapperField({
   if (!isMergedListField) {
     key = `_${(namePath || []).join("_")}`;
   }
-  return /* @__PURE__ */ reactExports.createElement(Field, _extends$11({
+  return /* @__PURE__ */ reactExports.createElement(Field, _extends$14({
     key,
     name: namePath,
     isListField: isMergedListField
@@ -24751,8 +24765,8 @@ const FormProvider = ({
     }
   }, children);
 };
-function _extends$10() {
-  _extends$10 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$13() {
+  _extends$13 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -24763,7 +24777,7 @@ function _extends$10() {
     }
     return target;
   };
-  return _extends$10.apply(this, arguments);
+  return _extends$13.apply(this, arguments);
 }
 const Form = (props, ref) => {
   const {
@@ -24863,7 +24877,7 @@ const Form = (props, ref) => {
   if (Component === false) {
     return wrapperNode;
   }
-  return /* @__PURE__ */ reactExports.createElement(Component, _extends$10({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement(Component, _extends$13({}, restProps, {
     ref: nativeElementRef,
     onSubmit: (event) => {
       event.preventDefault();
@@ -25339,7 +25353,7 @@ const genBaseStyle$5 = (token2) => {
     }
   };
 };
-const prepareComponentToken$e = (token2) => {
+const prepareComponentToken$f = (token2) => {
   const {
     colorFillContent,
     colorFill
@@ -25357,7 +25371,7 @@ const prepareComponentToken$e = (token2) => {
     paragraphLiHeight: token2.controlHeight / 2
   };
 };
-const useStyle$l = genStyleHooks("Skeleton", (token2) => {
+const useStyle$m = genStyleHooks("Skeleton", (token2) => {
   const {
     componentCls,
     calc
@@ -25377,7 +25391,7 @@ const useStyle$l = genStyleHooks("Skeleton", (token2) => {
     skeletonLoadingMotionDuration: "1.4s"
   });
   return genBaseStyle$5(skeletonToken);
-}, prepareComponentToken$e, {
+}, prepareComponentToken$f, {
   deprecatedTokens: [["color", "gradientFromColor"], ["colorGradientEnd", "gradientToColor"]]
 });
 const SkeletonAvatar = (props) => {
@@ -25397,7 +25411,7 @@ const SkeletonAvatar = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$l(prefixCls);
+  const [hashId, cssVarCls] = useStyle$m(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active
@@ -25434,7 +25448,7 @@ const SkeletonButton = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$l(prefixCls);
+  const [hashId, cssVarCls] = useStyle$m(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active,
@@ -25470,7 +25484,7 @@ const SkeletonNode = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$l(prefixCls);
+  const [hashId, cssVarCls] = useStyle$m(prefixCls);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active
   }, hashId, classNames?.root, className, rootClassName, cssVarCls);
@@ -25519,7 +25533,7 @@ const SkeletonInput = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$l(prefixCls);
+  const [hashId, cssVarCls] = useStyle$m(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active,
@@ -25652,7 +25666,7 @@ const Skeleton = (props) => {
     styles: contextStyles
   } = useComponentConfig("skeleton");
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$l(prefixCls);
+  const [hashId, cssVarCls] = useStyle$m(prefixCls);
   const mergedProps = {
     ...props,
     avatar,
@@ -25786,7 +25800,7 @@ const NormalOkBtn = () => {
 function renderCloseIcon(prefixCls, closeIcon) {
   return /* @__PURE__ */ React$2.createElement("span", {
     className: `${prefixCls}-close-x`
-  }, closeIcon || /* @__PURE__ */ React$2.createElement(RefIcon$k, {
+  }, closeIcon || /* @__PURE__ */ React$2.createElement(RefIcon$m, {
     className: `${prefixCls}-close-icon`
   }));
 }
@@ -26285,7 +26299,7 @@ const prepareToken = (token2) => {
   });
   return modalToken;
 };
-const prepareComponentToken$d = (token2) => ({
+const prepareComponentToken$e = (token2) => ({
   footerBg: "transparent",
   headerBg: "transparent",
   titleLineHeight: token2.lineHeightHeading5,
@@ -26307,10 +26321,10 @@ const prepareComponentToken$d = (token2) => ({
   confirmBtnsMarginTop: token2.wireframe ? token2.marginLG : token2.marginSM,
   mask: true
 });
-const useStyle$k = genStyleHooks("Modal", (token2) => {
+const useStyle$l = genStyleHooks("Modal", (token2) => {
   const modalToken = prepareToken(token2);
   return [genModalStyle(modalToken), genRTLStyle(modalToken), genModalMaskStyle(modalToken), initZoomMotion(modalToken, "zoom"), genResponsiveWidthStyle(modalToken)];
-}, prepareComponentToken$d, {
+}, prepareComponentToken$e, {
   unitless: {
     titleLineHeight: true
   }
@@ -26408,7 +26422,7 @@ const Modal$1 = (props) => {
     onClose?.();
   };
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$k(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$l(prefixCls, rootCls);
   const wrapClassNameExtended = clsx(wrapClassName, {
     [`${prefixCls}-centered`]: centered ?? contextCentered,
     [`${prefixCls}-wrap-rtl`]: direction === "rtl"
@@ -26428,7 +26442,7 @@ const Modal$1 = (props) => {
   }) : null;
   const [rawClosable, mergedCloseIcon, closeBtnIsDisabled, ariaProps] = useClosable(pickClosable(props), pickClosable(modalContext), {
     closable: true,
-    closeIcon: /* @__PURE__ */ reactExports.createElement(RefIcon$k, {
+    closeIcon: /* @__PURE__ */ reactExports.createElement(RefIcon$m, {
       className: `${prefixCls}-close-icon`
     }),
     closeIconRender: (icon) => renderCloseIcon(prefixCls, icon)
@@ -26629,7 +26643,7 @@ const genModalConfirmStyle = (token2) => {
 const Confirm = genSubStyleComponent(["Modal", "confirm"], (token2) => {
   const modalToken = prepareToken(token2);
   return genModalConfirmStyle(modalToken);
-}, prepareComponentToken$d, {
+}, prepareComponentToken$e, {
   // confirm is weak than modal since no conflict here
   order: -1e3
 });
@@ -26662,16 +26676,16 @@ const ConfirmContent = (props) => {
   if (icon === void 0) {
     switch (type2) {
       case "info":
-        mergedIcon = fallbackProp(infoIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$i, null));
+        mergedIcon = fallbackProp(infoIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$k, null));
         break;
       case "success":
-        mergedIcon = fallbackProp(successIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$m, null));
+        mergedIcon = fallbackProp(successIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$o, null));
         break;
       case "error":
-        mergedIcon = fallbackProp(errorIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$l, null));
+        mergedIcon = fallbackProp(errorIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$n, null));
         break;
       default:
-        mergedIcon = fallbackProp(warningIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$j, null));
+        mergedIcon = fallbackProp(warningIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$l, null));
     }
   }
   const mergedOkCancel = okCancel ?? type2 === "confirm";
@@ -27113,17 +27127,17 @@ function useModal() {
   })];
 }
 const TypeIcon = {
-  info: /* @__PURE__ */ reactExports.createElement(RefIcon$i, null),
-  success: /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
-  error: /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
-  warning: /* @__PURE__ */ reactExports.createElement(RefIcon$j, null),
-  loading: /* @__PURE__ */ reactExports.createElement(RefIcon$h, null)
+  info: /* @__PURE__ */ reactExports.createElement(RefIcon$k, null),
+  success: /* @__PURE__ */ reactExports.createElement(RefIcon$o, null),
+  error: /* @__PURE__ */ reactExports.createElement(RefIcon$n, null),
+  warning: /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
+  loading: /* @__PURE__ */ reactExports.createElement(RefIcon$j, null)
 };
 function getCloseIcon(prefixCls, closeIcon) {
   if (closeIcon === null || closeIcon === false) {
     return null;
   }
-  return closeIcon || /* @__PURE__ */ reactExports.createElement(RefIcon$k, {
+  return closeIcon || /* @__PURE__ */ reactExports.createElement(RefIcon$m, {
     className: `${prefixCls}-close-icon`
   });
 }
@@ -27137,7 +27151,7 @@ const Wrapper = ({
   prefixCls
 }) => {
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$q(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$r(prefixCls, rootCls);
   return /* @__PURE__ */ React$2.createElement(NotificationProvider, {
     classNames: {
       list: clsx(hashId, cssVarCls, rootCls)
@@ -27351,8 +27365,8 @@ const genBaseStyle$4 = (token2) => {
     }
   };
 };
-const prepareComponentToken$c = () => ({});
-const useStyle$j = genStyleHooks("App", genBaseStyle$4, prepareComponentToken$c);
+const prepareComponentToken$d = () => ({});
+const useStyle$k = genStyleHooks("App", genBaseStyle$4, prepareComponentToken$d);
 const App$2 = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   const {
     prefixCls: customizePrefixCls,
@@ -27371,7 +27385,7 @@ const App$2 = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
     style: contextStyle
   } = useComponentConfig("app");
   const prefixCls = getPrefixCls("app", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$j(prefixCls);
+  const [hashId, cssVarCls] = useStyle$k(prefixCls);
   const customClassName = clsx(hashId, prefixCls, className, rootClassName, cssVarCls, {
     [`${prefixCls}-rtl`]: direction === "rtl"
   });
@@ -27566,8 +27580,8 @@ function useSelectTriggerControl(elements, open, triggerOpen, customizedTrigger)
     return () => window.removeEventListener("mousedown", onGlobalMouseDown);
   }, [onGlobalMouseDown]);
 }
-function _extends$$() {
-  _extends$$ = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$12() {
+  _extends$12 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -27578,7 +27592,7 @@ function _extends$$() {
     }
     return target;
   };
-  return _extends$$.apply(this, arguments);
+  return _extends$12.apply(this, arguments);
 }
 const getBuiltInPlacements$1 = (popupMatchSelectWidth) => {
   const adjustX = popupMatchSelectWidth === true ? 0 : 1;
@@ -27668,7 +27682,7 @@ const SelectTrigger = (props, ref) => {
   reactExports.useImperativeHandle(ref, () => ({
     getPopupElement: () => triggerPopupRef.current?.popupElement
   }));
-  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$$({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$12({}, restProps, {
     showAction: onPopupVisibleChange ? ["click"] : [],
     hideAction: onPopupVisibleChange ? ["click"] : [],
     popupPlacement: placement || (direction === "rtl" ? "bottomRight" : "bottomLeft"),
@@ -28104,8 +28118,8 @@ function getTitle(item) {
   }
   return title;
 }
-function _extends$_() {
-  _extends$_ = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$11() {
+  _extends$11 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -28116,7 +28130,7 @@ function _extends$_() {
     }
     return target;
   };
-  return _extends$_.apply(this, arguments);
+  return _extends$11.apply(this, arguments);
 }
 const SingleContent = /* @__PURE__ */ reactExports.forwardRef(({
   inputProps
@@ -28191,7 +28205,7 @@ const SingleContent = /* @__PURE__ */ reactExports.forwardRef(({
     className: clsx(`${prefixCls}-content`, showHasValueCls && `${prefixCls}-content-has-value`, mergedSearchValue && `${prefixCls}-content-has-search-value`, hasOptionStyle && `${prefixCls}-content-has-option-style`, classNames?.content),
     style: styles?.content,
     title: hasOptionStyle ? void 0 : optionTitle
-  }, renderValue, /* @__PURE__ */ reactExports.createElement(Input$4, _extends$_({
+  }, renderValue, /* @__PURE__ */ reactExports.createElement(Input$4, _extends$11({
     ref
   }, inputProps, {
     value: mergedSearchValue,
@@ -28246,7 +28260,7 @@ function InternalItem(props, ref) {
   if (mergedHidden) {
     overflowProps["aria-hidden"] = true;
   }
-  let itemNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$17({
+  let itemNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$1a({
     className: clsx(!invalidate && prefixCls, className),
     style: {
       ...overflowStyle,
@@ -28312,7 +28326,7 @@ const InternalRawItem = (props, ref) => {
       component: Component = "div",
       ...restProps2
     } = props;
-    return /* @__PURE__ */ reactExports.createElement(Component, _extends$17({}, restProps2, {
+    return /* @__PURE__ */ reactExports.createElement(Component, _extends$1a({}, restProps2, {
       ref
     }));
   }
@@ -28326,7 +28340,7 @@ const InternalRawItem = (props, ref) => {
   } = props;
   return /* @__PURE__ */ reactExports.createElement(OverflowContext.Provider, {
     value: null
-  }, /* @__PURE__ */ reactExports.createElement(Item$3, _extends$17({
+  }, /* @__PURE__ */ reactExports.createElement(Item$3, _extends$1a({
     ref,
     className: clsx(contextClassName, className)
   }, restContext, restProps)));
@@ -28514,7 +28528,7 @@ function Overflow(props, ref) {
     }, renderRawItem(item, index));
   } : (item, index) => {
     const key = getKey2(item, index);
-    return /* @__PURE__ */ reactExports.createElement(Item$3, _extends$17({}, itemSharedProps, {
+    return /* @__PURE__ */ reactExports.createElement(Item$3, _extends$1a({}, itemSharedProps, {
       order: index,
       key,
       item,
@@ -28536,19 +28550,19 @@ function Overflow(props, ref) {
       ...itemSharedProps,
       ...restContextProps
     }
-  }, renderRawRest(omittedItems)) : /* @__PURE__ */ reactExports.createElement(Item$3, _extends$17({}, itemSharedProps, restContextProps), typeof mergedRenderRest === "function" ? mergedRenderRest(omittedItems) : mergedRenderRest);
-  const overflowNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$17({
+  }, renderRawRest(omittedItems)) : /* @__PURE__ */ reactExports.createElement(Item$3, _extends$1a({}, itemSharedProps, restContextProps), typeof mergedRenderRest === "function" ? mergedRenderRest(omittedItems) : mergedRenderRest);
+  const overflowNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$1a({
     className: clsx(!invalidate && prefixCls, className),
     style: style2,
     ref
-  }, restProps), prefix2 && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$17({}, itemSharedProps, {
+  }, restProps), prefix2 && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$1a({}, itemSharedProps, {
     responsive: isResponsive,
     responsiveDisabled: !shouldResponsive,
     order: -1,
     className: `${itemPrefixCls}-prefix`,
     registerSize: registerPrefixSize,
     display: true
-  }), prefix2), mergedData.map(internalRenderItemNode), showRest ? restNode : null, suffix && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$17({}, itemSharedProps, {
+  }), prefix2), mergedData.map(internalRenderItemNode), showRest ? restNode : null, suffix && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$1a({}, itemSharedProps, {
     responsive: isResponsive,
     responsiveDisabled: !shouldResponsive,
     order: mergedDisplayCount,
@@ -28595,8 +28609,8 @@ const TransBtn = (props) => {
     className: clsx(className.split(/\s+/).map((cls) => `${cls}-icon`))
   }, children));
 };
-function _extends$Z() {
-  _extends$Z = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$10() {
+  _extends$10 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -28607,7 +28621,7 @@ function _extends$Z() {
     }
     return target;
   };
-  return _extends$Z.apply(this, arguments);
+  return _extends$10.apply(this, arguments);
 }
 function itemKey(value) {
   return value.key ?? value.value;
@@ -28731,7 +28745,7 @@ const MultipleContent = /* @__PURE__ */ reactExports.forwardRef(function Multipl
     data: displayValues,
     renderItem,
     renderRest,
-    suffix: /* @__PURE__ */ reactExports.createElement(Input$4, _extends$Z({
+    suffix: /* @__PURE__ */ reactExports.createElement(Input$4, _extends$10({
       ref,
       disabled,
       readOnly: !inputEditable
@@ -28814,8 +28828,8 @@ function isValidateOpenKey(currentKeyCode) {
     ].includes(currentKeyCode)
   );
 }
-function _extends$Y() {
-  _extends$Y = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$$() {
+  _extends$$ = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -28826,7 +28840,7 @@ function _extends$Y() {
     }
     return target;
   };
-  return _extends$Y.apply(this, arguments);
+  return _extends$$.apply(this, arguments);
 }
 const DEFAULT_OMIT_PROPS = ["value", "onChange", "removeIcon", "placeholder", "maxTagCount", "maxTagTextLength", "maxTagPlaceholder", "choiceTransitionName", "onInputKeyDown", "onPopupScroll", "tabIndex", "activeValue", "onSelectorRemove", "focused"];
 const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput2(props, ref) {
@@ -28962,13 +28976,13 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
         ref: composeRef(RootComponent.ref, rootRef)
       });
     }
-    return /* @__PURE__ */ reactExports.createElement(RootComponent, _extends$Y({}, mergedProps, {
+    return /* @__PURE__ */ reactExports.createElement(RootComponent, _extends$$({}, mergedProps, {
       ref: rootRef
     }));
   }
   return /* @__PURE__ */ reactExports.createElement(SelectInputContext.Provider, {
     value: contextValue
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$Y({}, omit(domProps, ariaKeys), {
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$$({}, omit(domProps, ariaKeys), {
     // Style
     ref: rootRef,
     className,
@@ -29011,8 +29025,8 @@ function useComponents$1(components, getInputElement, getRawInputElement) {
     };
   }, [components, getInputElement, getRawInputElement]);
 }
-function _extends$X() {
-  _extends$X = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$_() {
+  _extends$_ = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -29023,7 +29037,7 @@ function _extends$X() {
     }
     return target;
   };
-  return _extends$X.apply(this, arguments);
+  return _extends$_.apply(this, arguments);
 }
 const isMultiple = (mode) => mode === "tags" || mode === "multiple";
 const BaseSelect = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -29361,7 +29375,7 @@ const BaseSelect = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     [`${prefixCls}-customize-input`]: customizeInputElement,
     [`${prefixCls}-show-search`]: showSearch
   });
-  let renderNode = /* @__PURE__ */ reactExports.createElement(SelectInput, _extends$X({}, restProps, {
+  let renderNode = /* @__PURE__ */ reactExports.createElement(SelectInput, _extends$_({}, restProps, {
     // Ref
     ref: containerRef,
     prefixCls,
@@ -29423,8 +29437,8 @@ const OptGroup = () => null;
 OptGroup.isSelectOptGroup = true;
 const Option = () => null;
 Option.isSelectOption = true;
-function _extends$W() {
-  _extends$W = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$Z() {
+  _extends$Z = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -29435,7 +29449,7 @@ function _extends$W() {
     }
     return target;
   };
-  return _extends$W.apply(this, arguments);
+  return _extends$Z.apply(this, arguments);
 }
 const Filler = /* @__PURE__ */ reactExports.forwardRef(({
   height,
@@ -29479,7 +29493,7 @@ const Filler = /* @__PURE__ */ reactExports.forwardRef(({
         onInnerResize();
       }
     }
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$W({
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$Z({
     style: innerStyle,
     className: clsx({
       [`${prefixCls}-holder-inner`]: prefixCls
@@ -30336,8 +30350,8 @@ function getSpinSize(containerSize = 0, scrollRange = 0) {
   baseSize = Math.max(baseSize, MIN_SIZE);
   return Math.floor(baseSize);
 }
-function _extends$V() {
-  _extends$V = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$Y() {
+  _extends$Y = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -30348,7 +30362,7 @@ function _extends$V() {
     }
     return target;
   };
-  return _extends$V.apply(this, arguments);
+  return _extends$Y.apply(this, arguments);
 }
 const EMPTY_DATA = [];
 const ScrollStyle = {
@@ -30714,7 +30728,7 @@ function RawList(props, ref) {
   if (isRTL) {
     containerProps.dir = "rtl";
   }
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$V({
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$Y({
     ref: containerRef,
     style: {
       ...style2,
@@ -30781,8 +30795,8 @@ List$1.displayName = "List";
 function isPlatformMac() {
   return /(mac\sos|macintosh)/i.test(navigator.appVersion);
 }
-function _extends$U() {
-  _extends$U = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$X() {
+  _extends$X = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -30793,7 +30807,7 @@ function _extends$U() {
     }
     return target;
   };
-  return _extends$U.apply(this, arguments);
+  return _extends$X.apply(this, arguments);
 }
 function isTitleType(content) {
   return typeof content === "string" || typeof content === "number";
@@ -31006,7 +31020,7 @@ const OptionList = (_, ref) => {
     } = item;
     const attrs = pickAttrs(itemData, true);
     const mergedLabel = getLabel(item);
-    return item ? /* @__PURE__ */ reactExports.createElement("div", _extends$U({
+    return item ? /* @__PURE__ */ reactExports.createElement("div", _extends$X({
       "aria-label": typeof mergedLabel === "string" && !group ? mergedLabel : null
     }, attrs, {
       key: index
@@ -31019,7 +31033,7 @@ const OptionList = (_, ref) => {
     role: "listbox",
     id: `${id2}_list`
   };
-  return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, virtual && /* @__PURE__ */ reactExports.createElement("div", _extends$U({}, a11yProps, {
+  return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, virtual && /* @__PURE__ */ reactExports.createElement("div", _extends$X({}, a11yProps, {
     style: {
       height: 0,
       width: 0,
@@ -31083,7 +31097,7 @@ const OptionList = (_, ref) => {
     if (title !== void 0) {
       optionTitle = title;
     }
-    return /* @__PURE__ */ reactExports.createElement("div", _extends$U({}, pickAttrs(passedProps), !virtual ? getItemAriaProps(item, itemIndex) : {}, {
+    return /* @__PURE__ */ reactExports.createElement("div", _extends$X({}, pickAttrs(passedProps), !virtual ? getItemAriaProps(item, itemIndex) : {}, {
       "aria-selected": virtual ? void 0 : isAriaSelected(value),
       "aria-disabled": mergedDisabled,
       className: optionClassName,
@@ -31310,8 +31324,8 @@ function useSearchConfig(showSearch, props, mode) {
     return [isObject2 || mode === "combobox" || mode === "tags" || mode === "multiple" && showSearch === void 0 ? true : showSearch, searchConfig];
   }, [mode, showSearch, filterOption, searchValue, optionFilterProp, filterSort, onSearch, autoClearSearchValue]);
 }
-function _extends$T() {
-  _extends$T = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$W() {
+  _extends$W = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -31322,7 +31336,7 @@ function _extends$T() {
     }
     return target;
   };
-  return _extends$T.apply(this, arguments);
+  return _extends$W.apply(this, arguments);
 }
 const OMIT_DOM_PROPS = ["inputValue"];
 function isRawValue(value) {
@@ -31687,7 +31701,7 @@ const Select$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, [maxCount, parsedOptions, displayOptions, onActiveValue, mergedDefaultActiveFirstOption, onInternalSelect, menuItemSelectedIcon, rawValues, mergedFieldNames, virtual, popupMatchSelectWidth, direction, listHeight, listItemHeight, childrenAsData, optionRender, classNames, styles]);
   return /* @__PURE__ */ reactExports.createElement(SelectContext.Provider, {
     value: selectContext
-  }, /* @__PURE__ */ reactExports.createElement(BaseSelect, _extends$T({}, restProps, {
+  }, /* @__PURE__ */ reactExports.createElement(BaseSelect, _extends$W({}, restProps, {
     // >>> MISC
     id: mergedId,
     prefixCls,
@@ -31901,7 +31915,7 @@ const genSharedEmptyStyle = (token2) => {
     }
   };
 };
-const useStyle$i = genStyleHooks("Empty", (token2) => {
+const useStyle$j = genStyleHooks("Empty", (token2) => {
   const {
     componentCls,
     controlHeightLG,
@@ -31941,7 +31955,7 @@ const Empty = (props) => {
     image: contextImage
   } = useComponentConfig("empty");
   const prefixCls = getPrefixCls("empty", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$i(prefixCls);
+  const [hashId, cssVarCls] = useStyle$j(prefixCls);
   const contextStyleRoot = useSemanticRootStyle(contextStyle);
   const styleRoot = useSemanticRootStyle(style2);
   const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, contextStyleRoot, styles, styleRoot], {
@@ -32772,7 +32786,7 @@ const genSelectInputStyle = (token2) => {
     ]
   };
 };
-const prepareComponentToken$b = (token2) => {
+const prepareComponentToken$c = (token2) => {
   const {
     fontSize,
     lineHeight,
@@ -32956,7 +32970,7 @@ const useSelectStyle = genStyleHooks("Select", (token2, {
     selectHeight: token2.controlHeight
   });
   return [genSelectStyle(selectToken), genSelectInputStyle(selectToken)];
-}, prepareComponentToken$b, {
+}, prepareComponentToken$c, {
   unitless: {
     optionLineHeight: true,
     optionSelectedFontWeight: true
@@ -32965,9 +32979,9 @@ const useSelectStyle = genStyleHooks("Select", (token2, {
 var CheckOutlined$2 = {};
 Object.defineProperty(CheckOutlined$2, "__esModule", { value: true });
 var CheckOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z" } }] }, "name": "check", "theme": "outlined" };
-var _default$f = CheckOutlined$2.default = CheckOutlined$1;
-function _extends$S() {
-  _extends$S = Object.assign ? Object.assign.bind() : function(target) {
+var _default$h = CheckOutlined$2.default = CheckOutlined$1;
+function _extends$V() {
+  _extends$V = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -32978,19 +32992,19 @@ function _extends$S() {
     }
     return target;
   };
-  return _extends$S.apply(this, arguments);
+  return _extends$V.apply(this, arguments);
 }
-const CheckOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$S({}, props, {
+const CheckOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$V({}, props, {
   ref,
-  icon: _default$f
+  icon: _default$h
 }));
-const RefIcon$f = /* @__PURE__ */ reactExports.forwardRef(CheckOutlined);
+const RefIcon$h = /* @__PURE__ */ reactExports.forwardRef(CheckOutlined);
 var DownOutlined$2 = {};
 Object.defineProperty(DownOutlined$2, "__esModule", { value: true });
 var DownOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" } }] }, "name": "down", "theme": "outlined" };
-var _default$e = DownOutlined$2.default = DownOutlined$1;
-function _extends$R() {
-  _extends$R = Object.assign ? Object.assign.bind() : function(target) {
+var _default$g = DownOutlined$2.default = DownOutlined$1;
+function _extends$U() {
+  _extends$U = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -33001,19 +33015,19 @@ function _extends$R() {
     }
     return target;
   };
-  return _extends$R.apply(this, arguments);
+  return _extends$U.apply(this, arguments);
 }
-const DownOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$R({}, props, {
+const DownOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$U({}, props, {
   ref,
-  icon: _default$e
+  icon: _default$g
 }));
-const RefIcon$e = /* @__PURE__ */ reactExports.forwardRef(DownOutlined);
+const RefIcon$g = /* @__PURE__ */ reactExports.forwardRef(DownOutlined);
 var SearchOutlined$2 = {};
 Object.defineProperty(SearchOutlined$2, "__esModule", { value: true });
 var SearchOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" } }] }, "name": "search", "theme": "outlined" };
-var _default$d = SearchOutlined$2.default = SearchOutlined$1;
-function _extends$Q() {
-  _extends$Q = Object.assign ? Object.assign.bind() : function(target) {
+var _default$f = SearchOutlined$2.default = SearchOutlined$1;
+function _extends$T() {
+  _extends$T = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -33024,13 +33038,13 @@ function _extends$Q() {
     }
     return target;
   };
-  return _extends$Q.apply(this, arguments);
+  return _extends$T.apply(this, arguments);
 }
-const SearchOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$Q({}, props, {
+const SearchOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$T({}, props, {
   ref,
-  icon: _default$d
+  icon: _default$f
 }));
-const RefIcon$d = /* @__PURE__ */ reactExports.forwardRef(SearchOutlined);
+const RefIcon$f = /* @__PURE__ */ reactExports.forwardRef(SearchOutlined);
 function useIcons$1({
   suffixIcon,
   contextSuffixIcon,
@@ -33053,7 +33067,7 @@ function useIcons$1({
   componentName
 }) {
   return reactExports.useMemo(() => {
-    const mergedClearIcon = fallbackProp(clearIcon, contextClearIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$l, null));
+    const mergedClearIcon = fallbackProp(clearIcon, contextClearIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$n, null));
     const getSuffixIconNode = (arrowIcon) => {
       if (suffixIcon === null && !hasFeedback && !showArrow) {
         return null;
@@ -33064,7 +33078,7 @@ function useIcons$1({
     if (suffixIcon !== void 0) {
       mergedSuffixIcon = getSuffixIconNode(suffixIcon);
     } else if (loading) {
-      mergedSuffixIcon = getSuffixIconNode(fallbackProp(loadingIcon, contextLoadingIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$h, {
+      mergedSuffixIcon = getSuffixIconNode(fallbackProp(loadingIcon, contextLoadingIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$j, {
         spin: true
       })));
     } else {
@@ -33073,13 +33087,13 @@ function useIcons$1({
         showSearch
       }) => {
         if (open && showSearch) {
-          return getSuffixIconNode(fallbackProp(searchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$d, null)));
+          return getSuffixIconNode(fallbackProp(searchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$f, null)));
         }
-        return getSuffixIconNode(fallbackProp(contextSuffixIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$e, null)));
+        return getSuffixIconNode(fallbackProp(contextSuffixIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$g, null)));
       };
     }
-    const mergedItemIcon = fallbackProp(menuItemSelectedIcon, contextMenuItemSelectedIcon, multiple ? /* @__PURE__ */ reactExports.createElement(RefIcon$f, null) : null);
-    const mergedRemoveIcon = fallbackProp(removeIcon, contextRemoveIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$k, null));
+    const mergedItemIcon = fallbackProp(menuItemSelectedIcon, contextMenuItemSelectedIcon, multiple ? /* @__PURE__ */ reactExports.createElement(RefIcon$h, null) : null);
+    const mergedRemoveIcon = fallbackProp(removeIcon, contextRemoveIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$m, null));
     return {
       clearIcon: mergedClearIcon,
       suffixIcon: mergedSuffixIcon,
@@ -33432,8 +33446,8 @@ const placements$2 = {
     targetOffset: targetOffset$1
   }
 };
-function _extends$P() {
-  _extends$P = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$S() {
+  _extends$S = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -33444,7 +33458,7 @@ function _extends$P() {
     }
     return target;
   };
-  return _extends$P.apply(this, arguments);
+  return _extends$S.apply(this, arguments);
 }
 const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -33502,7 +33516,7 @@ const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     };
     return /* @__PURE__ */ reactExports.cloneElement(child, ariaProps);
   };
-  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$P({
+  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$S({
     popupClassName: classNames?.root,
     prefixCls,
     popup: /* @__PURE__ */ reactExports.createElement(Popup$1, {
@@ -34070,7 +34084,7 @@ const genTooltipStyle = (token2) => {
     }
   ];
 };
-const prepareComponentToken$a = (token2) => ({
+const prepareComponentToken$b = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + 70,
   maxWidth: 250,
   ...getArrowOffsetToken({
@@ -34081,7 +34095,7 @@ const prepareComponentToken$a = (token2) => ({
     borderRadiusOuter: Math.min(token2.borderRadiusOuter, 4)
   }))
 });
-const useStyle$h = (prefixCls, rootCls, injectStyle = true) => {
+const useStyle$i = (prefixCls, rootCls, injectStyle = true) => {
   const useStyle2 = genStyleHooks("Tooltip", (token2) => {
     const {
       borderRadius,
@@ -34097,7 +34111,7 @@ const useStyle$h = (prefixCls, rootCls, injectStyle = true) => {
       tooltipBg: colorBgSpotlight
     });
     return [genTooltipStyle(TooltipToken), initZoomMotion(token2, "zoom-big-fast")];
-  }, prepareComponentToken$a, {
+  }, prepareComponentToken$b, {
     resetStyle: false,
     // Popover use Tooltip as internal component. We do not need to handle this.
     injectStyle
@@ -34150,7 +34164,7 @@ const PurePanel$6 = (props) => {
   const prefixCls = getPrefixCls("tooltip", customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$h(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$i(prefixCls, rootCls);
   const colorInfo = parseColor(rootPrefixCls, prefixCls, color);
   const arrowContentStyle = colorInfo.arrowStyle;
   const innerStyles = reactExports.useMemo(() => {
@@ -34293,7 +34307,7 @@ const InternalTooltip = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   const childProps = child.props;
   const childCls = !childProps.className || typeof childProps.className === "string" ? clsx(childProps.className, openClassName || `${prefixCls}-open`) : childProps.className;
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$h(prefixCls, rootCls, !injectFromPopover);
+  const [hashId, cssVarCls] = useStyle$i(prefixCls, rootCls, !injectFromPopover);
   const colorInfo = parseColor(rootPrefixCls, prefixCls, color);
   const arrowContentStyle = colorInfo.arrowStyle;
   const themeCls = clsx(rootCls, hashId, cssVarCls);
@@ -34470,7 +34484,7 @@ const genColorStyle = (token2) => {
     })
   };
 };
-const prepareComponentToken$9 = (token2) => {
+const prepareComponentToken$a = (token2) => {
   const {
     lineWidth,
     controlHeight,
@@ -34504,7 +34518,7 @@ const prepareComponentToken$9 = (token2) => {
     innerContentPadding: wireframe ? `${paddingSM}px ${popoverPaddingHorizontal}px` : 0
   };
 };
-const useStyle$g = genStyleHooks("Popover", (token2) => {
+const useStyle$h = genStyleHooks("Popover", (token2) => {
   const {
     colorBgElevated,
     colorText
@@ -34514,7 +34528,7 @@ const useStyle$g = genStyleHooks("Popover", (token2) => {
     popoverColor: colorText
   });
   return [genBaseStyle$2(popoverToken), genColorStyle(popoverToken), initZoomMotion(popoverToken, "zoom-big")];
-}, prepareComponentToken$9, {
+}, prepareComponentToken$a, {
   resetStyle: false,
   deprecatedTokens: [["width", "titleMinWidth"], ["minWidth", "titleMinWidth"]]
 });
@@ -34589,7 +34603,7 @@ const PurePanel$5 = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("popover", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$g(prefixCls);
+  const [hashId, cssVarCls] = useStyle$h(prefixCls);
   return /* @__PURE__ */ reactExports.createElement(RawPurePanel, {
     ...restProps,
     prefixCls,
@@ -34626,7 +34640,7 @@ const InternalPopover = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     trigger: contextTrigger
   } = useComponentConfig("popover");
   const prefixCls = getPrefixCls("popover", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$g(prefixCls);
+  const [hashId, cssVarCls] = useStyle$h(prefixCls);
   const rootPrefixCls = getPrefixCls();
   const mergedArrow = useMergedArrow(popoverArrow, contextArrow);
   const mergedTrigger = trigger || contextTrigger || "hover";
@@ -34695,9 +34709,9 @@ Popover._InternalPanelDoNotUseOrYouWillBeFired = PurePanel$5;
 var LeftOutlined$2 = {};
 Object.defineProperty(LeftOutlined$2, "__esModule", { value: true });
 var LeftOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z" } }] }, "name": "left", "theme": "outlined" };
-var _default$c = LeftOutlined$2.default = LeftOutlined$1;
-function _extends$O() {
-  _extends$O = Object.assign ? Object.assign.bind() : function(target) {
+var _default$e = LeftOutlined$2.default = LeftOutlined$1;
+function _extends$R() {
+  _extends$R = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -34708,13 +34722,13 @@ function _extends$O() {
     }
     return target;
   };
-  return _extends$O.apply(this, arguments);
+  return _extends$R.apply(this, arguments);
 }
-const LeftOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$O({}, props, {
+const LeftOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$R({}, props, {
   ref,
-  icon: _default$c
+  icon: _default$e
 }));
-const RefIcon$c = /* @__PURE__ */ reactExports.forwardRef(LeftOutlined);
+const RefIcon$e = /* @__PURE__ */ reactExports.forwardRef(LeftOutlined);
 const {
   ESC: ESC$1,
   TAB
@@ -34841,8 +34855,8 @@ const placements$1 = {
     targetOffset
   }
 };
-function _extends$N() {
-  _extends$N = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$Q() {
+  _extends$Q = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -34853,7 +34867,7 @@ function _extends$N() {
     }
     return target;
   };
-  return _extends$N.apply(this, arguments);
+  return _extends$Q.apply(this, arguments);
 }
 const Dropdown$2 = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   const {
@@ -34952,7 +34966,7 @@ const Dropdown$2 = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   if (!triggerHideAction && trigger.indexOf("contextMenu") !== -1) {
     triggerHideAction = ["click"];
   }
-  return /* @__PURE__ */ React$2.createElement(Trigger, _extends$N({
+  return /* @__PURE__ */ React$2.createElement(Trigger, _extends$Q({
     builtinPlacements: placements2
   }, otherProps, {
     prefixCls,
@@ -35407,8 +35421,8 @@ function warnItemProp({
   });
   return restInfo;
 }
-function _extends$M() {
-  _extends$M = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$P() {
+  _extends$P = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -35419,7 +35433,7 @@ function _extends$M() {
     }
     return target;
   };
-  return _extends$M.apply(this, arguments);
+  return _extends$P.apply(this, arguments);
 }
 class LegacyMenuItem extends reactExports.Component {
   render() {
@@ -35431,7 +35445,7 @@ class LegacyMenuItem extends reactExports.Component {
     } = this.props;
     const passedProps = omit(restProps, ["eventKey", "popupClassName", "popupOffset", "onTitleClick"]);
     warningOnce$1(!attribute, "`attribute` of Menu.Item is deprecated. Please pass attribute directly.");
-    return /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$M({}, attribute, {
+    return /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$P({}, attribute, {
       title: typeof title === "string" ? title : void 0
     }, passedProps, {
       ref: elementRef
@@ -35528,7 +35542,7 @@ const InternalMenuItem = /* @__PURE__ */ reactExports.forwardRef((props, ref) =>
   if (props.role === "option") {
     optionRoleProps["aria-selected"] = selected;
   }
-  let renderNode = /* @__PURE__ */ reactExports.createElement(LegacyMenuItem, _extends$M({
+  let renderNode = /* @__PURE__ */ reactExports.createElement(LegacyMenuItem, _extends$P({
     ref: legacyMenuItemRef,
     elementRef: mergedEleRef,
     role: role === null ? "none" : role || "menuitem",
@@ -35580,13 +35594,13 @@ function MenuItem$1(props, ref) {
   if (measure) {
     return null;
   }
-  return /* @__PURE__ */ reactExports.createElement(InternalMenuItem, _extends$M({}, props, {
+  return /* @__PURE__ */ reactExports.createElement(InternalMenuItem, _extends$P({}, props, {
     ref
   }));
 }
 const MenuItem$2 = /* @__PURE__ */ reactExports.forwardRef(MenuItem$1);
-function _extends$L() {
-  _extends$L = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$O() {
+  _extends$O = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -35597,7 +35611,7 @@ function _extends$L() {
     }
     return target;
   };
-  return _extends$L.apply(this, arguments);
+  return _extends$O.apply(this, arguments);
 }
 const InternalSubMenuList = ({
   className,
@@ -35609,7 +35623,7 @@ const InternalSubMenuList = ({
     mode,
     rtl
   } = reactExports.useContext(MenuContext$1);
-  return /* @__PURE__ */ reactExports.createElement("ul", _extends$L({
+  return /* @__PURE__ */ reactExports.createElement("ul", _extends$O({
     className: clsx(prefixCls, rtl && `${prefixCls}-rtl`, `${prefixCls}-sub`, `${prefixCls}-${mode === "inline" ? "inline" : "vertical"}`, className),
     role: "menu"
   }, restProps, {
@@ -35803,8 +35817,8 @@ function PopupTrigger({
     fresh: true
   }, children);
 }
-function _extends$K() {
-  _extends$K = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$N() {
+  _extends$N = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -35815,7 +35829,7 @@ function _extends$K() {
     }
     return target;
   };
-  return _extends$K.apply(this, arguments);
+  return _extends$N.apply(this, arguments);
 }
 function InlineSubMenuList({
   id: id2,
@@ -35859,7 +35873,7 @@ function InlineSubMenuList({
   return /* @__PURE__ */ reactExports.createElement(InheritableContextProvider, {
     mode: fixedMode,
     locked: !sameModeRef.current
-  }, /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$K({
+  }, /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$N({
     visible: mergedOpen
   }, mergedMotion, {
     forceRender: forceSubMenuRender,
@@ -35876,8 +35890,8 @@ function InlineSubMenuList({
     }, children);
   }));
 }
-function _extends$J() {
-  _extends$J = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$M() {
+  _extends$M = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -35888,7 +35902,7 @@ function _extends$J() {
     }
     return target;
   };
-  return _extends$J.apply(this, arguments);
+  return _extends$M.apply(this, arguments);
 }
 const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -36026,7 +36040,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   }, /* @__PURE__ */ reactExports.createElement("i", {
     className: `${subMenuPrefixCls}-arrow`
   })), [mode, mergedExpandIcon, props, open, subMenuPrefixCls]);
-  let titleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$J({
+  let titleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$M({
     role: "menuitem",
     style: directionStyle,
     className: `${subMenuPrefixCls}-title`,
@@ -36081,7 +36095,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
       onVisibleChange: onPopupVisibleChange
     }, titleNode);
   }
-  let listNode = /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$J({
+  let listNode = /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$M({
     ref,
     role: "none"
   }, restProps, {
@@ -36137,7 +36151,7 @@ const SubMenu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   if (measure) {
     renderNode = childList;
   } else {
-    renderNode = /* @__PURE__ */ reactExports.createElement(InternalSubMenu, _extends$J({
+    renderNode = /* @__PURE__ */ reactExports.createElement(InternalSubMenu, _extends$M({
       ref
     }, props), childList);
   }
@@ -36162,8 +36176,8 @@ function Divider({
     style: style2
   });
 }
-function _extends$I() {
-  _extends$I = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$L() {
+  _extends$L = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -36174,7 +36188,7 @@ function _extends$I() {
     }
     return target;
   };
-  return _extends$I.apply(this, arguments);
+  return _extends$L.apply(this, arguments);
 }
 const InternalMenuItemGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -36190,7 +36204,7 @@ const InternalMenuItemGroup = /* @__PURE__ */ reactExports.forwardRef((props, re
     styles
   } = reactExports.useContext(MenuContext$1);
   const groupPrefixCls = `${prefixCls}-item-group`;
-  return /* @__PURE__ */ reactExports.createElement("li", _extends$I({
+  return /* @__PURE__ */ reactExports.createElement("li", _extends$L({
     ref,
     role: "presentation"
   }, restProps, {
@@ -36218,12 +36232,12 @@ const MenuItemGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   if (measure) {
     return childList;
   }
-  return /* @__PURE__ */ reactExports.createElement(InternalMenuItemGroup, _extends$I({
+  return /* @__PURE__ */ reactExports.createElement(InternalMenuItemGroup, _extends$L({
     ref
   }, omit(props, ["warnKey"])), childList);
 });
-function _extends$H() {
-  _extends$H = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$K() {
+  _extends$K = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -36234,7 +36248,7 @@ function _extends$H() {
     }
     return target;
   };
-  return _extends$H.apply(this, arguments);
+  return _extends$K.apply(this, arguments);
 }
 function convertItemsToNodes(list, components, prefixCls) {
   const {
@@ -36256,25 +36270,25 @@ function convertItemsToNodes(list, components, prefixCls) {
       const mergedKey = key ?? `tmp-${index}`;
       if (children || type2 === "group") {
         if (type2 === "group") {
-          return /* @__PURE__ */ reactExports.createElement(MergedMenuItemGroup, _extends$H({
+          return /* @__PURE__ */ reactExports.createElement(MergedMenuItemGroup, _extends$K({
             key: mergedKey
           }, restProps, {
             title: label
           }), convertItemsToNodes(children, components, prefixCls));
         }
-        return /* @__PURE__ */ reactExports.createElement(MergedSubMenu, _extends$H({
+        return /* @__PURE__ */ reactExports.createElement(MergedSubMenu, _extends$K({
           key: mergedKey
         }, restProps, {
           title: label
         }), convertItemsToNodes(children, components, prefixCls));
       }
       if (type2 === "divider") {
-        return /* @__PURE__ */ reactExports.createElement(MergedDivider, _extends$H({
+        return /* @__PURE__ */ reactExports.createElement(MergedDivider, _extends$K({
           key: mergedKey
         }, restProps));
       }
       const hasExtra = !!extra || extra === 0;
-      return /* @__PURE__ */ reactExports.createElement(MergedMenuItem, _extends$H({
+      return /* @__PURE__ */ reactExports.createElement(MergedMenuItem, _extends$K({
         key: mergedKey
       }, restProps, {
         extra,
@@ -36305,8 +36319,8 @@ function parseItems(children, items, keyPath, components, prefixCls) {
   }
   return parseChildren(childNodes, keyPath);
 }
-function _extends$G() {
-  _extends$G = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$J() {
+  _extends$J = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -36317,7 +36331,7 @@ function _extends$G() {
     }
     return target;
   };
-  return _extends$G.apply(this, arguments);
+  return _extends$J.apply(this, arguments);
 }
 const EMPTY_LIST$1 = [];
 const Menu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -36578,7 +36592,7 @@ const Menu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       }, child)
     ))
   );
-  const container = /* @__PURE__ */ reactExports.createElement(ForwardOverflow, _extends$G({
+  const container = /* @__PURE__ */ reactExports.createElement(ForwardOverflow, _extends$J({
     id: id2,
     ref: containerRef,
     prefixCls: `${prefixCls}-overflow`,
@@ -36664,9 +36678,9 @@ const SiderContext = /* @__PURE__ */ reactExports.createContext({});
 var EllipsisOutlined$2 = {};
 Object.defineProperty(EllipsisOutlined$2, "__esModule", { value: true });
 var EllipsisOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z" } }] }, "name": "ellipsis", "theme": "outlined" };
-var _default$b = EllipsisOutlined$2.default = EllipsisOutlined$1;
-function _extends$F() {
-  _extends$F = Object.assign ? Object.assign.bind() : function(target) {
+var _default$d = EllipsisOutlined$2.default = EllipsisOutlined$1;
+function _extends$I() {
+  _extends$I = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -36677,13 +36691,13 @@ function _extends$F() {
     }
     return target;
   };
-  return _extends$F.apply(this, arguments);
+  return _extends$I.apply(this, arguments);
 }
-const EllipsisOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$F({}, props, {
+const EllipsisOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$I({}, props, {
   ref,
-  icon: _default$b
+  icon: _default$d
 }));
-const RefIcon$b = /* @__PURE__ */ reactExports.forwardRef(EllipsisOutlined);
+const RefIcon$d = /* @__PURE__ */ reactExports.forwardRef(EllipsisOutlined);
 const MenuContext = /* @__PURE__ */ reactExports.createContext({
   prefixCls: "",
   firstLevel: true,
@@ -37669,7 +37683,7 @@ const getBaseStyle = (token2) => {
     }
   ];
 };
-const prepareComponentToken$8 = (token2) => {
+const prepareComponentToken$9 = (token2) => {
   const {
     colorPrimary,
     colorError,
@@ -37786,7 +37800,7 @@ const prepareComponentToken$8 = (token2) => {
     itemWidth: activeBarWidth ? `calc(100% + ${activeBarBorderWidth}px)` : `calc(100% - ${itemMarginInline * 2}px)`
   };
 };
-const useStyle$f = (prefixCls, rootCls = prefixCls, injectStyle = true) => {
+const useStyle$g = (prefixCls, rootCls = prefixCls, injectStyle = true) => {
   const useStyle2 = genStyleHooks("Menu", (token2) => {
     const {
       colorBgElevated,
@@ -37865,7 +37879,7 @@ const useStyle$f = (prefixCls, rootCls = prefixCls, injectStyle = true) => {
       initSlideMotion(menuToken, "slide-down"),
       initZoomMotion(menuToken, "zoom-big")
     ];
-  }, prepareComponentToken$8, {
+  }, prepareComponentToken$9, {
     deprecatedTokens: [["colorGroupTitle", "groupTitleColor"], ["radiusItem", "itemBorderRadius"], ["radiusSubMenuItem", "subMenuItemBorderRadius"], ["colorItemText", "itemColor"], ["colorItemTextHover", "itemHoverColor"], ["colorItemTextHoverHorizontal", "horizontalItemHoverColor"], ["colorItemTextSelected", "itemSelectedColor"], ["colorItemTextSelectedHorizontal", "horizontalItemSelectedColor"], ["colorItemTextDisabled", "itemDisabledColor"], ["colorDangerItemText", "dangerItemColor"], ["colorDangerItemTextHover", "dangerItemHoverColor"], ["colorDangerItemTextSelected", "dangerItemSelectedColor"], ["colorDangerItemBgActive", "dangerItemActiveBg"], ["colorDangerItemBgSelected", "dangerItemSelectedBg"], ["colorItemBg", "itemBg"], ["colorItemBgHover", "itemHoverBg"], ["colorSubItemBg", "subMenuItemBg"], ["colorItemBgActive", "itemActiveBg"], ["colorItemBgSelectedHorizontal", "horizontalItemSelectedBg"], ["colorActiveBarWidth", "activeBarWidth"], ["colorActiveBarHeight", "activeBarHeight"], ["colorActiveBarBorderSize", "activeBarBorderWidth"], ["colorItemBgSelected", "itemSelectedBg"]],
     // Dropdown will handle menu style self. We do not need to handle this.
     injectStyle,
@@ -38021,7 +38035,7 @@ const InternalMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   };
   const prefixCls = getPrefixCls("menu", customizePrefixCls || overrideObj.prefixCls);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$f(prefixCls, rootCls, !override);
+  const [hashId, cssVarCls] = useStyle$g(prefixCls, rootCls, !override);
   const menuClassName = clsx(`${prefixCls}-${theme2}`, contextClassName, className);
   const mergedExpandIcon = reactExports.useMemo(() => {
     if (isFunction$1(expandIcon) || isEmptyIcon(expandIcon)) {
@@ -38056,7 +38070,7 @@ const InternalMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     value: contextValue
   }, /* @__PURE__ */ reactExports.createElement(ExportMenu, {
     getPopupContainer,
-    overflowedIndicator: /* @__PURE__ */ reactExports.createElement(RefIcon$b, null),
+    overflowedIndicator: /* @__PURE__ */ reactExports.createElement(RefIcon$d, null),
     overflowedIndicatorPopupClassName: clsx(prefixCls, `${prefixCls}-${theme2}`, overflowedIndicatorPopupClassName),
     classNames: {
       list: mergedClassNames.list,
@@ -38413,7 +38427,7 @@ const genBaseStyle$1 = (token2) => {
     [initSlideMotion(token2, "slide-up"), initSlideMotion(token2, "slide-down"), initSlideMotion(token2, "slide-left"), initSlideMotion(token2, "slide-right"), initMoveMotion(token2, "move-up"), initMoveMotion(token2, "move-down"), initZoomMotion(token2, "zoom-big")]
   ];
 };
-const prepareComponentToken$7 = (token2) => ({
+const prepareComponentToken$8 = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + 50,
   paddingBlock: (token2.controlHeight - token2.fontSize * token2.lineHeight) / 2,
   ...getArrowOffsetToken({
@@ -38422,7 +38436,7 @@ const prepareComponentToken$7 = (token2) => ({
   }),
   ...getArrowToken(token2)
 });
-const useStyle$e = genStyleHooks("Dropdown", (token2) => {
+const useStyle$f = genStyleHooks("Dropdown", (token2) => {
   const {
     marginXXS,
     sizePopupArrow,
@@ -38435,7 +38449,7 @@ const useStyle$e = genStyleHooks("Dropdown", (token2) => {
     dropdownEdgeChildPadding: paddingXXS
   });
   return [genBaseStyle$1(dropdownToken), genStatusStyle(dropdownToken)];
-}, prepareComponentToken$7, {
+}, prepareComponentToken$8, {
   resetStyle: false
 });
 const Dropdown$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -38515,7 +38529,7 @@ const Dropdown$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, [placement, direction]);
   const prefixCls = getPrefixCls("dropdown", customizePrefixCls);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$e(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$f(prefixCls, rootCls);
   const [, token2] = useToken();
   const child = reactExports.Children.only(isPrimitive(children) ? /* @__PURE__ */ reactExports.createElement("span", null, children) : children);
   const composedRef = useComposeRef(ref, getNodeRef(child));
@@ -38584,9 +38598,9 @@ const Dropdown$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       rootClassName: clsx(cssVarCls, rootCls),
       expandIcon: /* @__PURE__ */ reactExports.createElement("span", {
         className: `${prefixCls}-menu-submenu-arrow`
-      }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$c, {
+      }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$e, {
         className: `${prefixCls}-menu-submenu-arrow-icon`
-      }) : /* @__PURE__ */ reactExports.createElement(RefIcon$g, {
+      }) : /* @__PURE__ */ reactExports.createElement(RefIcon$i, {
         className: `${prefixCls}-menu-submenu-arrow-icon`
       })),
       mode: "vertical",
@@ -38634,282 +38648,288 @@ const WrapPurePanel = (props) => /* @__PURE__ */ reactExports.createElement(Pure
 }, /* @__PURE__ */ reactExports.createElement("span", null));
 Dropdown$1._InternalPanelDoNotUseOrYouWillBeFired = WrapPurePanel;
 var dayjs_min = { exports: {} };
-(function(module, exports) {
-  !function(t2, e) {
-    module.exports = e();
-  }(commonjsGlobal, function() {
-    var t2 = 1e3, e = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s = "minute", u2 = "hour", a = "day", o = "week", c = "month", f2 = "quarter", h2 = "year", d = "date", l2 = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|YYYY|YY|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M2 = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
-      var e2 = ["th", "st", "nd", "rd"], n3 = t3 % 100;
-      return "[" + t3 + (e2[(n3 - 20) % 10] || e2[n3] || e2[0]) + "]";
-    } }, m2 = function(t3, e2, n3) {
-      var r3 = String(t3);
-      return !r3 || r3.length >= e2 ? t3 : "" + Array(e2 + 1 - r3.length).join(n3) + t3;
-    }, v2 = { s: m2, z: function(t3) {
-      var e2 = -t3.utcOffset(), n3 = Math.abs(e2), r3 = Math.floor(n3 / 60), i2 = n3 % 60;
-      return (e2 <= 0 ? "+" : "-") + m2(r3, 2, "0") + ":" + m2(i2, 2, "0");
-    }, m: function t3(e2, n3) {
-      if (e2.date() < n3.date()) return -t3(n3, e2);
-      var r3 = 12 * (n3.year() - e2.year()) + (n3.month() - e2.month()), i2 = e2.clone().add(r3, c), s2 = n3 - i2 < 0, u3 = e2.clone().add(r3 + (s2 ? -1 : 1), c);
-      return +(-(r3 + (n3 - i2) / (s2 ? i2 - u3 : u3 - i2)) || 0);
-    }, a: function(t3) {
-      return t3 < 0 ? Math.ceil(t3) || 0 : Math.floor(t3);
-    }, p: function(t3) {
-      return { M: c, y: h2, w: o, d: a, D: d, h: u2, m: s, s: i, ms: r2, Q: f2 }[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
-    }, u: function(t3) {
-      return void 0 === t3;
-    } }, g = "en", D2 = {};
-    D2[g] = M2;
-    var p2 = "$isDayjsObject", S2 = function(t3) {
-      return t3 instanceof _ || !(!t3 || !t3[p2]);
-    }, w2 = function t3(e2, n3, r3) {
-      var i2;
-      if (!e2) return g;
-      if ("string" == typeof e2) {
-        var s2 = e2.toLowerCase();
-        D2[s2] && (i2 = s2), n3 && (D2[s2] = n3, i2 = s2);
-        var u3 = e2.split("-");
-        if (!i2 && u3.length > 1) return t3(u3[0]);
-      } else {
-        var a2 = e2.name;
-        D2[a2] = e2, i2 = a2;
-      }
-      return !r3 && i2 && (g = i2), i2 || !r3 && g;
-    }, O2 = function(t3, e2) {
-      if (S2(t3)) return t3.clone();
-      var n3 = "object" == typeof e2 ? e2 : {};
-      return n3.date = t3, n3.args = arguments, new _(n3);
-    }, b = v2;
-    b.l = w2, b.i = S2, b.w = function(t3, e2) {
-      return O2(t3, { locale: e2.$L, utc: e2.$u, x: e2.$x, $offset: e2.$offset });
-    };
-    var _ = function() {
-      function M3(t3) {
-        this.$L = w2(t3.locale, null, true), this.parse(t3), this.$x = this.$x || t3.x || {}, this[p2] = true;
-      }
-      var m3 = M3.prototype;
-      return m3.parse = function(t3) {
-        this.$d = function(t4) {
-          var e2 = t4.date, n3 = t4.utc;
-          if (null === e2) return /* @__PURE__ */ new Date(NaN);
-          if (b.u(e2)) return /* @__PURE__ */ new Date();
-          if (e2 instanceof Date) return new Date(e2);
-          if ("string" == typeof e2 && !/Z$/i.test(e2)) {
-            var r3 = e2.match($);
-            if (r3) {
-              var i2 = r3[2] - 1 || 0, s2 = (r3[7] || "0").substring(0, 3);
-              return n3 ? new Date(Date.UTC(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2)) : new Date(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2);
-            }
-          }
-          return new Date(e2);
-        }(t3), this.init();
-      }, m3.init = function() {
-        var t3 = this.$d;
-        this.$y = t3.getFullYear(), this.$M = t3.getMonth(), this.$D = t3.getDate(), this.$W = t3.getDay(), this.$H = t3.getHours(), this.$m = t3.getMinutes(), this.$s = t3.getSeconds(), this.$ms = t3.getMilliseconds();
-      }, m3.$utils = function() {
-        return b;
-      }, m3.isValid = function() {
-        return !(this.$d.toString() === l2);
-      }, m3.isSame = function(t3, e2) {
-        var n3 = O2(t3);
-        return this.startOf(e2) <= n3 && n3 <= this.endOf(e2);
-      }, m3.isAfter = function(t3, e2) {
-        return O2(t3) < this.startOf(e2);
-      }, m3.isBefore = function(t3, e2) {
-        return this.endOf(e2) < O2(t3);
-      }, m3.$g = function(t3, e2, n3) {
-        return b.u(t3) ? this[e2] : this.set(n3, t3);
-      }, m3.unix = function() {
-        return Math.floor(this.valueOf() / 1e3);
-      }, m3.valueOf = function() {
-        return this.$d.getTime();
-      }, m3.startOf = function(t3, e2) {
-        var n3 = this, r3 = !!b.u(e2) || e2, f3 = b.p(t3), l3 = function(t4, e3) {
-          var i2 = b.w(n3.$u ? Date.UTC(n3.$y, e3, t4) : new Date(n3.$y, e3, t4), n3);
-          return r3 ? i2 : i2.endOf(a);
-        }, $2 = function(t4, e3) {
-          return b.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e3)), n3);
-        }, y3 = this.$W, M4 = this.$M, m4 = this.$D, v3 = "set" + (this.$u ? "UTC" : "");
-        switch (f3) {
-          case h2:
-            return r3 ? l3(1, 0) : l3(31, 11);
-          case c:
-            return r3 ? l3(1, M4) : l3(0, M4 + 1);
-          case o:
-            var g2 = this.$locale().weekStart || 0, D3 = (y3 < g2 ? y3 + 7 : y3) - g2;
-            return l3(r3 ? m4 - D3 : m4 + (6 - D3), M4);
-          case a:
-          case d:
-            return $2(v3 + "Hours", 0);
-          case u2:
-            return $2(v3 + "Minutes", 1);
-          case s:
-            return $2(v3 + "Seconds", 2);
-          case i:
-            return $2(v3 + "Milliseconds", 3);
-          default:
-            return this.clone();
+var hasRequiredDayjs_min;
+function requireDayjs_min() {
+  if (hasRequiredDayjs_min) return dayjs_min.exports;
+  hasRequiredDayjs_min = 1;
+  (function(module, exports) {
+    !function(t2, e) {
+      module.exports = e();
+    }(commonjsGlobal, function() {
+      var t2 = 1e3, e = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s = "minute", u2 = "hour", a = "day", o = "week", c = "month", f2 = "quarter", h2 = "year", d = "date", l2 = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|YYYY|YY|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M2 = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
+        var e2 = ["th", "st", "nd", "rd"], n3 = t3 % 100;
+        return "[" + t3 + (e2[(n3 - 20) % 10] || e2[n3] || e2[0]) + "]";
+      } }, m2 = function(t3, e2, n3) {
+        var r3 = String(t3);
+        return !r3 || r3.length >= e2 ? t3 : "" + Array(e2 + 1 - r3.length).join(n3) + t3;
+      }, v2 = { s: m2, z: function(t3) {
+        var e2 = -t3.utcOffset(), n3 = Math.abs(e2), r3 = Math.floor(n3 / 60), i2 = n3 % 60;
+        return (e2 <= 0 ? "+" : "-") + m2(r3, 2, "0") + ":" + m2(i2, 2, "0");
+      }, m: function t3(e2, n3) {
+        if (e2.date() < n3.date()) return -t3(n3, e2);
+        var r3 = 12 * (n3.year() - e2.year()) + (n3.month() - e2.month()), i2 = e2.clone().add(r3, c), s2 = n3 - i2 < 0, u3 = e2.clone().add(r3 + (s2 ? -1 : 1), c);
+        return +(-(r3 + (n3 - i2) / (s2 ? i2 - u3 : u3 - i2)) || 0);
+      }, a: function(t3) {
+        return t3 < 0 ? Math.ceil(t3) || 0 : Math.floor(t3);
+      }, p: function(t3) {
+        return { M: c, y: h2, w: o, d: a, D: d, h: u2, m: s, s: i, ms: r2, Q: f2 }[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
+      }, u: function(t3) {
+        return void 0 === t3;
+      } }, g = "en", D2 = {};
+      D2[g] = M2;
+      var p2 = "$isDayjsObject", S2 = function(t3) {
+        return t3 instanceof _ || !(!t3 || !t3[p2]);
+      }, w2 = function t3(e2, n3, r3) {
+        var i2;
+        if (!e2) return g;
+        if ("string" == typeof e2) {
+          var s2 = e2.toLowerCase();
+          D2[s2] && (i2 = s2), n3 && (D2[s2] = n3, i2 = s2);
+          var u3 = e2.split("-");
+          if (!i2 && u3.length > 1) return t3(u3[0]);
+        } else {
+          var a2 = e2.name;
+          D2[a2] = e2, i2 = a2;
         }
-      }, m3.endOf = function(t3) {
-        return this.startOf(t3, false);
-      }, m3.$set = function(t3, e2) {
-        var n3, o2 = b.p(t3), f3 = "set" + (this.$u ? "UTC" : ""), l3 = (n3 = {}, n3[a] = f3 + "Date", n3[d] = f3 + "Date", n3[c] = f3 + "Month", n3[h2] = f3 + "FullYear", n3[u2] = f3 + "Hours", n3[s] = f3 + "Minutes", n3[i] = f3 + "Seconds", n3[r2] = f3 + "Milliseconds", n3)[o2], $2 = o2 === a ? this.$D + (e2 - this.$W) : e2;
-        if (o2 === c || o2 === h2) {
-          var y3 = this.clone().set(d, 1);
-          y3.$d[l3]($2), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
-        } else l3 && this.$d[l3]($2);
-        return this.init(), this;
-      }, m3.set = function(t3, e2) {
-        return this.clone().$set(t3, e2);
-      }, m3.get = function(t3) {
-        return this[b.p(t3)]();
-      }, m3.add = function(r3, f3) {
-        var d2, l3 = this;
-        r3 = Number(r3);
-        var $2 = b.p(f3), y3 = function(t3) {
-          var e2 = O2(l3);
-          return b.w(e2.date(e2.date() + Math.round(t3 * r3)), l3);
-        };
-        if ($2 === c) return this.set(c, this.$M + r3);
-        if ($2 === h2) return this.set(h2, this.$y + r3);
-        if ($2 === a) return y3(1);
-        if ($2 === o) return y3(7);
-        var M4 = (d2 = {}, d2[s] = e, d2[u2] = n2, d2[i] = t2, d2)[$2] || 1, m4 = this.$d.getTime() + r3 * M4;
-        return b.w(m4, this);
-      }, m3.subtract = function(t3, e2) {
-        return this.add(-1 * t3, e2);
-      }, m3.format = function(t3) {
-        var e2 = this, n3 = this.$locale();
-        if (!this.isValid()) return n3.invalidDate || l2;
-        var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = b.z(this), s2 = this.$H, u3 = this.$m, a2 = this.$M, o2 = n3.weekdays, c2 = n3.months, f3 = n3.meridiem, h3 = function(t4, n4, i3, s3) {
-          return t4 && (t4[n4] || t4(e2, r3)) || i3[n4].slice(0, s3);
-        }, d2 = function(t4) {
-          return b.s(s2 % 12 || 12, t4, "0");
-        }, $2 = f3 || function(t4, e3, n4) {
-          var r4 = t4 < 12 ? "AM" : "PM";
-          return n4 ? r4.toLowerCase() : r4;
-        };
-        return r3.replace(y2, function(t4, r4) {
-          return r4 || function(t5) {
-            switch (t5) {
-              case "YY":
-                return String(e2.$y).slice(-2);
-              case "YYYY":
-                return b.s(e2.$y, 4, "0");
-              case "M":
-                return a2 + 1;
-              case "MM":
-                return b.s(a2 + 1, 2, "0");
-              case "MMM":
-                return h3(n3.monthsShort, a2, c2, 3);
-              case "MMMM":
-                return h3(c2, a2);
-              case "D":
-                return e2.$D;
-              case "DD":
-                return b.s(e2.$D, 2, "0");
-              case "d":
-                return String(e2.$W);
-              case "dd":
-                return h3(n3.weekdaysMin, e2.$W, o2, 2);
-              case "ddd":
-                return h3(n3.weekdaysShort, e2.$W, o2, 3);
-              case "dddd":
-                return o2[e2.$W];
-              case "H":
-                return String(s2);
-              case "HH":
-                return b.s(s2, 2, "0");
-              case "h":
-                return d2(1);
-              case "hh":
-                return d2(2);
-              case "a":
-                return $2(s2, u3, true);
-              case "A":
-                return $2(s2, u3, false);
-              case "m":
-                return String(u3);
-              case "mm":
-                return b.s(u3, 2, "0");
-              case "s":
-                return String(e2.$s);
-              case "ss":
-                return b.s(e2.$s, 2, "0");
-              case "SSS":
-                return b.s(e2.$ms, 3, "0");
-              case "Z":
-                return i2;
-            }
-            return null;
-          }(t4) || i2.replace(":", "");
-        });
-      }, m3.utcOffset = function() {
-        return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
-      }, m3.diff = function(r3, d2, l3) {
-        var $2, y3 = this, M4 = b.p(d2), m4 = O2(r3), v3 = (m4.utcOffset() - this.utcOffset()) * e, g2 = this - m4, D3 = function() {
-          return b.m(y3, m4);
-        };
-        switch (M4) {
-          case h2:
-            $2 = D3() / 12;
-            break;
-          case c:
-            $2 = D3();
-            break;
-          case f2:
-            $2 = D3() / 3;
-            break;
-          case o:
-            $2 = (g2 - v3) / 6048e5;
-            break;
-          case a:
-            $2 = (g2 - v3) / 864e5;
-            break;
-          case u2:
-            $2 = g2 / n2;
-            break;
-          case s:
-            $2 = g2 / e;
-            break;
-          case i:
-            $2 = g2 / t2;
-            break;
-          default:
-            $2 = g2;
-        }
-        return l3 ? $2 : b.a($2);
-      }, m3.daysInMonth = function() {
-        return this.endOf(c).$D;
-      }, m3.$locale = function() {
-        return D2[this.$L];
-      }, m3.locale = function(t3, e2) {
-        if (!t3) return this.$L;
-        var n3 = this.clone(), r3 = w2(t3, e2, true);
-        return r3 && (n3.$L = r3), n3;
-      }, m3.clone = function() {
-        return b.w(this.$d, this);
-      }, m3.toDate = function() {
-        return new Date(this.valueOf());
-      }, m3.toJSON = function() {
-        return this.isValid() ? this.toISOString() : null;
-      }, m3.toISOString = function() {
-        return this.$d.toISOString();
-      }, m3.toString = function() {
-        return this.$d.toUTCString();
-      }, M3;
-    }(), Y2 = _.prototype;
-    return O2.prototype = Y2, [["$ms", r2], ["$s", i], ["$m", s], ["$H", u2], ["$W", a], ["$M", c], ["$y", h2], ["$D", d]].forEach(function(t3) {
-      Y2[t3[1]] = function(e2) {
-        return this.$g(e2, t3[0], t3[1]);
+        return !r3 && i2 && (g = i2), i2 || !r3 && g;
+      }, O2 = function(t3, e2) {
+        if (S2(t3)) return t3.clone();
+        var n3 = "object" == typeof e2 ? e2 : {};
+        return n3.date = t3, n3.args = arguments, new _(n3);
+      }, b = v2;
+      b.l = w2, b.i = S2, b.w = function(t3, e2) {
+        return O2(t3, { locale: e2.$L, utc: e2.$u, x: e2.$x, $offset: e2.$offset });
       };
-    }), O2.extend = function(t3, e2) {
-      return t3.$i || (t3(e2, _, O2), t3.$i = true), O2;
-    }, O2.locale = w2, O2.isDayjs = S2, O2.unix = function(t3) {
-      return O2(1e3 * t3);
-    }, O2.en = D2[g], O2.Ls = D2, O2.p = {}, O2;
-  });
-})(dayjs_min);
-var dayjs_minExports = dayjs_min.exports;
+      var _ = function() {
+        function M3(t3) {
+          this.$L = w2(t3.locale, null, true), this.parse(t3), this.$x = this.$x || t3.x || {}, this[p2] = true;
+        }
+        var m3 = M3.prototype;
+        return m3.parse = function(t3) {
+          this.$d = function(t4) {
+            var e2 = t4.date, n3 = t4.utc;
+            if (null === e2) return /* @__PURE__ */ new Date(NaN);
+            if (b.u(e2)) return /* @__PURE__ */ new Date();
+            if (e2 instanceof Date) return new Date(e2);
+            if ("string" == typeof e2 && !/Z$/i.test(e2)) {
+              var r3 = e2.match($);
+              if (r3) {
+                var i2 = r3[2] - 1 || 0, s2 = (r3[7] || "0").substring(0, 3);
+                return n3 ? new Date(Date.UTC(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2)) : new Date(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2);
+              }
+            }
+            return new Date(e2);
+          }(t3), this.init();
+        }, m3.init = function() {
+          var t3 = this.$d;
+          this.$y = t3.getFullYear(), this.$M = t3.getMonth(), this.$D = t3.getDate(), this.$W = t3.getDay(), this.$H = t3.getHours(), this.$m = t3.getMinutes(), this.$s = t3.getSeconds(), this.$ms = t3.getMilliseconds();
+        }, m3.$utils = function() {
+          return b;
+        }, m3.isValid = function() {
+          return !(this.$d.toString() === l2);
+        }, m3.isSame = function(t3, e2) {
+          var n3 = O2(t3);
+          return this.startOf(e2) <= n3 && n3 <= this.endOf(e2);
+        }, m3.isAfter = function(t3, e2) {
+          return O2(t3) < this.startOf(e2);
+        }, m3.isBefore = function(t3, e2) {
+          return this.endOf(e2) < O2(t3);
+        }, m3.$g = function(t3, e2, n3) {
+          return b.u(t3) ? this[e2] : this.set(n3, t3);
+        }, m3.unix = function() {
+          return Math.floor(this.valueOf() / 1e3);
+        }, m3.valueOf = function() {
+          return this.$d.getTime();
+        }, m3.startOf = function(t3, e2) {
+          var n3 = this, r3 = !!b.u(e2) || e2, f3 = b.p(t3), l3 = function(t4, e3) {
+            var i2 = b.w(n3.$u ? Date.UTC(n3.$y, e3, t4) : new Date(n3.$y, e3, t4), n3);
+            return r3 ? i2 : i2.endOf(a);
+          }, $2 = function(t4, e3) {
+            return b.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e3)), n3);
+          }, y3 = this.$W, M4 = this.$M, m4 = this.$D, v3 = "set" + (this.$u ? "UTC" : "");
+          switch (f3) {
+            case h2:
+              return r3 ? l3(1, 0) : l3(31, 11);
+            case c:
+              return r3 ? l3(1, M4) : l3(0, M4 + 1);
+            case o:
+              var g2 = this.$locale().weekStart || 0, D3 = (y3 < g2 ? y3 + 7 : y3) - g2;
+              return l3(r3 ? m4 - D3 : m4 + (6 - D3), M4);
+            case a:
+            case d:
+              return $2(v3 + "Hours", 0);
+            case u2:
+              return $2(v3 + "Minutes", 1);
+            case s:
+              return $2(v3 + "Seconds", 2);
+            case i:
+              return $2(v3 + "Milliseconds", 3);
+            default:
+              return this.clone();
+          }
+        }, m3.endOf = function(t3) {
+          return this.startOf(t3, false);
+        }, m3.$set = function(t3, e2) {
+          var n3, o2 = b.p(t3), f3 = "set" + (this.$u ? "UTC" : ""), l3 = (n3 = {}, n3[a] = f3 + "Date", n3[d] = f3 + "Date", n3[c] = f3 + "Month", n3[h2] = f3 + "FullYear", n3[u2] = f3 + "Hours", n3[s] = f3 + "Minutes", n3[i] = f3 + "Seconds", n3[r2] = f3 + "Milliseconds", n3)[o2], $2 = o2 === a ? this.$D + (e2 - this.$W) : e2;
+          if (o2 === c || o2 === h2) {
+            var y3 = this.clone().set(d, 1);
+            y3.$d[l3]($2), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
+          } else l3 && this.$d[l3]($2);
+          return this.init(), this;
+        }, m3.set = function(t3, e2) {
+          return this.clone().$set(t3, e2);
+        }, m3.get = function(t3) {
+          return this[b.p(t3)]();
+        }, m3.add = function(r3, f3) {
+          var d2, l3 = this;
+          r3 = Number(r3);
+          var $2 = b.p(f3), y3 = function(t3) {
+            var e2 = O2(l3);
+            return b.w(e2.date(e2.date() + Math.round(t3 * r3)), l3);
+          };
+          if ($2 === c) return this.set(c, this.$M + r3);
+          if ($2 === h2) return this.set(h2, this.$y + r3);
+          if ($2 === a) return y3(1);
+          if ($2 === o) return y3(7);
+          var M4 = (d2 = {}, d2[s] = e, d2[u2] = n2, d2[i] = t2, d2)[$2] || 1, m4 = this.$d.getTime() + r3 * M4;
+          return b.w(m4, this);
+        }, m3.subtract = function(t3, e2) {
+          return this.add(-1 * t3, e2);
+        }, m3.format = function(t3) {
+          var e2 = this, n3 = this.$locale();
+          if (!this.isValid()) return n3.invalidDate || l2;
+          var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = b.z(this), s2 = this.$H, u3 = this.$m, a2 = this.$M, o2 = n3.weekdays, c2 = n3.months, f3 = n3.meridiem, h3 = function(t4, n4, i3, s3) {
+            return t4 && (t4[n4] || t4(e2, r3)) || i3[n4].slice(0, s3);
+          }, d2 = function(t4) {
+            return b.s(s2 % 12 || 12, t4, "0");
+          }, $2 = f3 || function(t4, e3, n4) {
+            var r4 = t4 < 12 ? "AM" : "PM";
+            return n4 ? r4.toLowerCase() : r4;
+          };
+          return r3.replace(y2, function(t4, r4) {
+            return r4 || function(t5) {
+              switch (t5) {
+                case "YY":
+                  return String(e2.$y).slice(-2);
+                case "YYYY":
+                  return b.s(e2.$y, 4, "0");
+                case "M":
+                  return a2 + 1;
+                case "MM":
+                  return b.s(a2 + 1, 2, "0");
+                case "MMM":
+                  return h3(n3.monthsShort, a2, c2, 3);
+                case "MMMM":
+                  return h3(c2, a2);
+                case "D":
+                  return e2.$D;
+                case "DD":
+                  return b.s(e2.$D, 2, "0");
+                case "d":
+                  return String(e2.$W);
+                case "dd":
+                  return h3(n3.weekdaysMin, e2.$W, o2, 2);
+                case "ddd":
+                  return h3(n3.weekdaysShort, e2.$W, o2, 3);
+                case "dddd":
+                  return o2[e2.$W];
+                case "H":
+                  return String(s2);
+                case "HH":
+                  return b.s(s2, 2, "0");
+                case "h":
+                  return d2(1);
+                case "hh":
+                  return d2(2);
+                case "a":
+                  return $2(s2, u3, true);
+                case "A":
+                  return $2(s2, u3, false);
+                case "m":
+                  return String(u3);
+                case "mm":
+                  return b.s(u3, 2, "0");
+                case "s":
+                  return String(e2.$s);
+                case "ss":
+                  return b.s(e2.$s, 2, "0");
+                case "SSS":
+                  return b.s(e2.$ms, 3, "0");
+                case "Z":
+                  return i2;
+              }
+              return null;
+            }(t4) || i2.replace(":", "");
+          });
+        }, m3.utcOffset = function() {
+          return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
+        }, m3.diff = function(r3, d2, l3) {
+          var $2, y3 = this, M4 = b.p(d2), m4 = O2(r3), v3 = (m4.utcOffset() - this.utcOffset()) * e, g2 = this - m4, D3 = function() {
+            return b.m(y3, m4);
+          };
+          switch (M4) {
+            case h2:
+              $2 = D3() / 12;
+              break;
+            case c:
+              $2 = D3();
+              break;
+            case f2:
+              $2 = D3() / 3;
+              break;
+            case o:
+              $2 = (g2 - v3) / 6048e5;
+              break;
+            case a:
+              $2 = (g2 - v3) / 864e5;
+              break;
+            case u2:
+              $2 = g2 / n2;
+              break;
+            case s:
+              $2 = g2 / e;
+              break;
+            case i:
+              $2 = g2 / t2;
+              break;
+            default:
+              $2 = g2;
+          }
+          return l3 ? $2 : b.a($2);
+        }, m3.daysInMonth = function() {
+          return this.endOf(c).$D;
+        }, m3.$locale = function() {
+          return D2[this.$L];
+        }, m3.locale = function(t3, e2) {
+          if (!t3) return this.$L;
+          var n3 = this.clone(), r3 = w2(t3, e2, true);
+          return r3 && (n3.$L = r3), n3;
+        }, m3.clone = function() {
+          return b.w(this.$d, this);
+        }, m3.toDate = function() {
+          return new Date(this.valueOf());
+        }, m3.toJSON = function() {
+          return this.isValid() ? this.toISOString() : null;
+        }, m3.toISOString = function() {
+          return this.$d.toISOString();
+        }, m3.toString = function() {
+          return this.$d.toUTCString();
+        }, M3;
+      }(), Y2 = _.prototype;
+      return O2.prototype = Y2, [["$ms", r2], ["$s", i], ["$m", s], ["$H", u2], ["$W", a], ["$M", c], ["$y", h2], ["$D", d]].forEach(function(t3) {
+        Y2[t3[1]] = function(e2) {
+          return this.$g(e2, t3[0], t3[1]);
+        };
+      }), O2.extend = function(t3, e2) {
+        return t3.$i || (t3(e2, _, O2), t3.$i = true), O2;
+      }, O2.locale = w2, O2.isDayjs = S2, O2.unix = function(t3) {
+        return O2(1e3 * t3);
+      }, O2.en = D2[g], O2.Ls = D2, O2.p = {}, O2;
+    });
+  })(dayjs_min);
+  return dayjs_min.exports;
+}
+var dayjs_minExports = requireDayjs_min();
 const dayjs = /* @__PURE__ */ getDefaultExportFromCjs(dayjs_minExports);
 var weekday$1 = { exports: {} };
 (function(module, exports) {
@@ -40989,8 +41009,8 @@ function PanelHeader(props) {
     style: hideNext ? HIDDEN_STYLE : {}
   }, superNextIcon));
 }
-function _extends$E() {
-  _extends$E = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$H() {
+  _extends$H = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41001,7 +41021,7 @@ function _extends$E() {
     }
     return target;
   };
-  return _extends$E.apply(this, arguments);
+  return _extends$H.apply(this, arguments);
 }
 function DatePanel(props) {
   const {
@@ -41136,7 +41156,7 @@ function DatePanel(props) {
       clone = generateConfig2.addMonth(clone, 1);
       return generateConfig2.addDate(clone, -1);
     }
-  }, monthYearNodes), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$E({
+  }, monthYearNodes), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$H({
     titleFormat: locale2.fieldDateFormat
   }, props, {
     colNum: WEEK_DAY_COUNT,
@@ -41322,8 +41342,8 @@ function TimeColumn(props) {
     }) : inner);
   }));
 }
-function _extends$D() {
-  _extends$D = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$G() {
+  _extends$G = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41334,7 +41354,7 @@ function _extends$D() {
     }
     return target;
   };
-  return _extends$D.apply(this, arguments);
+  return _extends$G.apply(this, arguments);
 }
 function isAM(hour) {
   return hour < 12;
@@ -41505,35 +41525,35 @@ function TimePanelBody(props) {
   return /* @__PURE__ */ reactExports.createElement("div", {
     className: clsx(`${prefixCls}-content`, classNames.content),
     style: styles.content
-  }, showHour && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$D({
+  }, showHour && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$G({
     units: hourUnits,
     value: hour,
     optionalValue: pickerHour,
     type: "hour",
     onChange: onHourChange,
     onHover: onHourHover
-  }, sharedColumnProps)), showMinute && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$D({
+  }, sharedColumnProps)), showMinute && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$G({
     units: minuteUnits,
     value: minute,
     optionalValue: pickerMinute,
     type: "minute",
     onChange: onMinuteChange,
     onHover: onMinuteHover
-  }, sharedColumnProps)), showSecond && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$D({
+  }, sharedColumnProps)), showSecond && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$G({
     units: secondUnits,
     value: second,
     optionalValue: pickerSecond,
     type: "second",
     onChange: onSecondChange,
     onHover: onSecondHover
-  }, sharedColumnProps)), showMillisecond && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$D({
+  }, sharedColumnProps)), showMillisecond && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$G({
     units: millisecondUnits,
     value: millisecond,
     optionalValue: pickerMillisecond,
     type: "millisecond",
     onChange: onMillisecondChange,
     onHover: onMillisecondHover
-  }, sharedColumnProps)), showMeridiem && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$D({
+  }, sharedColumnProps)), showMeridiem && /* @__PURE__ */ reactExports.createElement(TimeColumn, _extends$G({
     units: meridiemUnits,
     value: meridiem,
     type: "meridiem",
@@ -41565,8 +41585,8 @@ function TimePanel(props) {
     generateConfig: generateConfig2
   }) : " "), /* @__PURE__ */ reactExports.createElement(TimePanelBody, showTime)));
 }
-function _extends$C() {
-  _extends$C = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$F() {
+  _extends$F = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41577,7 +41597,7 @@ function _extends$C() {
     }
     return target;
   };
-  return _extends$C.apply(this, arguments);
+  return _extends$F.apply(this, arguments);
 }
 function DateTimePanel(props) {
   const {
@@ -41606,13 +41626,13 @@ function DateTimePanel(props) {
   };
   return /* @__PURE__ */ reactExports.createElement("div", {
     className: panelPrefixCls
-  }, /* @__PURE__ */ reactExports.createElement(DatePanel, _extends$C({}, props, {
+  }, /* @__PURE__ */ reactExports.createElement(DatePanel, _extends$F({}, props, {
     onSelect: onDateSelect,
     onHover: onDateHover
   })), /* @__PURE__ */ reactExports.createElement(TimePanel, props));
 }
-function _extends$B() {
-  _extends$B = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$E() {
+  _extends$E = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41623,7 +41643,7 @@ function _extends$B() {
     }
     return target;
   };
-  return _extends$B.apply(this, arguments);
+  return _extends$E.apply(this, arguments);
 }
 function DecadePanel(props) {
   const {
@@ -41695,7 +41715,7 @@ function DecadePanel(props) {
     onChange: onPickerValueChange,
     getStart: getStartYear,
     getEnd: getEndYear
-  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$B({}, props, {
+  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$E({}, props, {
     disabledDate: mergedDisabledDate,
     colNum: 3,
     rowNum: 4,
@@ -41705,8 +41725,8 @@ function DecadePanel(props) {
     getCellClassName
   }))));
 }
-function _extends$A() {
-  _extends$A = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$D() {
+  _extends$D = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41717,7 +41737,7 @@ function _extends$A() {
     }
     return target;
   };
-  return _extends$A.apply(this, arguments);
+  return _extends$D.apply(this, arguments);
 }
 function MonthPanel(props) {
   const {
@@ -41776,7 +41796,7 @@ function MonthPanel(props) {
     onChange: onPickerValueChange,
     getStart: (date2) => generateConfig2.setMonth(date2, 0),
     getEnd: (date2) => generateConfig2.setMonth(date2, 11)
-  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$A({}, props, {
+  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$D({}, props, {
     disabledDate: mergedDisabledDate,
     titleFormat: locale2.fieldMonthFormat,
     colNum: 3,
@@ -41787,8 +41807,8 @@ function MonthPanel(props) {
     getCellClassName
   }))));
 }
-function _extends$z() {
-  _extends$z = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$C() {
+  _extends$C = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41799,7 +41819,7 @@ function _extends$z() {
     }
     return target;
   };
-  return _extends$z.apply(this, arguments);
+  return _extends$C.apply(this, arguments);
 }
 function QuarterPanel(props) {
   const {
@@ -41849,7 +41869,7 @@ function QuarterPanel(props) {
     onChange: onPickerValueChange,
     getStart: (date2) => generateConfig2.setMonth(date2, 0),
     getEnd: (date2) => generateConfig2.setMonth(date2, 11)
-  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$z({}, props, {
+  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$C({}, props, {
     titleFormat: locale2.fieldQuarterFormat,
     colNum: 4,
     rowNum: 1,
@@ -41859,8 +41879,8 @@ function QuarterPanel(props) {
     getCellClassName
   }))));
 }
-function _extends$y() {
-  _extends$y = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$B() {
+  _extends$B = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41871,7 +41891,7 @@ function _extends$y() {
     }
     return target;
   };
-  return _extends$y.apply(this, arguments);
+  return _extends$B.apply(this, arguments);
 }
 function WeekPanel(props) {
   const {
@@ -41906,14 +41926,14 @@ function WeekPanel(props) {
       rangeCls
     );
   };
-  return /* @__PURE__ */ reactExports.createElement(DatePanel, _extends$y({}, props, {
+  return /* @__PURE__ */ reactExports.createElement(DatePanel, _extends$B({}, props, {
     mode: "week",
     panelName: "week",
     rowClassName
   }));
 }
-function _extends$x() {
-  _extends$x = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$A() {
+  _extends$A = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -41924,7 +41944,7 @@ function _extends$x() {
     }
     return target;
   };
-  return _extends$x.apply(this, arguments);
+  return _extends$A.apply(this, arguments);
 }
 function YearPanel(props) {
   const {
@@ -41998,7 +42018,7 @@ function YearPanel(props) {
     onChange: onPickerValueChange,
     getStart: getStartYear,
     getEnd: getEndYear
-  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$x({}, props, {
+  }, yearNode), /* @__PURE__ */ reactExports.createElement(PanelBody, _extends$A({}, props, {
     disabledDate: mergedDisabledDate,
     titleFormat: locale2.fieldYearFormat,
     colNum: 3,
@@ -42009,8 +42029,8 @@ function YearPanel(props) {
     getCellClassName
   }))));
 }
-function _extends$w() {
-  _extends$w = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$z() {
+  _extends$z = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -42021,7 +42041,7 @@ function _extends$w() {
     }
     return target;
   };
-  return _extends$w.apply(this, arguments);
+  return _extends$z.apply(this, arguments);
 }
 const DefaultComponents = {
   date: DatePanel,
@@ -42199,7 +42219,7 @@ function PickerPanel(props, ref) {
     className: clsx(panelCls, {
       [`${panelCls}-rtl`]: direction === "rtl"
     })
-  }, /* @__PURE__ */ reactExports.createElement(PanelComponent, _extends$w({}, panelProps, {
+  }, /* @__PURE__ */ reactExports.createElement(PanelComponent, _extends$z({}, panelProps, {
     // Time
     showTime: mergedShowTime,
     prefixCls: mergedPrefixCls,
@@ -42219,8 +42239,8 @@ function PickerPanel(props, ref) {
   })))));
 }
 const RefPanelPicker = /* @__PURE__ */ reactExports.memo(/* @__PURE__ */ reactExports.forwardRef(PickerPanel));
-function _extends$v() {
-  _extends$v = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$y() {
+  _extends$y = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -42231,7 +42251,7 @@ function _extends$v() {
     }
     return target;
   };
-  return _extends$v.apply(this, arguments);
+  return _extends$y.apply(this, arguments);
 }
 function PopupPanel(props) {
   const {
@@ -42287,7 +42307,7 @@ function PopupPanel(props) {
         ...sharedContext,
         hidePrev: true
       }
-    }, /* @__PURE__ */ reactExports.createElement(RefPanelPicker, _extends$v({}, pickerProps, {
+    }, /* @__PURE__ */ reactExports.createElement(RefPanelPicker, _extends$y({}, pickerProps, {
       pickerValue: nextPickerValue,
       onPickerValueChange: onSecondPickerValueChange
     }))));
@@ -42329,8 +42349,8 @@ function PresetPanel(props) {
     }
   }, label))));
 }
-function _extends$u() {
-  _extends$u = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$x() {
+  _extends$x = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -42341,7 +42361,7 @@ function _extends$u() {
     }
     return target;
   };
-  return _extends$u.apply(this, arguments);
+  return _extends$x.apply(this, arguments);
 }
 function Popup(props) {
   const {
@@ -42444,9 +42464,9 @@ function Popup(props) {
     presets,
     onClick: onPresetSubmit,
     onHover: onPresetHover
-  }), /* @__PURE__ */ reactExports.createElement("div", null, /* @__PURE__ */ reactExports.createElement(PopupPanel, _extends$u({}, props, {
+  }), /* @__PURE__ */ reactExports.createElement("div", null, /* @__PURE__ */ reactExports.createElement(PopupPanel, _extends$x({}, props, {
     value: popupPanelValue
-  })), /* @__PURE__ */ reactExports.createElement(Footer$1, _extends$u({}, props, {
+  })), /* @__PURE__ */ reactExports.createElement(Footer$1, _extends$x({}, props, {
     showNow: multiple ? false : showNow,
     invalid: disableSubmit,
     onSubmit: onFooterSubmit
@@ -42639,8 +42659,8 @@ const propNames = ["onMouseEnter", "onMouseLeave"];
 function useRootProps(props) {
   return reactExports.useMemo(() => pickProps(props, propNames), [props]);
 }
-function _extends$t() {
-  _extends$t = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$w() {
+  _extends$w = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -42651,7 +42671,7 @@ function _extends$t() {
     }
     return target;
   };
-  return _extends$t.apply(this, arguments);
+  return _extends$w.apply(this, arguments);
 }
 function Icon$1({
   icon,
@@ -42662,13 +42682,13 @@ function Icon$1({
     classNames,
     styles
   } = reactExports.useContext(PickerContext);
-  return icon ? /* @__PURE__ */ reactExports.createElement("span", _extends$t({
+  return icon ? /* @__PURE__ */ reactExports.createElement("span", _extends$w({
     className: clsx(`${prefixCls}-suffix`, classNames.suffix),
     style: styles.suffix
   }, restProps), icon) : null;
 }
-function _extends$s() {
-  _extends$s = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$v() {
+  _extends$v = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -42679,7 +42699,7 @@ function _extends$s() {
     }
     return target;
   };
-  return _extends$s.apply(this, arguments);
+  return _extends$v.apply(this, arguments);
 }
 function ClearIcon({
   icon,
@@ -42692,7 +42712,7 @@ function ClearIcon({
     styles,
     locale: locale2
   } = reactExports.useContext(PickerContext);
-  return /* @__PURE__ */ reactExports.createElement("button", _extends$s({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement("button", _extends$v({}, restProps, {
     type: "button",
     "aria-label": locale2.clear,
     className: clsx(`${prefixCls}-clear`, classNames.suffix),
@@ -42793,8 +42813,8 @@ function getMaskRange(key) {
   };
   return PresetRange[key];
 }
-function _extends$r() {
-  _extends$r = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$u() {
+  _extends$u = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -42805,7 +42825,7 @@ function _extends$r() {
     }
     return target;
   };
-  return _extends$r.apply(this, arguments);
+  return _extends$u.apply(this, arguments);
 }
 const Input$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -43046,7 +43066,7 @@ const Input$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       [`${inputPrefixCls}-active`]: active && showActiveCls,
       [`${inputPrefixCls}-placeholder`]: helped
     }, className)
-  }, /* @__PURE__ */ reactExports.createElement(Component, _extends$r({
+  }, /* @__PURE__ */ reactExports.createElement(Component, _extends$u({
     ref: inputRef,
     "aria-invalid": invalid,
     autoComplete: "off"
@@ -43064,8 +43084,8 @@ const Input$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     icon: suffixIcon
   }), clearIcon);
 });
-function _extends$q() {
-  _extends$q = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$t() {
+  _extends$t = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -43076,7 +43096,7 @@ function _extends$q() {
     }
     return target;
   };
-  return _extends$q.apply(this, arguments);
+  return _extends$t.apply(this, arguments);
 }
 function RangeSelector(props, ref) {
   const {
@@ -43200,7 +43220,7 @@ function RangeSelector(props, ref) {
   const endAutoFocus = autoFocus && !startAutoFocus && !disabled[1];
   return /* @__PURE__ */ reactExports.createElement(RefResizeObserver, {
     onResize: syncActiveOffset
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$q({}, rootProps, {
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$t({}, rootProps, {
     className: clsx(prefixCls, `${prefixCls}-range`, {
       [`${prefixCls}-focused`]: focused,
       [`${prefixCls}-disabled`]: disabled.every((i) => i),
@@ -43222,7 +43242,7 @@ function RangeSelector(props, ref) {
   }), prefix2 && /* @__PURE__ */ reactExports.createElement("div", {
     className: clsx(`${prefixCls}-prefix`, classNames.prefix),
     style: styles.prefix
-  }, prefix2), /* @__PURE__ */ reactExports.createElement(Input$3, _extends$q({
+  }, prefix2), /* @__PURE__ */ reactExports.createElement(Input$3, _extends$t({
     ref: inputStartRef
   }, getInputProps(0), {
     className: `${prefixCls}-input-start`,
@@ -43231,7 +43251,7 @@ function RangeSelector(props, ref) {
     "date-range": "start"
   })), /* @__PURE__ */ reactExports.createElement("div", {
     className: `${prefixCls}-range-separator`
-  }, separator), /* @__PURE__ */ reactExports.createElement(Input$3, _extends$q({
+  }, separator), /* @__PURE__ */ reactExports.createElement(Input$3, _extends$t({
     ref: inputEndRef
   }, getInputProps(1), {
     className: `${prefixCls}-input-end`,
@@ -43262,8 +43282,8 @@ function useSemantic(classNames, styles) {
     return [mergedClassNames, mergedStyles];
   }, [classNames, styles]);
 }
-function _extends$p() {
-  _extends$p = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$s() {
+  _extends$s = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -43274,7 +43294,7 @@ function _extends$p() {
     }
     return target;
   };
-  return _extends$p.apply(this, arguments);
+  return _extends$s.apply(this, arguments);
 }
 function separateConfig(config, defaultConfig2) {
   const singleConfig = config ?? defaultConfig2;
@@ -43533,7 +43553,7 @@ function RangePicker(props, ref) {
     const restProps = omit(filledProps, [...Object.keys(domProps), "onChange", "onCalendarChange", "onClear", "style", "className", "onPanelChange", "disabledTime", "classNames", "styles"]);
     return restProps;
   }, [filledProps]);
-  const panel = /* @__PURE__ */ reactExports.createElement(Popup, _extends$p({}, panelProps, {
+  const panel = /* @__PURE__ */ reactExports.createElement(Popup, _extends$s({}, panelProps, {
     showNow: mergedShowNow,
     showTime: mergedShowTime,
     range: true,
@@ -43636,7 +43656,7 @@ function RangePicker(props, ref) {
   }, [mergedOpen]);
   return /* @__PURE__ */ reactExports.createElement(PickerContext.Provider, {
     value: context
-  }, /* @__PURE__ */ reactExports.createElement(PickerTrigger, _extends$p({}, pickTriggerProps(filledProps), {
+  }, /* @__PURE__ */ reactExports.createElement(PickerTrigger, _extends$s({}, pickTriggerProps(filledProps), {
     popupElement: panel,
     popupStyle: mergedStyles.popup.root,
     popupClassName: clsx(rootClassName, mergedClassNames.popup.root),
@@ -43645,7 +43665,7 @@ function RangePicker(props, ref) {
     range: true
   }), /* @__PURE__ */ reactExports.createElement(
     RefRangeSelector,
-    _extends$p({}, filledProps, {
+    _extends$s({}, filledProps, {
       // Ref
       ref: selectorRef,
       className: clsx(filledProps.className, rootClassName, mergedClassNames.root),
@@ -43746,8 +43766,8 @@ function MultipleDates(props) {
     className: `${prefixCls}-selection-placeholder`
   }, placeholder));
 }
-function _extends$o() {
-  _extends$o = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$r() {
+  _extends$r = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -43758,7 +43778,7 @@ function _extends$o() {
     }
     return target;
   };
-  return _extends$o.apply(this, arguments);
+  return _extends$r.apply(this, arguments);
 }
 function SingleSelector(props, ref) {
   const {
@@ -43875,7 +43895,7 @@ function SingleSelector(props, ref) {
   }), showClear && /* @__PURE__ */ reactExports.createElement(ClearIcon, {
     icon: clearIcon,
     onClear
-  })) : /* @__PURE__ */ reactExports.createElement(Input$3, _extends$o({
+  })) : /* @__PURE__ */ reactExports.createElement(Input$3, _extends$r({
     ref: inputRef
   }, getInputProps(), {
     autoFocus,
@@ -43887,7 +43907,7 @@ function SingleSelector(props, ref) {
     }),
     showActiveCls: false
   }));
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$o({}, rootProps, {
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$r({}, rootProps, {
     className: clsx(prefixCls, {
       [`${prefixCls}-multiple`]: multiple,
       [`${prefixCls}-focused`]: focused,
@@ -43913,8 +43933,8 @@ function SingleSelector(props, ref) {
   }, prefix2), selectorNode);
 }
 const RefSingleSelector = /* @__PURE__ */ reactExports.forwardRef(SingleSelector);
-function _extends$n() {
-  _extends$n = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$q() {
+  _extends$q = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -43925,7 +43945,7 @@ function _extends$n() {
     }
     return target;
   };
-  return _extends$n.apply(this, arguments);
+  return _extends$q.apply(this, arguments);
 }
 function Picker(props, ref) {
   const [filledProps, internalPicker, complexPicker, formatList, maskFormat, isInvalidateDate] = useFilledProps(props);
@@ -44174,7 +44194,7 @@ function Picker(props, ref) {
       multiple: filledProps.multiple
     };
   }, [filledProps]);
-  const panel = /* @__PURE__ */ reactExports.createElement(Popup, _extends$n({}, panelProps, {
+  const panel = /* @__PURE__ */ reactExports.createElement(Popup, _extends$q({}, panelProps, {
     showNow: mergedShowNow,
     showTime,
     disabledDate,
@@ -44254,7 +44274,7 @@ function Picker(props, ref) {
   }, [mergedOpen]);
   return /* @__PURE__ */ reactExports.createElement(PickerContext.Provider, {
     value: context
-  }, /* @__PURE__ */ reactExports.createElement(PickerTrigger, _extends$n({}, pickTriggerProps(filledProps), {
+  }, /* @__PURE__ */ reactExports.createElement(PickerTrigger, _extends$q({}, pickTriggerProps(filledProps), {
     popupElement: panel,
     popupStyle: mergedStyles.popup.root,
     popupClassName: clsx(rootClassName, mergedClassNames.popup.root),
@@ -44262,7 +44282,7 @@ function Picker(props, ref) {
     onClose: onPopupClose
   }), /* @__PURE__ */ reactExports.createElement(
     RefSingleSelector,
-    _extends$n({}, filledProps, {
+    _extends$q({}, filledProps, {
       // Ref
       ref: selectorRef,
       className: clsx(filledProps.className, rootClassName, mergedClassNames.root),
@@ -44314,8 +44334,8 @@ const RadioGroupContext = /* @__PURE__ */ reactExports.createContext(void 0);
 const RadioGroupContextProvider = RadioGroupContext.Provider;
 const RadioOptionTypeContext = /* @__PURE__ */ reactExports.createContext(void 0);
 const RadioOptionTypeContextProvider = RadioOptionTypeContext.Provider;
-function _extends$m() {
-  _extends$m = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$p() {
+  _extends$p = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -44326,7 +44346,7 @@ function _extends$m() {
     }
     return target;
   };
-  return _extends$m.apply(this, arguments);
+  return _extends$p.apply(this, arguments);
 }
 const Checkbox$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -44385,7 +44405,7 @@ const Checkbox$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     title,
     style: style2,
     ref: holderRef
-  }, /* @__PURE__ */ reactExports.createElement("input", _extends$m({}, inputProps, {
+  }, /* @__PURE__ */ reactExports.createElement("input", _extends$p({}, inputProps, {
     className: `${prefixCls}-input`,
     ref: inputRef,
     onChange: handleChange,
@@ -44867,7 +44887,7 @@ const getRadioButtonStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$6 = (token2) => {
+const prepareComponentToken$7 = (token2) => {
   const {
     wireframe,
     padding,
@@ -44909,7 +44929,7 @@ const prepareComponentToken$6 = (token2) => {
     radioBgColor: wireframe ? colorBgContainer : colorPrimary
   };
 };
-const useStyle$d = genStyleHooks("Radio", (token2) => {
+const useStyle$e = genStyleHooks("Radio", (token2) => {
   const {
     controlOutline,
     controlOutlineWidth
@@ -44921,7 +44941,7 @@ const useStyle$d = genStyleHooks("Radio", (token2) => {
     radioButtonFocusShadow
   });
   return [getGroupRadioStyle(radioToken), getRadioBasicStyle(radioToken), getRadioButtonStyle(radioToken)];
-}, prepareComponentToken$6, {
+}, prepareComponentToken$7, {
   unitless: {
     radioSize: true,
     dotSize: true
@@ -44963,7 +44983,7 @@ const InternalRadio = (props, ref) => {
   const isButtonType = (groupContext?.optionType || radioOptionTypeContext) === "button";
   const prefixCls = isButtonType ? `${radioPrefixCls}-button` : radioPrefixCls;
   const rootCls = useCSSVarCls(radioPrefixCls);
-  const [hashId, cssVarCls] = useStyle$d(radioPrefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$e(radioPrefixCls, rootCls);
   const radioProps = {
     ...restProps
   };
@@ -45072,7 +45092,7 @@ const RadioGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const prefixCls = getPrefixCls("radio", customizePrefixCls);
   const groupPrefixCls = `${prefixCls}-group`;
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$d(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$e(prefixCls, rootCls);
   let childrenToRender = children;
   if (options && options.length > 0) {
     childrenToRender = options.map((option) => {
@@ -46094,7 +46114,7 @@ const useSharedStyle = genStyleHooks(["Input", "Shared"], (token2) => {
 }, initComponentToken, {
   resetFont: false
 });
-const useStyle$c = genStyleHooks(["Input", "Component"], (token2) => {
+const useStyle$d = genStyleHooks(["Input", "Component"], (token2) => {
   const inputToken = merge(token2, initInputToken(token2));
   return [
     genGroupStyle(inputToken),
@@ -46937,7 +46957,7 @@ const initPanelComponentToken = (token2) => {
   };
   return filledToken;
 };
-const prepareComponentToken$5 = (token2) => ({
+const prepareComponentToken$6 = (token2) => ({
   ...initComponentToken(token2),
   ...initPanelComponentToken(token2),
   ...getArrowToken(token2),
@@ -47425,7 +47445,7 @@ const genPickerStyle = (token2) => {
     initMoveMotion(token2, "move-down")
   ];
 };
-const useStyle$b = genStyleHooks("DatePicker", (token2) => {
+const useStyle$c = genStyleHooks("DatePicker", (token2) => {
   const pickerToken = merge(initInputToken(token2), initPickerPanelToken(token2), {
     inputPaddingHorizontalBase: token2.calc(token2.paddingSM).sub(1).equal(),
     multipleSelectItemHeight: token2.multipleItemHeight,
@@ -47444,13 +47464,13 @@ const useStyle$b = genStyleHooks("DatePicker", (token2) => {
       focusElCls: `${token2.componentCls}-focused`
     })
   ];
-}, prepareComponentToken$5);
+}, prepareComponentToken$6);
 var PlusOutlined$2 = {};
 Object.defineProperty(PlusOutlined$2, "__esModule", { value: true });
 var PlusOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z" } }, { "tag": "path", "attrs": { "d": "M192 474h672q8 0 8 8v60q0 8-8 8H160q-8 0-8-8v-60q0-8 8-8z" } }] }, "name": "plus", "theme": "outlined" };
-var _default$a = PlusOutlined$2.default = PlusOutlined$1;
-function _extends$l() {
-  _extends$l = Object.assign ? Object.assign.bind() : function(target) {
+var _default$c = PlusOutlined$2.default = PlusOutlined$1;
+function _extends$o() {
+  _extends$o = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -47461,13 +47481,13 @@ function _extends$l() {
     }
     return target;
   };
-  return _extends$l.apply(this, arguments);
+  return _extends$o.apply(this, arguments);
 }
-const PlusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$l({}, props, {
+const PlusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$o({}, props, {
   ref,
-  icon: _default$a
+  icon: _default$c
 }));
-const RefIcon$a = /* @__PURE__ */ reactExports.forwardRef(PlusOutlined);
+const RefIcon$c = /* @__PURE__ */ reactExports.forwardRef(PlusOutlined);
 const TabContext = /* @__PURE__ */ reactExports.createContext(null);
 const useIndicator = (options) => {
   const {
@@ -47870,8 +47890,8 @@ const ExtraContent = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     ref
   }, content) : null;
 });
-function _extends$k() {
-  _extends$k = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$n() {
+  _extends$n = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -47882,7 +47902,7 @@ function _extends$k() {
     }
     return target;
   };
-  return _extends$k.apply(this, arguments);
+  return _extends$n.apply(this, arguments);
 }
 const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -48029,7 +48049,7 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const overlayClassName = clsx(popupClassName, {
     [`${dropdownPrefix}-rtl`]: rtl
   });
-  const moreNode = mobile ? null : /* @__PURE__ */ reactExports.createElement(Dropdown$2, _extends$k({
+  const moreNode = mobile ? null : /* @__PURE__ */ reactExports.createElement(Dropdown$2, _extends$n({
     prefixCls: dropdownPrefix,
     overlay: menu,
     visible: tabs.length ? open : false,
@@ -48168,8 +48188,8 @@ const TabNode = (props) => {
   }, closeIcon || editable.removeIcon || "×"));
   return renderWrapper ? renderWrapper(node2) : node2;
 };
-function _extends$j() {
-  _extends$j = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$m() {
+  _extends$m = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -48180,7 +48200,7 @@ function _extends$j() {
     }
     return target;
   };
-  return _extends$j.apply(this, arguments);
+  return _extends$m.apply(this, arguments);
 }
 const getTabSize = (tab, containerRect) => {
   const {
@@ -48667,7 +48687,7 @@ const TabNavList = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       ...indicatorStyle,
       ...styles?.indicator
     }
-  }))))), /* @__PURE__ */ reactExports.createElement(OperationNode$1, _extends$j({}, props, {
+  }))))), /* @__PURE__ */ reactExports.createElement(OperationNode$1, _extends$m({}, props, {
     removeAriaLabel: locale2?.removeAriaLabel,
     ref: operationsRef,
     prefixCls,
@@ -48713,8 +48733,8 @@ const TabPane$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     ref
   }, children);
 });
-function _extends$i() {
-  _extends$i = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$l() {
+  _extends$l = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -48725,7 +48745,7 @@ function _extends$i() {
     }
     return target;
   };
-  return _extends$i.apply(this, arguments);
+  return _extends$l.apply(this, arguments);
 }
 const TabPanelList = (props) => {
   const {
@@ -48763,7 +48783,7 @@ const TabPanelList = (props) => {
       ...restTabProps
     } = item;
     const active = key === activeKey;
-    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$i({
+    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$l({
       key,
       visible: active,
       forceRender,
@@ -48772,7 +48792,7 @@ const TabPanelList = (props) => {
     }, animated.tabPaneMotion), ({
       style: motionStyle,
       className: motionClassName
-    }, ref) => /* @__PURE__ */ reactExports.createElement(TabPane$1, _extends$i({}, restTabProps, {
+    }, ref) => /* @__PURE__ */ reactExports.createElement(TabPane$1, _extends$l({}, restTabProps, {
       prefixCls: contentPrefixCls,
       id: id2,
       tabKey: key,
@@ -48817,8 +48837,8 @@ function useAnimateConfig$1(animated = {
   }
   return mergedAnimated;
 }
-function _extends$h() {
-  _extends$h = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$k() {
+  _extends$k = Object.assign ? Object.assign.bind() : function(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -48829,7 +48849,7 @@ function _extends$h() {
     }
     return target;
   };
-  return _extends$h.apply(this, arguments);
+  return _extends$k.apply(this, arguments);
 }
 let uuid = 0;
 const Tabs$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -48925,7 +48945,7 @@ const Tabs$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, [tabs, prefixCls]);
   return /* @__PURE__ */ reactExports.createElement(TabContext.Provider, {
     value: memoizedValue
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$h({
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$k({
     ref,
     id: id2,
     className: clsx(prefixCls, `${prefixCls}-${tabPosition}`, {
@@ -48933,9 +48953,9 @@ const Tabs$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       [`${prefixCls}-editable`]: editable,
       [`${prefixCls}-rtl`]: rtl
     }, className)
-  }, restProps), /* @__PURE__ */ reactExports.createElement(TabNavListWrapper, _extends$h({}, tabNavBarProps, {
+  }, restProps), /* @__PURE__ */ reactExports.createElement(TabNavListWrapper, _extends$k({}, tabNavBarProps, {
     renderTabBar
-  })), /* @__PURE__ */ reactExports.createElement(TabPanelList, _extends$h({
+  })), /* @__PURE__ */ reactExports.createElement(TabPanelList, _extends$k({
     destroyOnHidden
   }, sharedProps, {
     bodyStyle: styles?.body,
@@ -49883,7 +49903,7 @@ const genTabsStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$4 = (token2) => {
+const prepareComponentToken$5 = (token2) => {
   const {
     cardHeight,
     cardHeightSM,
@@ -49928,7 +49948,7 @@ const prepareComponentToken$4 = (token2) => {
     cardGutter: token2.marginXXS / 2
   };
 };
-const useStyle$a = genStyleHooks("Tabs", (token2) => {
+const useStyle$b = genStyleHooks("Tabs", (token2) => {
   const tabsToken = merge(token2, {
     // `cardPadding` is empty by default, so we could calculate with dynamic `cardHeight`
     tabsCardPadding: token2.cardPadding,
@@ -49939,7 +49959,7 @@ const useStyle$a = genStyleHooks("Tabs", (token2) => {
     tabsHorizontalItemMarginRTL: `0 0 0 ${unit$1(token2.horizontalItemGutter)}`
   });
   return [genSizeStyle(tabsToken), genRtlStyle(tabsToken), genPositionStyle(tabsToken), genDropdownStyle(tabsToken), genCardStyle$1(tabsToken), genTabsStyle(tabsToken), genMotionStyle(tabsToken)];
-}, prepareComponentToken$4);
+}, prepareComponentToken$5);
 const TabPane = () => null;
 const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -49986,7 +50006,7 @@ const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("tabs", customizePrefixCls);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$a(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$b(prefixCls, rootCls);
   const tabsRef = reactExports.useRef(null);
   reactExports.useImperativeHandle(ref, () => ({
     nativeElement: tabsRef.current
@@ -50000,8 +50020,8 @@ const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       }) => {
         onEdit?.(editType === "add" ? event : key, editType);
       },
-      removeIcon: removeIcon ?? tabs?.removeIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$k, null),
-      addIcon: (addIcon ?? tabs?.addIcon) || /* @__PURE__ */ reactExports.createElement(RefIcon$a, null),
+      removeIcon: removeIcon ?? tabs?.removeIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
+      addIcon: (addIcon ?? tabs?.addIcon) || /* @__PURE__ */ reactExports.createElement(RefIcon$c, null),
       showAdd: hideAdd !== true
     };
   }
@@ -50061,7 +50081,7 @@ const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     style: mergedStyles.root,
     editable,
     more: {
-      icon: tabs?.more?.icon ?? tabs?.moreIcon ?? moreIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$b, null),
+      icon: tabs?.more?.icon ?? tabs?.moreIcon ?? moreIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$d, null),
       transitionName: `${rootPrefixCls}-slide-up`,
       ...more
     },
@@ -50414,7 +50434,7 @@ const genCardSizeStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$3 = (token2) => ({
+const prepareComponentToken$4 = (token2) => ({
   headerBg: "transparent",
   headerFontSize: token2.fontSizeLG,
   headerFontSizeSM: token2.fontSize,
@@ -50430,7 +50450,7 @@ const prepareComponentToken$3 = (token2) => ({
   bodyPadding: token2.bodyPadding ?? token2.paddingLG,
   headerPadding: token2.headerPadding ?? token2.paddingLG
 });
-const useStyle$9 = genStyleHooks("Card", (token2) => {
+const useStyle$a = genStyleHooks("Card", (token2) => {
   const cardToken = merge(token2, {
     cardShadow: token2.boxShadowCard,
     cardHeadPadding: token2.padding,
@@ -50443,7 +50463,7 @@ const useStyle$9 = genStyleHooks("Card", (token2) => {
     // Size
     genCardSizeStyle(cardToken)
   ];
-}, prepareComponentToken$3);
+}, prepareComponentToken$4);
 const ActionNode = (props) => {
   const {
     actionClasses,
@@ -50517,7 +50537,7 @@ const Card$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const childNodes = reactExports.useMemo(() => toArray$5(children), [children]);
   const isContainGrid = reactExports.useMemo(() => childNodes.some((child) => /* @__PURE__ */ reactExports.isValidElement(child) && child.type === CardGrid), [childNodes]);
   const prefixCls = getPrefixCls("card", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$9(prefixCls);
+  const [hashId, cssVarCls] = useStyle$a(prefixCls);
   const loadingBlock = /* @__PURE__ */ reactExports.createElement(Skeleton, {
     loading: true,
     active: true,
@@ -50876,7 +50896,7 @@ function getStyle(prefixCls, token2) {
   });
   return genCheckboxStyle(checkboxToken);
 }
-const useStyle$8 = genStyleHooks("Checkbox", (token2, {
+const useStyle$9 = genStyleHooks("Checkbox", (token2, {
   prefixCls
 }) => [getStyle(prefixCls, token2)]);
 const GroupContext = /* @__PURE__ */ React$2.createContext(null);
@@ -50952,7 +50972,7 @@ const InternalCheckbox = (props, ref) => {
   }, [indeterminate]);
   const prefixCls = getPrefixCls("checkbox", customizePrefixCls);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$8(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$9(prefixCls, rootCls);
   const checkboxProps = {
     ...restProps
   };
@@ -51063,7 +51083,7 @@ const CheckboxGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const prefixCls = getPrefixCls("checkbox", customizePrefixCls);
   const groupPrefixCls = `${prefixCls}-group`;
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$8(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$9(prefixCls, rootCls);
   const domProps = omit(restProps, ["value", "disabled"]);
   const childrenNode = options.length ? memoizedOptions.map((option) => /* @__PURE__ */ reactExports.createElement(Checkbox$1, {
     prefixCls,
@@ -51401,7 +51421,7 @@ const Segmented$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       value: optionValue,
       disabled: optionDisabled
     } = segmentedOption;
-    return /* @__PURE__ */ reactExports.createElement(InternalSegmentedOption, _extends$17({}, segmentedOption, {
+    return /* @__PURE__ */ reactExports.createElement(InternalSegmentedOption, _extends$1a({}, segmentedOption, {
       name,
       data: segmentedOption,
       itemRender,
@@ -51424,7 +51444,7 @@ const Segmented$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       disabled: !!disabled || !!optionDisabled
     }));
   };
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$17({
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$1a({
     role: "radiogroup",
     "aria-label": "segmented control",
     tabIndex: disabled ? void 0 : 0,
@@ -51643,7 +51663,7 @@ const genSegmentedStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$2 = (token2) => {
+const prepareComponentToken$3 = (token2) => {
   const {
     colorTextLabel,
     colorText,
@@ -51664,7 +51684,7 @@ const prepareComponentToken$2 = (token2) => {
     itemSelectedColor: colorText
   };
 };
-const useStyle$7 = genStyleHooks("Segmented", (token2) => {
+const useStyle$8 = genStyleHooks("Segmented", (token2) => {
   const {
     lineWidth,
     calc
@@ -51674,7 +51694,7 @@ const useStyle$7 = genStyleHooks("Segmented", (token2) => {
     segmentedPaddingHorizontalSM: calc(token2.controlPaddingHorizontalSM).sub(lineWidth).equal()
   });
   return genSegmentedStyle(segmentedToken);
-}, prepareComponentToken$2);
+}, prepareComponentToken$3);
 function isSegmentedLabeledOptionWithIcon(option) {
   return isPlainObject$1(option) && !!option?.icon;
 }
@@ -51716,7 +51736,7 @@ const InternalSegmented = /* @__PURE__ */ reactExports.forwardRef((props, ref) =
     props: mergedProps
   });
   const prefixCls = getPrefixCls("segmented", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$7(prefixCls);
+  const [hashId, cssVarCls] = useStyle$8(prefixCls);
   const mergedSize = useSize(customSize);
   const extendedOptions = reactExports.useMemo(() => options.map((option) => {
     if (isSegmentedLabeledOptionWithIcon(option)) {
@@ -51772,6 +51792,988 @@ const InternalSegmented = /* @__PURE__ */ reactExports.forwardRef((props, ref) =
   });
 });
 const Segmented = InternalSegmented;
+var MinusOutlined$2 = {};
+Object.defineProperty(MinusOutlined$2, "__esModule", { value: true });
+var MinusOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M872 474H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h720c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8z" } }] }, "name": "minus", "theme": "outlined" };
+var _default$b = MinusOutlined$2.default = MinusOutlined$1;
+function _extends$j() {
+  _extends$j = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$j.apply(this, arguments);
+}
+const MinusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$j({}, props, {
+  ref,
+  icon: _default$b
+}));
+const RefIcon$b = /* @__PURE__ */ reactExports.forwardRef(MinusOutlined);
+var UpOutlined$2 = {};
+Object.defineProperty(UpOutlined$2, "__esModule", { value: true });
+var UpOutlined$1 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M890.5 755.3L537.9 269.2c-12.8-17.6-39-17.6-51.7 0L133.5 755.3A8 8 0 00140 768h75c5.1 0 9.9-2.5 12.9-6.6L512 369.8l284.1 391.6c3 4.1 7.8 6.6 12.9 6.6h75c6.5 0 10.3-7.4 6.5-12.7z" } }] }, "name": "up", "theme": "outlined" };
+var _default$a = UpOutlined$2.default = UpOutlined$1;
+function _extends$i() {
+  _extends$i = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$i.apply(this, arguments);
+}
+const UpOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$3, _extends$i({}, props, {
+  ref,
+  icon: _default$a
+}));
+const RefIcon$a = /* @__PURE__ */ reactExports.forwardRef(UpOutlined);
+function supportBigInt() {
+  return typeof BigInt === "function";
+}
+function isEmpty$1(value) {
+  return !value && value !== 0 && !Number.isNaN(value) || !String(value).trim();
+}
+function trimNumber(numStr) {
+  var str = numStr.trim();
+  var negative = str.startsWith("-");
+  if (negative) {
+    str = str.slice(1);
+  }
+  str = str.replace(/(\.\d*[^0])0*$/, "$1").replace(/\.0*$/, "").replace(/^0+/, "");
+  if (str.startsWith(".")) {
+    str = "0".concat(str);
+  }
+  var trimStr = str || "0";
+  var splitNumber = trimStr.split(".");
+  var integerStr = splitNumber[0] || "0";
+  var decimalStr = splitNumber[1] || "0";
+  if (integerStr === "0" && decimalStr === "0") {
+    negative = false;
+  }
+  var negativeStr = negative ? "-" : "";
+  return {
+    negative,
+    negativeStr,
+    trimStr,
+    integerStr,
+    decimalStr,
+    fullStr: "".concat(negativeStr).concat(trimStr)
+  };
+}
+function isE(number2) {
+  var str = String(number2);
+  return !Number.isNaN(Number(str)) && str.includes("e");
+}
+function parseScientificNotation(numStr) {
+  var _numStr$toLowerCase$s = numStr.toLowerCase().split("e"), _numStr$toLowerCase$s2 = _slicedToArray(_numStr$toLowerCase$s, 2), mantissa = _numStr$toLowerCase$s2[0], _numStr$toLowerCase$s3 = _numStr$toLowerCase$s2[1], exponent = _numStr$toLowerCase$s3 === void 0 ? "0" : _numStr$toLowerCase$s3;
+  var negative = mantissa.startsWith("-");
+  var unsignedMantissa = negative ? mantissa.slice(1) : mantissa;
+  var _unsignedMantissa$spl = unsignedMantissa.split("."), _unsignedMantissa$spl2 = _slicedToArray(_unsignedMantissa$spl, 2), _unsignedMantissa$spl3 = _unsignedMantissa$spl2[0], integer2 = _unsignedMantissa$spl3 === void 0 ? "0" : _unsignedMantissa$spl3, _unsignedMantissa$spl4 = _unsignedMantissa$spl2[1], decimal = _unsignedMantissa$spl4 === void 0 ? "" : _unsignedMantissa$spl4;
+  var digits = "".concat(integer2).concat(decimal).replace(/^0+/, "") || "0";
+  return {
+    decimal,
+    digits,
+    exponent: Number(exponent),
+    integer: integer2,
+    negative
+  };
+}
+function expandScientificNotation(parsed) {
+  var decimal = parsed.decimal, digits = parsed.digits, exponent = parsed.exponent, integer2 = parsed.integer, negative = parsed.negative;
+  if (digits === "0") {
+    return "0";
+  }
+  var integerDigits = integer2.replace(/^0+/, "").length;
+  var leadingDecimalZeros = (decimal.match(/^0*/) || [""])[0].length;
+  var initialDecimalIndex = integerDigits || -leadingDecimalZeros;
+  var decimalIndex = initialDecimalIndex + exponent;
+  var expanded = "";
+  if (decimalIndex <= 0) {
+    expanded = "0.".concat("0".repeat(-decimalIndex)).concat(digits);
+  } else if (decimalIndex >= digits.length) {
+    expanded = "".concat(digits).concat("0".repeat(decimalIndex - digits.length));
+  } else {
+    expanded = "".concat(digits.slice(0, decimalIndex), ".").concat(digits.slice(decimalIndex));
+  }
+  return "".concat(negative ? "-" : "").concat(expanded);
+}
+function getScientificPrecision(parsed) {
+  if (parsed.exponent >= 0) {
+    return Math.max(0, parsed.decimal.length - parsed.exponent);
+  }
+  return Math.abs(parsed.exponent) + parsed.decimal.length;
+}
+function getNumberPrecision(number2) {
+  var numStr = String(number2);
+  if (isE(number2)) {
+    return getScientificPrecision(parseScientificNotation(numStr));
+  }
+  return numStr.includes(".") && validateNumber(numStr) ? numStr.length - numStr.indexOf(".") - 1 : 0;
+}
+function num2str(number2) {
+  var numStr = String(number2);
+  if (isE(number2)) {
+    if (number2 > Number.MAX_SAFE_INTEGER) {
+      return String(supportBigInt() ? BigInt(number2).toString() : Number.MAX_SAFE_INTEGER);
+    }
+    if (number2 < Number.MIN_SAFE_INTEGER) {
+      return String(supportBigInt() ? BigInt(number2).toString() : Number.MIN_SAFE_INTEGER);
+    }
+    var parsed = parseScientificNotation(numStr);
+    var precision = getScientificPrecision(parsed);
+    numStr = precision > 100 ? expandScientificNotation(parsed) : number2.toFixed(precision);
+  }
+  return trimNumber(numStr).fullStr;
+}
+function validateNumber(num) {
+  if (typeof num === "number") {
+    return !Number.isNaN(num);
+  }
+  if (!num) {
+    return false;
+  }
+  return (
+    // Normal type: 11.28
+    /^\s*-?\d+(\.\d+)?\s*$/.test(num) || // Pre-number: 1.
+    /^\s*-?\d+\.\s*$/.test(num) || // Post-number: .1
+    /^\s*-?\.\d+\s*$/.test(num)
+  );
+}
+var BigIntDecimal = /* @__PURE__ */ function() {
+  function BigIntDecimal2(value) {
+    _classCallCheck(this, BigIntDecimal2);
+    _defineProperty(this, "origin", "");
+    _defineProperty(this, "negative", void 0);
+    _defineProperty(this, "integer", void 0);
+    _defineProperty(this, "decimal", void 0);
+    _defineProperty(this, "decimalLen", void 0);
+    _defineProperty(this, "empty", void 0);
+    _defineProperty(this, "nan", void 0);
+    if (isEmpty$1(value)) {
+      this.empty = true;
+      return;
+    }
+    this.origin = String(value);
+    if (value === "-" || Number.isNaN(value)) {
+      this.nan = true;
+      return;
+    }
+    var mergedValue = value;
+    if (isE(mergedValue)) {
+      mergedValue = Number(mergedValue);
+    }
+    mergedValue = typeof mergedValue === "string" ? mergedValue : num2str(mergedValue);
+    if (validateNumber(mergedValue)) {
+      var trimRet = trimNumber(mergedValue);
+      this.negative = trimRet.negative;
+      var numbers = trimRet.trimStr.split(".");
+      this.integer = BigInt(numbers[0]);
+      var decimalStr = numbers[1] || "0";
+      this.decimal = BigInt(decimalStr);
+      this.decimalLen = decimalStr.length;
+    } else {
+      this.nan = true;
+    }
+  }
+  _createClass(BigIntDecimal2, [{
+    key: "getMark",
+    value: function getMark2() {
+      return this.negative ? "-" : "";
+    }
+  }, {
+    key: "getIntegerStr",
+    value: function getIntegerStr() {
+      return this.integer.toString();
+    }
+    /**
+     * @private get decimal string
+     */
+  }, {
+    key: "getDecimalStr",
+    value: function getDecimalStr() {
+      return this.decimal.toString().padStart(this.decimalLen, "0");
+    }
+    /**
+     * @private Align BigIntDecimal with same decimal length. e.g. 12.3 + 5 = 1230000
+     * This is used for add function only.
+     */
+  }, {
+    key: "alignDecimal",
+    value: function alignDecimal(decimalLength) {
+      var str = "".concat(this.getMark()).concat(this.getIntegerStr()).concat(this.getDecimalStr().padEnd(decimalLength, "0"));
+      return BigInt(str);
+    }
+  }, {
+    key: "negate",
+    value: function negate() {
+      var clone = new BigIntDecimal2(this.toString());
+      clone.negative = !clone.negative;
+      return clone;
+    }
+  }, {
+    key: "cal",
+    value: function cal(offset2, calculator, calDecimalLen) {
+      var maxDecimalLength = Math.max(this.getDecimalStr().length, offset2.getDecimalStr().length);
+      var myAlignedDecimal = this.alignDecimal(maxDecimalLength);
+      var offsetAlignedDecimal = offset2.alignDecimal(maxDecimalLength);
+      var valueStr = calculator(myAlignedDecimal, offsetAlignedDecimal).toString();
+      var nextDecimalLength = calDecimalLen(maxDecimalLength);
+      var _trimNumber = trimNumber(valueStr), negativeStr = _trimNumber.negativeStr, trimStr = _trimNumber.trimStr;
+      var hydrateValueStr = "".concat(negativeStr).concat(trimStr.padStart(nextDecimalLength + 1, "0"));
+      return new BigIntDecimal2("".concat(hydrateValueStr.slice(0, -nextDecimalLength), ".").concat(hydrateValueStr.slice(-nextDecimalLength)));
+    }
+  }, {
+    key: "add",
+    value: function add(value) {
+      if (this.isInvalidate()) {
+        return new BigIntDecimal2(value);
+      }
+      var offset2 = new BigIntDecimal2(value);
+      if (offset2.isInvalidate()) {
+        return this;
+      }
+      return this.cal(offset2, function(num1, num2) {
+        return num1 + num2;
+      }, function(len) {
+        return len;
+      });
+    }
+  }, {
+    key: "multi",
+    value: function multi(value) {
+      var target = new BigIntDecimal2(value);
+      if (this.isInvalidate() || target.isInvalidate()) {
+        return new BigIntDecimal2(NaN);
+      }
+      return this.cal(target, function(num1, num2) {
+        return num1 * num2;
+      }, function(len) {
+        return len * 2;
+      });
+    }
+  }, {
+    key: "isEmpty",
+    value: function isEmpty2() {
+      return this.empty;
+    }
+  }, {
+    key: "isNaN",
+    value: function isNaN2() {
+      return this.nan;
+    }
+  }, {
+    key: "isInvalidate",
+    value: function isInvalidate() {
+      return this.isEmpty() || this.isNaN();
+    }
+  }, {
+    key: "equals",
+    value: function equals(target) {
+      return this.toString() === (target === null || target === void 0 ? void 0 : target.toString());
+    }
+  }, {
+    key: "lessEquals",
+    value: function lessEquals(target) {
+      return this.add(target.negate().toString()).toNumber() <= 0;
+    }
+  }, {
+    key: "toNumber",
+    value: function toNumber() {
+      if (this.isNaN()) {
+        return NaN;
+      }
+      return Number(this.toString());
+    }
+  }, {
+    key: "toString",
+    value: function toString2() {
+      var safe = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : true;
+      if (!safe) {
+        return this.origin;
+      }
+      if (this.isInvalidate()) {
+        return "";
+      }
+      return trimNumber("".concat(this.getMark()).concat(this.getIntegerStr(), ".").concat(this.getDecimalStr())).fullStr;
+    }
+  }]);
+  return BigIntDecimal2;
+}();
+var NumberDecimal = /* @__PURE__ */ function() {
+  function NumberDecimal2(value) {
+    _classCallCheck(this, NumberDecimal2);
+    _defineProperty(this, "origin", "");
+    _defineProperty(this, "number", void 0);
+    _defineProperty(this, "empty", void 0);
+    if (isEmpty$1(value)) {
+      this.empty = true;
+      return;
+    }
+    this.origin = String(value);
+    this.number = Number(value);
+  }
+  _createClass(NumberDecimal2, [{
+    key: "negate",
+    value: function negate() {
+      return new NumberDecimal2(-this.toNumber());
+    }
+  }, {
+    key: "add",
+    value: function add(value) {
+      if (this.isInvalidate()) {
+        return new NumberDecimal2(value);
+      }
+      var target = Number(value);
+      if (Number.isNaN(target)) {
+        return this;
+      }
+      var number2 = this.number + target;
+      if (number2 > Number.MAX_SAFE_INTEGER) {
+        return new NumberDecimal2(Number.MAX_SAFE_INTEGER);
+      }
+      if (number2 < Number.MIN_SAFE_INTEGER) {
+        return new NumberDecimal2(Number.MIN_SAFE_INTEGER);
+      }
+      var maxPrecision = Math.max(getNumberPrecision(this.number), getNumberPrecision(target));
+      return new NumberDecimal2(number2.toFixed(maxPrecision));
+    }
+  }, {
+    key: "multi",
+    value: function multi(value) {
+      var target = Number(value);
+      if (this.isInvalidate() || Number.isNaN(target)) {
+        return new NumberDecimal2(NaN);
+      }
+      var number2 = this.number * target;
+      if (number2 > Number.MAX_SAFE_INTEGER) {
+        return new NumberDecimal2(Number.MAX_SAFE_INTEGER);
+      }
+      if (number2 < Number.MIN_SAFE_INTEGER) {
+        return new NumberDecimal2(Number.MIN_SAFE_INTEGER);
+      }
+      var maxPrecision = Math.max(getNumberPrecision(this.number), getNumberPrecision(target));
+      return new NumberDecimal2(number2.toFixed(maxPrecision));
+    }
+  }, {
+    key: "isEmpty",
+    value: function isEmpty2() {
+      return this.empty;
+    }
+  }, {
+    key: "isNaN",
+    value: function isNaN2() {
+      return Number.isNaN(this.number);
+    }
+  }, {
+    key: "isInvalidate",
+    value: function isInvalidate() {
+      return this.isEmpty() || this.isNaN();
+    }
+  }, {
+    key: "equals",
+    value: function equals(target) {
+      return this.toNumber() === (target === null || target === void 0 ? void 0 : target.toNumber());
+    }
+  }, {
+    key: "lessEquals",
+    value: function lessEquals(target) {
+      return this.add(target.negate().toString()).toNumber() <= 0;
+    }
+  }, {
+    key: "toNumber",
+    value: function toNumber() {
+      return this.number;
+    }
+  }, {
+    key: "toString",
+    value: function toString2() {
+      var safe = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : true;
+      if (!safe) {
+        return this.origin;
+      }
+      if (this.isInvalidate()) {
+        return "";
+      }
+      if (isE(this.number) && getNumberPrecision(this.number) > 100) {
+        return String(this.number);
+      }
+      return num2str(this.number);
+    }
+  }]);
+  return NumberDecimal2;
+}();
+function getMiniDecimal(value) {
+  if (supportBigInt()) {
+    return new BigIntDecimal(value);
+  }
+  return new NumberDecimal(value);
+}
+function toFixed(numStr, separatorStr, precision) {
+  var cutOnly = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : false;
+  if (numStr === "") {
+    return "";
+  }
+  var _trimNumber = trimNumber(numStr), negativeStr = _trimNumber.negativeStr, integerStr = _trimNumber.integerStr, decimalStr = _trimNumber.decimalStr;
+  var precisionDecimalStr = "".concat(separatorStr).concat(decimalStr);
+  var numberWithoutDecimal = "".concat(negativeStr).concat(integerStr);
+  if (precision >= 0) {
+    var advancedNum = Number(decimalStr[precision]);
+    if (advancedNum >= 5 && !cutOnly) {
+      var advancedDecimal = getMiniDecimal(numStr).add("".concat(negativeStr, "0.").concat("0".repeat(precision)).concat(10 - advancedNum));
+      return toFixed(advancedDecimal.toString(), separatorStr, precision, cutOnly);
+    }
+    if (precision === 0) {
+      return numberWithoutDecimal;
+    }
+    return "".concat(numberWithoutDecimal).concat(separatorStr).concat(decimalStr.padEnd(precision, "0").slice(0, precision));
+  }
+  if (precisionDecimalStr === ".0") {
+    return numberWithoutDecimal;
+  }
+  return "".concat(numberWithoutDecimal).concat(precisionDecimalStr);
+}
+function useCursor(input, focused) {
+  const selectionRef = reactExports.useRef(null);
+  function recordCursor() {
+    try {
+      const {
+        selectionStart: start,
+        selectionEnd: end,
+        value
+      } = input;
+      const beforeTxt = value.substring(0, start);
+      const afterTxt = value.substring(end);
+      selectionRef.current = {
+        start,
+        end,
+        value,
+        beforeTxt,
+        afterTxt
+      };
+    } catch (e) {
+    }
+  }
+  function restoreCursor() {
+    if (input && selectionRef.current && focused) {
+      try {
+        const {
+          value
+        } = input;
+        const {
+          beforeTxt,
+          afterTxt,
+          start
+        } = selectionRef.current;
+        let startPos = value.length;
+        if (value.startsWith(beforeTxt)) {
+          startPos = beforeTxt.length;
+        } else if (value.endsWith(afterTxt)) {
+          startPos = value.length - selectionRef.current.afterTxt.length;
+        } else {
+          const beforeLastChar = beforeTxt[start - 1];
+          const newIndex = value.indexOf(beforeLastChar, start - 1);
+          if (newIndex !== -1) {
+            startPos = newIndex + 1;
+          }
+        }
+        input.setSelectionRange(startPos, startPos);
+      } catch (e) {
+        warningOnce$1(false, `Something warning of cursor restore. Please fire issue about this: ${e.message}`);
+      }
+    }
+  }
+  return [recordCursor, restoreCursor];
+}
+const STEP_INTERVAL = 200;
+const STEP_DELAY = 600;
+function StepHandler({
+  prefixCls,
+  action,
+  children,
+  disabled,
+  className,
+  style: style2,
+  onStep
+}) {
+  const isUpAction = action === "up";
+  const stepTimeoutRef = reactExports.useRef();
+  const frameIds = reactExports.useRef([]);
+  const onStopStep = () => {
+    clearTimeout(stepTimeoutRef.current);
+  };
+  const onStepMouseDown = (e) => {
+    e.preventDefault();
+    onStopStep();
+    onStep(isUpAction, "handler");
+    function loopStep() {
+      onStep(isUpAction, "handler");
+      stepTimeoutRef.current = setTimeout(loopStep, STEP_INTERVAL);
+    }
+    stepTimeoutRef.current = setTimeout(loopStep, STEP_DELAY);
+  };
+  reactExports.useEffect(() => () => {
+    onStopStep();
+    frameIds.current.forEach((id2) => {
+      wrapperRaf.cancel(id2);
+    });
+  }, []);
+  const actionClassName = `${prefixCls}-action`;
+  const mergedClassName = clsx(actionClassName, `${actionClassName}-${action}`, {
+    [`${actionClassName}-${action}-disabled`]: disabled
+  }, className);
+  const safeOnStopStep = () => frameIds.current.push(wrapperRaf(onStopStep));
+  return /* @__PURE__ */ reactExports.createElement("span", {
+    unselectable: "on",
+    role: "button",
+    onMouseUp: safeOnStopStep,
+    onMouseLeave: safeOnStopStep,
+    onMouseDown: (e) => {
+      onStepMouseDown(e);
+    },
+    "aria-label": isUpAction ? "Increase Value" : "Decrease Value",
+    "aria-disabled": disabled,
+    className: mergedClassName,
+    style: style2
+  }, children || /* @__PURE__ */ reactExports.createElement("span", {
+    unselectable: "on",
+    className: `${prefixCls}-action-${action}-inner`
+  }));
+}
+function getDecupleSteps(step) {
+  const stepStr = typeof step === "number" ? num2str(step) : trimNumber(step).fullStr;
+  const hasPoint = stepStr.includes(".");
+  if (!hasPoint) {
+    return step + "0";
+  }
+  return trimNumber(stepStr.replace(/(\d)\.(\d)/g, "$1$2.")).fullStr;
+}
+const useFrame = () => {
+  const idRef = reactExports.useRef(0);
+  const cleanUp = () => {
+    wrapperRaf.cancel(idRef.current);
+  };
+  reactExports.useEffect(() => cleanUp, []);
+  return (callback) => {
+    cleanUp();
+    idRef.current = wrapperRaf(() => {
+      callback();
+    });
+  };
+};
+function _extends$h() {
+  _extends$h = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$h.apply(this, arguments);
+}
+const getDecimalValue = (stringMode, decimalValue) => {
+  if (stringMode || decimalValue.isEmpty()) {
+    return decimalValue.toString();
+  }
+  return decimalValue.toNumber();
+};
+const getDecimalIfValidate = (value) => {
+  const decimal = getMiniDecimal(value);
+  return decimal.isInvalidate() ? null : decimal;
+};
+const InputNumber$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+  const {
+    mode = "input",
+    prefixCls = "rc-input-number",
+    className,
+    style: style2,
+    classNames,
+    styles,
+    min,
+    max,
+    step = 1,
+    defaultValue,
+    value,
+    disabled,
+    readOnly,
+    upHandler,
+    downHandler,
+    keyboard,
+    changeOnWheel = false,
+    controls = true,
+    prefix: prefix2,
+    suffix,
+    stringMode,
+    parser,
+    formatter,
+    precision,
+    decimalSeparator,
+    onChange,
+    onInput,
+    onPressEnter,
+    onStep,
+    // Mouse Events
+    onMouseDown,
+    onClick,
+    onMouseUp,
+    onMouseLeave,
+    onMouseMove,
+    onMouseEnter,
+    onMouseOut,
+    changeOnBlur = true,
+    ...restProps
+  } = props;
+  const [focus2, setFocus] = reactExports.useState(false);
+  const userTypingRef = reactExports.useRef(false);
+  const compositionRef = reactExports.useRef(false);
+  const shiftKeyRef = reactExports.useRef(false);
+  const rootRef = reactExports.useRef(null);
+  const inputRef = reactExports.useRef(null);
+  reactExports.useImperativeHandle(ref, () => proxyObject(inputRef.current, {
+    focus: (option) => {
+      triggerFocus(inputRef.current, option);
+    },
+    blur: () => {
+      inputRef.current?.blur();
+    },
+    nativeElement: rootRef.current
+  }));
+  const [decimalValue, setDecimalValue] = reactExports.useState(() => getMiniDecimal(value ?? defaultValue));
+  function setUncontrolledDecimalValue(newDecimal) {
+    if (value === void 0) {
+      setDecimalValue(newDecimal);
+    }
+  }
+  const getPrecision = reactExports.useCallback((numStr, userTyping) => {
+    if (userTyping) {
+      return void 0;
+    }
+    if (precision >= 0) {
+      return precision;
+    }
+    return Math.max(getNumberPrecision(numStr), getNumberPrecision(step));
+  }, [precision, step]);
+  const mergedParser = reactExports.useCallback((num) => {
+    const numStr = String(num);
+    if (parser) {
+      return parser(numStr);
+    }
+    let parsedStr = numStr;
+    if (decimalSeparator) {
+      parsedStr = parsedStr.replace(decimalSeparator, ".");
+    }
+    return parsedStr.replace(/[^\w.-]+/g, "");
+  }, [parser, decimalSeparator]);
+  const inputValueRef = reactExports.useRef("");
+  const mergedFormatter = reactExports.useCallback((number2, userTyping) => {
+    if (formatter) {
+      return formatter(number2, {
+        userTyping,
+        input: String(inputValueRef.current)
+      });
+    }
+    let str = typeof number2 === "number" ? num2str(number2) : number2;
+    if (!userTyping) {
+      const mergedPrecision = getPrecision(str, userTyping);
+      if (validateNumber(str) && (decimalSeparator || mergedPrecision >= 0)) {
+        const separatorStr = decimalSeparator || ".";
+        str = toFixed(str, separatorStr, mergedPrecision);
+      }
+    }
+    return str;
+  }, [formatter, getPrecision, decimalSeparator]);
+  const [inputValue, setInternalInputValue] = reactExports.useState(() => {
+    const initValue = defaultValue ?? value;
+    if (decimalValue.isInvalidate() && ["string", "number"].includes(typeof initValue)) {
+      return Number.isNaN(initValue) ? "" : initValue;
+    }
+    return mergedFormatter(decimalValue.toString(), false);
+  });
+  inputValueRef.current = inputValue;
+  function setInputValue(newValue, userTyping) {
+    setInternalInputValue(mergedFormatter(
+      // Invalidate number is sometime passed by external control, we should let it go
+      // Otherwise is controlled by internal interactive logic which check by userTyping
+      // You can ref 'show limited value when input is not focused' test for more info.
+      newValue.isInvalidate() ? newValue.toString(false) : newValue.toString(!userTyping),
+      userTyping
+    ));
+  }
+  const maxDecimal = reactExports.useMemo(() => getDecimalIfValidate(max), [max, precision]);
+  const minDecimal = reactExports.useMemo(() => getDecimalIfValidate(min), [min, precision]);
+  const upDisabled = reactExports.useMemo(() => {
+    if (!maxDecimal || !decimalValue || decimalValue.isInvalidate()) {
+      return false;
+    }
+    return maxDecimal.lessEquals(decimalValue);
+  }, [maxDecimal, decimalValue]);
+  const downDisabled = reactExports.useMemo(() => {
+    if (!minDecimal || !decimalValue || decimalValue.isInvalidate()) {
+      return false;
+    }
+    return decimalValue.lessEquals(minDecimal);
+  }, [minDecimal, decimalValue]);
+  const [recordCursor, restoreCursor] = useCursor(inputRef.current, focus2);
+  const getRangeValue = (target) => {
+    if (maxDecimal && !target.lessEquals(maxDecimal)) {
+      return maxDecimal;
+    }
+    if (minDecimal && !minDecimal.lessEquals(target)) {
+      return minDecimal;
+    }
+    return null;
+  };
+  const isInRange2 = (target) => !getRangeValue(target);
+  const triggerValueUpdate = (newValue, userTyping) => {
+    let updateValue = newValue;
+    let isRangeValidate = isInRange2(updateValue) || updateValue.isEmpty();
+    if (!updateValue.isEmpty() && !userTyping) {
+      updateValue = getRangeValue(updateValue) || updateValue;
+      isRangeValidate = true;
+    }
+    if (!readOnly && !disabled && isRangeValidate) {
+      const numStr = updateValue.toString();
+      const mergedPrecision = getPrecision(numStr, userTyping);
+      if (mergedPrecision >= 0) {
+        updateValue = getMiniDecimal(toFixed(numStr, ".", mergedPrecision));
+        if (!isInRange2(updateValue)) {
+          updateValue = getMiniDecimal(toFixed(numStr, ".", mergedPrecision, true));
+        }
+      }
+      if (!updateValue.equals(decimalValue)) {
+        setUncontrolledDecimalValue(updateValue);
+        onChange?.(updateValue.isEmpty() ? null : getDecimalValue(stringMode, updateValue));
+        if (value === void 0) {
+          setInputValue(updateValue, userTyping);
+        }
+      }
+      return updateValue;
+    }
+    return decimalValue;
+  };
+  const onNextPromise = useFrame();
+  const collectInputValue = (inputStr) => {
+    recordCursor();
+    inputValueRef.current = inputStr;
+    setInternalInputValue(inputStr);
+    if (!compositionRef.current) {
+      const finalValue = mergedParser(inputStr);
+      const finalDecimal = getMiniDecimal(finalValue);
+      if (!finalDecimal.isNaN()) {
+        triggerValueUpdate(finalDecimal, true);
+      }
+    }
+    onInput?.(inputStr);
+    onNextPromise(() => {
+      let nextInputStr = inputStr;
+      if (!parser) {
+        nextInputStr = inputStr.replace(/。/g, ".");
+      }
+      if (nextInputStr !== inputStr) {
+        collectInputValue(nextInputStr);
+      }
+    });
+  };
+  const onCompositionStart = () => {
+    compositionRef.current = true;
+  };
+  const onCompositionEnd = () => {
+    compositionRef.current = false;
+    collectInputValue(inputRef.current.value);
+  };
+  const onInternalInput = (e) => {
+    collectInputValue(e.target.value);
+  };
+  const onInternalStep = useEvent((up, emitter) => {
+    if (up && upDisabled || !up && downDisabled) {
+      return;
+    }
+    userTypingRef.current = false;
+    let stepDecimal = getMiniDecimal(shiftKeyRef.current ? getDecupleSteps(step) : step);
+    if (!up) {
+      stepDecimal = stepDecimal.negate();
+    }
+    const target = (decimalValue || getMiniDecimal(0)).add(stepDecimal.toString());
+    const updatedValue = triggerValueUpdate(target, false);
+    onStep?.(getDecimalValue(stringMode, updatedValue), {
+      offset: shiftKeyRef.current ? getDecupleSteps(step) : step,
+      type: up ? "up" : "down",
+      emitter
+    });
+    inputRef.current?.focus();
+  });
+  const flushInputValue = (userTyping) => {
+    const parsedValue = getMiniDecimal(mergedParser(inputValue));
+    let formatValue2;
+    if (!parsedValue.isNaN()) {
+      formatValue2 = triggerValueUpdate(parsedValue, userTyping);
+    } else {
+      formatValue2 = triggerValueUpdate(decimalValue, userTyping);
+    }
+    if (value !== void 0) {
+      setInputValue(decimalValue, false);
+    } else if (!formatValue2.isNaN()) {
+      setInputValue(formatValue2, false);
+    }
+  };
+  const onBeforeInput = () => {
+    userTypingRef.current = true;
+  };
+  const onKeyDown = (event) => {
+    const {
+      key,
+      shiftKey
+    } = event;
+    userTypingRef.current = true;
+    shiftKeyRef.current = shiftKey;
+    if (key === "Enter") {
+      if (!compositionRef.current) {
+        userTypingRef.current = false;
+      }
+      flushInputValue(false);
+      onPressEnter?.(event);
+    }
+    if (keyboard === false) {
+      return;
+    }
+    if (!compositionRef.current && ["Up", "ArrowUp", "Down", "ArrowDown"].includes(key)) {
+      onInternalStep(key === "Up" || key === "ArrowUp", "keyboard");
+      event.preventDefault();
+    }
+  };
+  const onKeyUp = () => {
+    userTypingRef.current = false;
+    shiftKeyRef.current = false;
+  };
+  reactExports.useEffect(() => {
+    if (changeOnWheel && focus2) {
+      const onWheel = (event) => {
+        onInternalStep(event.deltaY < 0, "wheel");
+        event.preventDefault();
+      };
+      const input = inputRef.current;
+      if (input) {
+        input.addEventListener("wheel", onWheel, {
+          passive: false
+        });
+        return () => input.removeEventListener("wheel", onWheel);
+      }
+    }
+  });
+  const onBlur = () => {
+    if (changeOnBlur) {
+      flushInputValue(false);
+    }
+    setFocus(false);
+    userTypingRef.current = false;
+  };
+  const onInternalMouseDown = (event) => {
+    if (inputRef.current && event.target !== inputRef.current) {
+      inputRef.current.focus();
+      event.preventDefault();
+    }
+    onMouseDown?.(event);
+  };
+  useLayoutUpdateEffect(() => {
+    if (!decimalValue.isInvalidate()) {
+      setInputValue(decimalValue, false);
+    }
+  }, [precision, formatter]);
+  useLayoutUpdateEffect(() => {
+    const newValue = getMiniDecimal(value);
+    setDecimalValue(newValue);
+    const currentParsedValue = getMiniDecimal(mergedParser(inputValue));
+    if (!newValue.equals(currentParsedValue) || !userTypingRef.current || formatter) {
+      setInputValue(newValue, userTypingRef.current);
+    }
+  }, [value]);
+  useLayoutUpdateEffect(() => {
+    if (formatter) {
+      restoreCursor();
+    }
+  }, [inputValue]);
+  const sharedHandlerProps = {
+    prefixCls,
+    onStep: onInternalStep,
+    className: classNames?.action,
+    style: styles?.action
+  };
+  const upNode = /* @__PURE__ */ reactExports.createElement(StepHandler, _extends$h({}, sharedHandlerProps, {
+    action: "up",
+    disabled: upDisabled
+  }), upHandler);
+  const downNode = /* @__PURE__ */ reactExports.createElement(StepHandler, _extends$h({}, sharedHandlerProps, {
+    action: "down",
+    disabled: downDisabled
+  }), downHandler);
+  return /* @__PURE__ */ reactExports.createElement("div", {
+    ref: rootRef,
+    className: clsx(prefixCls, `${prefixCls}-mode-${mode}`, className, classNames?.root, {
+      [`${prefixCls}-focused`]: focus2,
+      [`${prefixCls}-disabled`]: disabled,
+      [`${prefixCls}-readonly`]: readOnly,
+      [`${prefixCls}-not-a-number`]: decimalValue.isNaN(),
+      [`${prefixCls}-out-of-range`]: !decimalValue.isInvalidate() && !isInRange2(decimalValue)
+    }),
+    style: {
+      ...styles?.root,
+      ...style2
+    },
+    onMouseDown: onInternalMouseDown,
+    onMouseUp,
+    onMouseLeave,
+    onMouseMove,
+    onMouseEnter,
+    onMouseOut,
+    onClick,
+    onFocus: () => {
+      setFocus(true);
+    },
+    onBlur,
+    onKeyDown,
+    onKeyUp,
+    onCompositionStart,
+    onCompositionEnd,
+    onBeforeInput
+  }, mode === "spinner" && controls && downNode, prefix2 !== void 0 && /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${prefixCls}-prefix`, classNames?.prefix),
+    style: styles?.prefix
+  }, prefix2), /* @__PURE__ */ reactExports.createElement("input", _extends$h({
+    autoComplete: "off",
+    role: "spinbutton",
+    "aria-valuemin": min,
+    "aria-valuemax": max,
+    "aria-valuenow": decimalValue.isInvalidate() ? null : decimalValue.toString(),
+    step,
+    ref: inputRef,
+    className: clsx(`${prefixCls}-input`, classNames?.input),
+    style: styles?.input,
+    value: inputValue,
+    onChange: onInternalInput,
+    disabled,
+    readOnly
+  }, restProps)), suffix !== void 0 && /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${prefixCls}-suffix`, classNames?.suffix),
+    style: styles?.suffix
+  }, suffix), mode === "spinner" && controls && upNode, mode === "input" && controls && /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${prefixCls}-actions`, classNames?.actions),
+    style: styles?.actions
+  }, upNode, downNode));
+});
 const genSpaceAddonStyle = (token2) => {
   const {
     componentCls,
@@ -51891,7 +52893,7 @@ const genSpaceAddonStyle = (token2) => {
     ]
   };
 };
-const useStyle$6 = genStyleHooks("Addon", (token2) => [genSpaceAddonStyle(token2), genCompactItemStyle(token2, {
+const useStyle$7 = genStyleHooks("Addon", (token2) => [genSpaceAddonStyle(token2), genCompactItemStyle(token2, {
   focus: false
 })]);
 const SpaceAddon = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
@@ -51910,7 +52912,7 @@ const SpaceAddon = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
     direction: directionConfig
   } = React$2.useContext(ConfigContext);
   const prefixCls = getPrefixCls("space-addon", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$6(prefixCls);
+  const [hashId, cssVarCls] = useStyle$7(prefixCls);
   const {
     compactItemClassnames,
     compactSize
@@ -51927,6 +52929,494 @@ const SpaceAddon = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
     ...restProps
   }, children);
 });
+const prepareComponentToken$2 = (token2) => {
+  const handleVisible = token2.handleVisible ?? "auto";
+  const handleWidth = token2.controlHeightSM - token2.lineWidth * 2;
+  return {
+    ...initComponentToken(token2),
+    controlWidth: 90,
+    handleWidth,
+    handleFontSize: token2.fontSize / 2,
+    handleVisible,
+    handleActiveBg: token2.colorFillAlter,
+    handleBg: token2.colorBgContainer,
+    filledHandleBg: new FastColor(token2.colorFillSecondary).onBackground(token2.colorBgContainer).toHexString(),
+    handleHoverColor: token2.colorPrimary,
+    handleBorderColor: token2.colorBorder,
+    handleOpacity: handleVisible === true ? 1 : 0,
+    handleVisibleWidth: handleVisible === true ? handleWidth : 0
+  };
+};
+const genInputNumberStyles = (token2) => {
+  const {
+    componentCls,
+    lineWidth,
+    lineType,
+    borderRadius,
+    inputFontSizeSM,
+    inputFontSizeLG,
+    colorError,
+    paddingInlineSM,
+    paddingBlockSM,
+    paddingBlockLG,
+    paddingInlineLG,
+    colorIcon,
+    colorTextDisabled,
+    motionDurationMid,
+    handleHoverColor,
+    handleOpacity,
+    paddingInline,
+    paddingBlock,
+    handleBg,
+    handleActiveBg,
+    inputAffixPadding,
+    borderRadiusSM,
+    controlWidth,
+    handleBorderColor,
+    filledHandleBg,
+    lineHeightLG,
+    antCls
+  } = token2;
+  const borderStyle = `${unit$1(lineWidth)} ${lineType} ${handleBorderColor}`;
+  const [varName, varRef] = genCssVar(antCls, "input-number");
+  return [
+    // ==========================================================
+    // ==                         Base                         ==
+    // ==========================================================
+    {
+      [componentCls]: {
+        ...resetComponent(token2),
+        ...genBasicInputStyle(token2),
+        [varName("input-padding-block")]: unit$1(paddingBlock),
+        [varName("input-padding-inline")]: unit$1(paddingInline),
+        display: "inline-flex",
+        width: controlWidth,
+        margin: 0,
+        paddingBlock: 0,
+        borderRadius,
+        // ======================= Variants =======================
+        ...genOutlinedStyle(token2, {
+          [`${componentCls}-actions`]: {
+            background: handleBg,
+            [`${componentCls}-action-down`]: {
+              borderBlockStart: borderStyle
+            }
+          }
+        }),
+        ...genFilledStyle(token2, {
+          [`${componentCls}-actions`]: {
+            background: filledHandleBg,
+            [`${componentCls}-action-down`]: {
+              borderBlockStart: borderStyle
+            }
+          },
+          "&:focus-within": {
+            [`${componentCls}-actions`]: {
+              background: handleBg
+            }
+          }
+        }),
+        ...genUnderlinedStyle(token2, {
+          [`${componentCls}-actions`]: {
+            background: handleBg,
+            [`${componentCls}-action-down`]: {
+              borderBlockStart: borderStyle
+            }
+          }
+        }),
+        ...genBorderlessStyle(token2),
+        // InputNumber 两层结构：borderless 补偿只加在内层 input 的 CSS 变量上，避免外层+内层双重 padding 导致高度异常
+        [`&${componentCls}-borderless`]: {
+          paddingBlock: 0,
+          [varName("input-padding-block")]: unit$1(token2.calc(paddingBlock).add(lineWidth).equal())
+        },
+        [`&${componentCls}-borderless${componentCls}-sm`]: {
+          paddingBlock: 0,
+          [varName("input-padding-block")]: unit$1(token2.calc(paddingBlockSM).add(lineWidth).equal())
+        },
+        [`&${componentCls}-borderless${componentCls}-lg`]: {
+          paddingBlock: 0,
+          [varName("input-padding-block")]: unit$1(token2.calc(paddingBlockLG).add(lineWidth).equal())
+        },
+        // ========================= RTL ==========================
+        "&-rtl": {
+          direction: "rtl",
+          [`${componentCls}-input`]: {
+            direction: "rtl"
+          }
+        },
+        // ===================== Out Of Range =====================
+        [`&${componentCls}-out-of-range`]: {
+          [`${componentCls}-input`]: {
+            color: colorError
+          }
+        },
+        // ======================== Input =========================
+        [`${componentCls}-input`]: {
+          ...resetComponent(token2),
+          width: "100%",
+          paddingBlock: varRef("input-padding-block"),
+          textAlign: "start",
+          backgroundColor: "transparent",
+          border: 0,
+          borderRadius: 0,
+          outline: 0,
+          transition: `all ${motionDurationMid} linear`,
+          appearance: "textfield",
+          fontSize: "inherit",
+          lineHeight: "inherit",
+          ...genPlaceholderStyle(token2.colorTextPlaceholder),
+          '&[type="number"]::-webkit-inner-spin-button, &[type="number"]::-webkit-outer-spin-button': {
+            margin: 0,
+            appearance: "none"
+          }
+        },
+        [`&:hover ${componentCls}-handler-wrap, &-focused ${componentCls}-handler-wrap`]: {
+          width: token2.handleWidth,
+          opacity: 1
+        },
+        // ======================= Disabled =======================
+        [`&-disabled ${componentCls}-input`]: {
+          cursor: "not-allowed",
+          color: token2.colorTextDisabled
+        }
+      }
+    },
+    // ==========================================================
+    // ==                        Action                        ==
+    // ==========================================================
+    {
+      [componentCls]: {
+        // ======================= Shared =======================
+        [`${componentCls}-action`]: {
+          ...resetIcon(),
+          userSelect: "none",
+          overflow: "hidden",
+          fontWeight: "bold",
+          lineHeight: 0,
+          textAlign: "center",
+          cursor: "pointer",
+          transition: `all ${motionDurationMid} linear`,
+          // Active: change background not disabled only;
+          [`&:active:not(${componentCls}-action-up-disabled):not(${componentCls}-action-down-disabled)`]: {
+            background: handleActiveBg
+          },
+          // Hover: change color not disabled only;
+          [`&:hover:not(${componentCls}-action-up-disabled):not(${componentCls}-action-down-disabled)`]: {
+            color: handleHoverColor
+          },
+          [`&${componentCls}-action-up-disabled, &${componentCls}-action-down-disabled`]: {
+            cursor: "not-allowed",
+            color: colorTextDisabled
+          }
+        },
+        // ===================== Input Mode =====================
+        "&-mode-input": {
+          overflow: "hidden",
+          [`${componentCls}-actions`]: {
+            position: "absolute",
+            insetBlockStart: 0,
+            insetInlineEnd: 0,
+            width: token2.handleVisibleWidth,
+            opacity: handleOpacity,
+            height: "100%",
+            borderRadius: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+            transition: `all ${motionDurationMid}`,
+            overflow: "hidden",
+            // Fix input number inside Menu makes icon too large
+            // We arise the selector priority by nest selector here
+            // https://github.com/ant-design/ant-design/issues/14367
+            [`${componentCls}-action`]: {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flex: "auto",
+              height: "40%",
+              marginInlineEnd: 0,
+              fontSize: token2.handleFontSize
+            }
+          },
+          [`&:hover ${componentCls}-actions, &-focused ${componentCls}-actions`]: {
+            width: token2.handleWidth,
+            opacity: 1
+          },
+          [`${componentCls}-action`]: {
+            color: colorIcon,
+            height: "50%",
+            borderInlineStart: borderStyle,
+            // Hover: change height not disabled only;
+            [`&:hover:not(${componentCls}-action-up-disabled):not(${componentCls}-action-down-disabled)`]: {
+              height: `60%`
+            }
+          },
+          [`&${componentCls}-disabled, &${componentCls}-readonly`]: {
+            [`${componentCls}-actions`]: {
+              display: "none"
+            }
+          }
+        },
+        // ==================== Spinner Mode ====================
+        [`&${componentCls}-mode-spinner`]: {
+          padding: 0,
+          width: "auto",
+          [`${componentCls}-action`]: {
+            flex: "none",
+            paddingInline: varRef("input-padding-inline"),
+            "&-up": {
+              borderInlineStart: borderStyle
+            },
+            "&-down": {
+              borderInlineEnd: borderStyle
+            }
+          },
+          [`${componentCls}-input`]: {
+            textAlign: "center",
+            paddingInline: varRef("input-padding-inline")
+          }
+        }
+      }
+    },
+    // ==========================================================
+    // ==                         Size                         ==
+    // ==========================================================
+    {
+      [componentCls]: {
+        "&-lg": {
+          [varName("input-padding-block")]: unit$1(paddingBlockLG),
+          [varName("input-padding-inline")]: unit$1(paddingInlineLG),
+          paddingBlock: 0,
+          fontSize: inputFontSizeLG,
+          lineHeight: lineHeightLG
+        },
+        "&-sm": {
+          [varName("input-padding-block")]: unit$1(paddingBlockSM),
+          [varName("input-padding-inline")]: unit$1(paddingInlineSM),
+          paddingBlock: 0,
+          fontSize: inputFontSizeSM,
+          borderRadius: borderRadiusSM
+        }
+      }
+    },
+    // ==========================================================
+    // ==                      Pre/Suffix                      ==
+    // ==========================================================
+    {
+      [componentCls]: {
+        [`${componentCls}-prefix, ${componentCls}-suffix`]: {
+          display: "flex",
+          flex: "none",
+          alignItems: "center",
+          alignSelf: "center",
+          pointerEvents: "none"
+        },
+        [`${componentCls}-prefix`]: {
+          marginInlineEnd: inputAffixPadding
+        },
+        [`${componentCls}-suffix`]: {
+          height: "100%",
+          marginInlineStart: inputAffixPadding,
+          transition: `margin ${motionDurationMid}`
+        },
+        [`&:hover:not(${componentCls}-without-controls)`]: {
+          [`${componentCls}-suffix`]: {
+            marginInlineEnd: token2.handleWidth
+          }
+        }
+      }
+    }
+  ];
+};
+const genCompatibleStyles = (token2) => {
+  const {
+    componentCls,
+    antCls
+  } = token2;
+  return {
+    [`${componentCls}-addon`]: {
+      [`&:has(${antCls}-select)`]: {
+        border: 0,
+        padding: 0
+      }
+    }
+  };
+};
+const useStyle$6 = genStyleHooks("InputNumber", (token2) => {
+  const inputNumberToken = merge(token2, initInputToken(token2));
+  return [
+    genInputNumberStyles(inputNumberToken),
+    genCompatibleStyles(inputNumberToken),
+    // =====================================================
+    // ==             Space Compact                       ==
+    // =====================================================
+    genCompactItemStyle(inputNumberToken)
+  ];
+}, prepareComponentToken$2, {
+  unitless: {
+    handleOpacity: true
+  },
+  resetFont: false
+});
+const InternalInputNumber = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+  const inputRef = reactExports.useRef(null);
+  reactExports.useImperativeHandle(ref, () => inputRef.current);
+  const {
+    rootClassName,
+    size: customizeSize,
+    disabled: customDisabled,
+    prefixCls,
+    addonBefore: _addonBefore,
+    addonAfter: _addonAfter,
+    prefix: prefix2,
+    suffix,
+    bordered,
+    readOnly,
+    status,
+    controls = true,
+    variant: customVariant,
+    className,
+    style: style2,
+    classNames,
+    styles,
+    mode,
+    ...others
+  } = props;
+  const {
+    direction,
+    className: contextClassName,
+    style: contextStyle,
+    styles: contextStyles,
+    classNames: contextClassNames
+  } = useComponentConfig("inputNumber");
+  const disabled = reactExports.useContext(DisabledContext);
+  const mergedDisabled = customDisabled ?? disabled;
+  const mergedControls = reactExports.useMemo(() => {
+    if (!controls || mergedDisabled || readOnly) {
+      return false;
+    }
+    return controls;
+  }, [controls, mergedDisabled, readOnly]);
+  const {
+    compactSize,
+    compactItemClassnames
+  } = useCompactItemContext(prefixCls, direction);
+  let upIcon = mode === "spinner" ? /* @__PURE__ */ reactExports.createElement(RefIcon$c, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$a, null);
+  let downIcon = mode === "spinner" ? /* @__PURE__ */ reactExports.createElement(RefIcon$b, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$g, null);
+  const controlsTemp = typeof mergedControls === "boolean" ? mergedControls : void 0;
+  if (isPlainObject$1(mergedControls)) {
+    upIcon = mergedControls.upIcon || upIcon;
+    downIcon = mergedControls.downIcon || downIcon;
+  }
+  const {
+    hasFeedback,
+    isFormItemInput,
+    feedbackIcon
+  } = reactExports.useContext(FormItemInputContext);
+  const mergedSize = useSize((ctx) => customizeSize ?? compactSize ?? ctx);
+  const [variant, enableVariantCls] = useVariant("inputNumber", customVariant, bordered);
+  const suffixNode = hasFeedback && /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, feedbackIcon);
+  const mergedProps = {
+    ...props,
+    size: mergedSize,
+    disabled: mergedDisabled,
+    controls: mergedControls
+  };
+  const contextStyleRoot = useSemanticRootStyle(contextStyle);
+  const styleRoot = useSemanticRootStyle(style2);
+  const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, contextStyleRoot, styles, styleRoot], {
+    props: mergedProps
+  });
+  return /* @__PURE__ */ reactExports.createElement(InputNumber$1, {
+    ref: inputRef,
+    mode,
+    disabled: mergedDisabled,
+    className: clsx(className, rootClassName, mergedClassNames.root, contextClassName, compactItemClassnames, getStatusClassNames(prefixCls, status, hasFeedback), {
+      [`${prefixCls}-${variant}`]: enableVariantCls,
+      [`${prefixCls}-lg`]: mergedSize === "large",
+      [`${prefixCls}-sm`]: mergedSize === "small",
+      [`${prefixCls}-rtl`]: direction === "rtl",
+      [`${prefixCls}-in-form-item`]: isFormItemInput,
+      [`${prefixCls}-without-controls`]: !mergedControls
+    }),
+    style: mergedStyles.root,
+    upHandler: upIcon,
+    downHandler: downIcon,
+    prefixCls,
+    readOnly,
+    controls: controlsTemp,
+    prefix: prefix2,
+    suffix: suffixNode || suffix,
+    classNames: mergedClassNames,
+    styles: mergedStyles,
+    ...others
+  });
+});
+const InputNumber = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+  const {
+    addonBefore,
+    addonAfter,
+    prefixCls: customizePrefixCls,
+    className,
+    status: customStatus,
+    rootClassName,
+    ...rest
+  } = props;
+  const {
+    getPrefixCls
+  } = useComponentConfig("inputNumber");
+  const prefixCls = getPrefixCls("input-number", customizePrefixCls);
+  const {
+    status: contextStatus
+  } = reactExports.useContext(FormItemInputContext);
+  const mergedStatus = getMergedStatus(contextStatus, customStatus);
+  const rootCls = useCSSVarCls(prefixCls);
+  const [hashId, cssVarCls] = useStyle$6(prefixCls, rootCls);
+  const hasLegacyAddon = addonBefore || addonAfter;
+  const inputNumberNode = /* @__PURE__ */ reactExports.createElement(InternalInputNumber, {
+    ref,
+    ...rest,
+    prefixCls,
+    status: mergedStatus,
+    className: clsx(cssVarCls, rootCls, hashId, className),
+    rootClassName: !hasLegacyAddon ? rootClassName : void 0
+  });
+  if (hasLegacyAddon) {
+    const renderAddon = (node2) => {
+      if (!node2) {
+        return null;
+      }
+      return /* @__PURE__ */ reactExports.createElement(SpaceAddon, {
+        className: clsx(`${prefixCls}-addon`, cssVarCls, hashId),
+        variant: props.variant,
+        disabled: props.disabled,
+        status: mergedStatus
+      }, /* @__PURE__ */ reactExports.createElement(ContextIsolator, {
+        form: true
+      }, node2));
+    };
+    const addonBeforeNode = renderAddon(addonBefore);
+    const addonAfterNode = renderAddon(addonAfter);
+    return /* @__PURE__ */ reactExports.createElement(Compact$1, {
+      rootClassName
+    }, addonBeforeNode, inputNumberNode, addonAfterNode);
+  }
+  return inputNumberNode;
+});
+const TypedInputNumber = InputNumber;
+const PureInputNumber = (props) => /* @__PURE__ */ reactExports.createElement(ConfigProvider, {
+  theme: {
+    components: {
+      InputNumber: {
+        handleVisible: true
+      }
+    }
+  }
+}, /* @__PURE__ */ reactExports.createElement(InputNumber, {
+  ...props
+}));
+TypedInputNumber._InternalPanelDoNotUseOrYouWillBeFired = PureInputNumber;
 function hasAddon(props) {
   return !!(props.addonBefore || props.addonAfter);
 }
@@ -52847,7 +54337,7 @@ const Input$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const inputRef = reactExports.useRef(null);
   const rootCls = useCSSVarCls(prefixCls);
   const [hashId, cssVarCls] = useSharedStyle(prefixCls, rootClassName);
-  useStyle$c(prefixCls, rootCls);
+  useStyle$d(prefixCls, rootCls);
   const {
     compactSize,
     compactItemClassnames
@@ -53194,7 +54684,7 @@ const generateRangePicker = (generateConfig2) => {
     const mergedSeparator = separator ?? rangePicker?.separator;
     const [variant, enableVariantCls] = useVariant("rangePicker", customVariant, bordered);
     const rootCls = useCSSVarCls(prefixCls);
-    const [hashId, cssVarCls] = useStyle$b(prefixCls, rootCls);
+    const [hashId, cssVarCls] = useStyle$c(prefixCls, rootCls);
     const mergedRootClassName = clsx(hashId, cssVarCls, rootCls, rootClassName);
     const mergedAllowClear = useAllowClear$1({
       componentName: "RangePicker",
@@ -53345,7 +54835,7 @@ const generatePicker$1 = (generateConfig2) => {
       const innerRef = reactExports.useRef(null);
       const [variant, enableVariantCls] = useVariant("datePicker", customVariant, bordered);
       const rootCls = useCSSVarCls(prefixCls);
-      const [hashId, cssVarCls] = useStyle$b(prefixCls, rootCls);
+      const [hashId, cssVarCls] = useStyle$c(prefixCls, rootCls);
       const mergedRootClassName = clsx(hashId, cssVarCls, rootCls, rootClassName);
       reactExports.useImperativeHandle(ref, () => innerRef.current);
       const additionalProps = {
@@ -53737,7 +55227,7 @@ const DropdownButton = (props) => {
     placement,
     getPopupContainer,
     href,
-    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$b, null),
+    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$d, null),
     title,
     buttonsRender = (buttons) => buttons,
     mouseEnterDelay,
@@ -55804,9 +57294,9 @@ const icons = {
   rotateRight: /* @__PURE__ */ reactExports.createElement(RefIcon$5, null),
   zoomIn: /* @__PURE__ */ reactExports.createElement(RefIcon$3, null),
   zoomOut: /* @__PURE__ */ reactExports.createElement(RefIcon$2, null),
-  close: /* @__PURE__ */ reactExports.createElement(RefIcon$k, null),
-  left: /* @__PURE__ */ reactExports.createElement(RefIcon$c, null),
-  right: /* @__PURE__ */ reactExports.createElement(RefIcon$g, null),
+  close: /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
+  left: /* @__PURE__ */ reactExports.createElement(RefIcon$e, null),
+  right: /* @__PURE__ */ reactExports.createElement(RefIcon$i, null),
   flipX: /* @__PURE__ */ reactExports.createElement(RefIcon$4, null),
   flipY: /* @__PURE__ */ reactExports.createElement(RefIcon$4, {
     rotate: 90
@@ -55836,8 +57326,8 @@ const InternalPreviewGroup = ({
   const [contextPreviewConfig, contextPreviewRootClassName, contextPreviewMaskClassName] = usePreviewConfig(contextPreview);
   const memoizedIcons = reactExports.useMemo(() => ({
     ...icons,
-    left: direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$g, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$c, null),
-    right: direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$c, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$g, null)
+    left: direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$i, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$e, null),
+    right: direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$e, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$i, null)
   }), [direction]);
   const mergedPreview = useMergedPreviewConfig(
     // Preview config
@@ -56091,7 +57581,7 @@ const Group = (props) => {
   } = props;
   const prefixCls = getPrefixCls("input-group", customizePrefixCls);
   const inputPrefixCls = getPrefixCls("input");
-  const [hashId, cssVarCls] = useStyle$c(inputPrefixCls);
+  const [hashId, cssVarCls] = useStyle$d(inputPrefixCls);
   const cls = clsx(prefixCls, cssVarCls, {
     [`${prefixCls}-lg`]: props.size === "large",
     [`${prefixCls}-sm`]: props.size === "small",
@@ -56744,7 +58234,7 @@ const Search$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     customOnPressEnter?.(e);
     onSearch(e);
   };
-  const searchIcon = typeof enterButton === "boolean" ? fallbackProp(customizeSearchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$d, null)) : null;
+  const searchIcon = typeof enterButton === "boolean" ? fallbackProp(customizeSearchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$f, null)) : null;
   const btnPrefixCls = `${prefixCls}-btn`;
   const btnClassName = clsx(btnPrefixCls, {
     [`${btnPrefixCls}-${variant}`]: variant
@@ -57099,7 +58589,7 @@ const PurePanel$1 = (props) => {
   const rootPrefixCls = getPrefixCls();
   const prefixCls = customizePrefixCls || getPrefixCls("modal");
   const rootCls = useCSSVarCls(rootPrefixCls);
-  const [hashId, cssVarCls] = useStyle$k(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$l(prefixCls, rootCls);
   const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, styles], {
     props
   });
@@ -57249,7 +58739,7 @@ const Overlay = (props) => {
     cancelText,
     okText,
     okType = "primary",
-    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$j, null),
+    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
     showCancel = true,
     close: close2,
     onConfirm,
@@ -57328,7 +58818,7 @@ const InternalPopconfirm = /* @__PURE__ */ reactExports.forwardRef((props, ref) 
     placement = "top",
     trigger,
     okType = "primary",
-    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$j, null),
+    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
     children,
     overlayClassName,
     onOpenChange,
@@ -58004,6 +59494,17 @@ const CodeXml = createLucideIcon("CodeXml", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const Columns3 = createLucideIcon("Columns3", [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
+  ["path", { d: "M9 3v18", key: "fh3hqa" }],
+  ["path", { d: "M15 3v18", key: "14nvp0" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Download = createLucideIcon("Download", [
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["polyline", { points: "7 10 12 15 17 10", key: "2ggqvy" }],
@@ -58245,6 +59746,17 @@ const Maximize2 = createLucideIcon("Maximize2", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const Merge = createLucideIcon("Merge", [
+  ["path", { d: "m8 6 4-4 4 4", key: "ybng9g" }],
+  ["path", { d: "M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22", key: "1hyw0i" }],
+  ["path", { d: "m20 22-5-5", key: "1m27yz" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Minus = createLucideIcon("Minus", [["path", { d: "M5 12h14", key: "1ays0h" }]]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -58352,6 +59864,17 @@ const Quote = createLucideIcon("Quote", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const Rows3 = createLucideIcon("Rows3", [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
+  ["path", { d: "M21 9H3", key: "1338ky" }],
+  ["path", { d: "M21 15H3", key: "9uk58r" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Save = createLucideIcon("Save", [
   [
     "path",
@@ -58388,6 +59911,18 @@ const Settings = createLucideIcon("Settings", [
     }
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+]);
+/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Split = createLucideIcon("Split", [
+  ["path", { d: "M16 3h5v5", key: "1806ms" }],
+  ["path", { d: "M8 3H3v5", key: "15dfkv" }],
+  ["path", { d: "M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3", key: "1qrqzj" }],
+  ["path", { d: "m15 9 6-6", key: "ko1vev" }]
 ]);
 /**
  * @license lucide-react v0.468.0 - ISC
@@ -77487,7 +79022,7 @@ var Image = Node3.create({
     ];
   }
 });
-var index_default$a = Image;
+var index_default$7 = Image;
 var MAX_FIND_CHILD_SPAN_DEPTH = 20;
 var findChildSpans = (element, depth = 0) => {
   const childSpans = [];
@@ -77815,7 +79350,7 @@ Extension.create({
     return extensions;
   }
 });
-var index_default$9 = Color2;
+var index_default$6 = Color2;
 const encodedTlds = "aaa1rp3bb0ott3vie4c1le2ogado5udhabi7c0ademy5centure6ountant0s9o1tor4d0s1ult4e0g1ro2tna4f0l1rica5g0akhan5ency5i0g1rbus3force5tel5kdn3l0ibaba4pay4lfinanz6state5y2sace3tom5m0azon4ericanexpress7family11x2fam3ica3sterdam8nalytics7droid5quan4z2o0l2partments8p0le4q0uarelle8r0ab1mco4chi3my2pa2t0e3s0da2ia2sociates9t0hleta5torney7u0ction5di0ble3o3spost5thor3o0s4w0s2x0a2z0ure5ba0by2idu3namex4d1k2r0celona5laycard4s5efoot5gains6seball5ketball8uhaus5yern5b0c1t1va3cg1n2d1e0ats2uty4er2rlin4st0buy5t2f1g1h0arti5i0ble3d1ke2ng0o3o1z2j1lack0friday9ockbuster8g1omberg7ue3m0s1w2n0pparibas9o0ats3ehringer8fa2m1nd2o0k0ing5sch2tik2on4t1utique6x2r0adesco6idgestone9oadway5ker3ther5ussels7s1t1uild0ers6siness6y1zz3v1w1y1z0h3ca0b1fe2l0l1vinklein9m0era3p2non3petown5ital0one8r0avan4ds2e0er0s4s2sa1e1h1ino4t0ering5holic7ba1n1re3c1d1enter4o1rn3f0a1d2g1h0anel2nel4rity4se2t2eap3intai5ristmas6ome4urch5i0priani6rcle4sco3tadel4i0c2y3k1l0aims4eaning6ick2nic1que6othing5ud3ub0med6m1n1o0ach3des3ffee4llege4ogne5m0mbank4unity6pany2re3uter5sec4ndos3struction8ulting7tact3ractors9oking4l1p2rsica5untry4pon0s4rses6pa2r0edit0card4union9icket5own3s1uise0s6u0isinella9v1w1x1y0mru3ou3z2dad1nce3ta1e1ing3sun4y2clk3ds2e0al0er2s3gree4livery5l1oitte5ta3mocrat6ntal2ist5si0gn4v2hl2iamonds6et2gital5rect0ory7scount3ver5h2y2j1k1m1np2o0cs1tor4g1mains5t1wnload7rive4tv2ubai3pont4rban5vag2r2z2earth3t2c0o2deka3u0cation8e1g1mail3erck5nergy4gineer0ing9terprises10pson4quipment8r0icsson6ni3s0q1tate5t1u0rovision8s2vents5xchange6pert3osed4ress5traspace10fage2il1rwinds6th3mily4n0s2rm0ers5shion4t3edex3edback6rrari3ero6i0delity5o2lm2nal1nce1ial7re0stone6mdale6sh0ing5t0ness6j1k1lickr3ghts4r2orist4wers5y2m1o0o0d1tball6rd1ex2sale4um3undation8x2r0ee1senius7l1ogans4ntier7tr2ujitsu5n0d2rniture7tbol5yi3ga0l0lery3o1up4me0s3p1rden4y2b0iz3d0n2e0a1nt0ing5orge5f1g0ee3h1i0ft0s3ves2ing5l0ass3e1obal2o4m0ail3bh2o1x2n1odaddy5ld0point6f2odyear5g0le4p1t1v2p1q1r0ainger5phics5tis4een3ipe3ocery4up4s1t1u0cci3ge2ide2tars5ru3w1y2hair2mburg5ngout5us3bo2dfc0bank7ealth0care8lp1sinki6re1mes5iphop4samitsu7tachi5v2k0t2m1n1ockey4ldings5iday5medepot5goods5s0ense7nda3rse3spital5t0ing5t0els3mail5use3w2r1sbc3t1u0ghes5yatt3undai7ibm2cbc2e1u2d1e0ee3fm2kano4l1m0amat4db2mo0bilien9n0c1dustries8finiti5o2g1k1stitute6urance4e4t0ernational10uit4vestments10o1piranga7q1r0ish4s0maili5t0anbul7t0au2v3jaguar4va3cb2e0ep2tzt3welry6io2ll2m0p2nj2o0bs1urg4t1y2p0morgan6rs3uegos4niper7kaufen5ddi3e0rryhotels6properties14fh2g1h1i0a1ds2m1ndle4tchen5wi3m1n1oeln3matsu5sher5p0mg2n2r0d1ed3uokgroup8w1y0oto4z2la0caixa5mborghini8er3nd0rover6xess5salle5t0ino3robe5w0yer5b1c1ds2ease3clerc5frak4gal2o2xus4gbt3i0dl2fe0insurance9style7ghting6ke2lly3mited4o2ncoln4k2ve1ing5k1lc1p2oan0s3cker3us3l1ndon4tte1o3ve3pl0financial11r1s1t0d0a3u0ndbeck6xe1ury5v1y2ma0drid4if1son4keup4n0agement7go3p1rket0ing3s4riott5shalls7ttel5ba2c0kinsey7d1e0d0ia3et2lbourne7me1orial6n0u2rck0msd7g1h1iami3crosoft7l1ni1t2t0subishi9k1l0b1s2m0a2n1o0bi0le4da2e1i1m1nash3ey2ster5rmon3tgage6scow4to0rcycles9v0ie4p1q1r1s0d2t0n1r2u0seum3ic4v1w1x1y1z2na0b1goya4me2vy3ba2c1e0c1t0bank4flix4work5ustar5w0s2xt0direct7us4f0l2g0o2hk2i0co2ke1on3nja3ssan1y5l1o0kia3rton4w0ruz3tv4p1r0a1w2tt2u1yc2z2obi1server7ffice5kinawa6layan0group9lo3m0ega4ne1g1l0ine5oo2pen3racle3nge4g0anic5igins6saka4tsuka4t2vh3pa0ge2nasonic7ris2s1tners4s1y3y2ccw3e0t2f0izer5g1h0armacy6d1ilips5one2to0graphy6s4ysio5ics1tet2ures6d1n0g1k2oneer5zza4k1l0ace2y0station9umbing5s3m1n0c2ohl2ker3litie5rn2st3r0axi3ess3ime3o0d0uctions8f1gressive8mo2perties3y5tection8u0dential9s1t1ub2w0c2y2qa1pon3uebec3st5racing4dio4e0ad1lestate6tor2y4cipes5d0umbrella9hab3ise0n3t2liance6n0t0als5pair3ort3ublican8st0aurant8view0s5xroth6ich0ardli6oh3l1o1p2o0cks3deo3gers4om3s0vp3u0gby3hr2n2w0e2yukyu6sa0arland6fe0ty4kura4le1on3msclub4ung5ndvik0coromant12ofi4p1rl2s1ve2xo3b0i1s2c0b1haeffler7midt4olarships8ol3ule3warz5ience5ot3d1e0arch3t2cure1ity6ek2lect4ner3rvices6ven3w1x0y3fr2g1h0angrila6rp3ell3ia1ksha5oes2p0ping5uji3w3i0lk2na1gles5te3j1k0i0n2y0pe4l0ing4m0art3ile4n0cf3o0ccer3ial4ftbank4ware6hu2lar2utions7ng1y2y2pa0ce3ort2t3r0l2s1t0ada2ples4r1tebank4farm7c0group6ockholm6rage3e3ream4udio2y3yle4u0cks3pplies3y2ort5rf1gery5zuki5v1watch4iss4x1y0dney4stems6z2tab1ipei4lk2obao4rget4tamotors6r2too4x0i3c0i2d0k2eam2ch0nology8l1masek5nnis4va3f1g1h0d1eater2re6iaa2ckets5enda4ps2res2ol4j0maxx4x2k0maxx5l1m0all4n1o0day3kyo3ols3p1ray3shiba5tal3urs3wn2yota3s3r0ade1ing4ining5vel0ers0insurance16ust3v2t1ube2i1nes3shu4v0s2w1z2ua1bank3s2g1k1nicom3versity8o2ol2ps2s1y1z2va0cations7na1guard7c1e0gas3ntures6risign5mögensberater2ung14sicherung10t2g1i0ajes4deo3g1king4llas4n1p1rgin4sa1ion4va1o3laanderen9n1odka3lvo3te1ing3o2yage5u2wales2mart4ter4ng0gou5tch0es6eather0channel12bcam3er2site5d0ding5ibo2r3f1hoswho6ien2ki2lliamhill9n0dows4e1ners6me2oodside6rk0s2ld3w2s1tc1f3xbox3erox4ihuan4n2xx2yz3yachts4hoo3maxun5ndex5e1odobashi7ga2kohama6u0tube6t1un3za0ppos4ra3ero3ip2m1one3uerich6w2";
 const encodedUtlds = "ελ1υ2бг1ел3дети4ею2католик6ом3мкд2он1сква6онлайн5рг3рус2ф2сайт3рб3укр3қаз3հայ3ישראל5קום3ابوظبي5رامكو5لاردن4بحرين5جزائر5سعودية6عليان5مغرب5مارات5یران5بارت2زار4يتك3ھارت5تونس4سودان3رية5شبكة4عراق2ب2مان4فلسطين6قطر3كاثوليك6وم3مصر2ليسيا5وريتانيا7قع4همراه5پاکستان7ڀارت4कॉम3नेट3भारत0म्3ोत5संगठन5বাংলা5ভারত2ৰত4ਭਾਰਤ4ભારત4ଭାରତ4இந்தியா6லங்கை6சிங்கப்பூர்11భారత్5ಭಾರತ4ഭാരതം5ලංකා4คอม3ไทย3ລາວ3გე2みんな3アマゾン4クラウド4グーグル4コム2ストア3セール3ファッション6ポイント4世界2中信1国1國1文网3亚马逊3企业2佛山2信息2健康2八卦2公司1益2台湾1灣2商城1店1标2嘉里0大酒店5在线2大拿2天主教3娱乐2家電2广东2微博2慈善2我爱你3手机2招聘2政务1府2新加坡2闻2时尚2書籍2机构2淡马锡3游戏2澳門2点看2移动2组织机构4网址1店1站1络2联通2谷歌2购物2通販2集团2電訊盈科4飞利浦3食品2餐厅2香格里拉3港2닷넷1컴2삼성2한국2";
 const numeric = "numeric";
@@ -79404,7 +80939,7 @@ var Link = Mark2.create({
     return plugins;
   }
 });
-var index_default$8 = Link;
+var index_default$5 = Link;
 var TextAlign = Extension.create({
   name: "textAlign",
   addOptions() {
@@ -79467,7 +81002,7 @@ var TextAlign = Extension.create({
     };
   }
 });
-var index_default$7 = TextAlign;
+var index_default$4 = TextAlign;
 var Underline = Mark2.create({
   name: "underline",
   addOptions() {
@@ -79537,7 +81072,7 @@ var Underline = Mark2.create({
     };
   }
 });
-var index_default$6 = Underline;
+var index_default$3 = Underline;
 let readFromCache;
 let addToCache;
 if (typeof WeakMap != "undefined") {
@@ -81970,9 +83505,114 @@ Extension.create({
     return extensions;
   }
 });
-var index_default$5 = TableCell;
-var index_default$4 = TableHeader;
-var index_default$3 = TableRow;
+const EDGE_PX = 12;
+const MIN_COL_WIDTH = 48;
+function findResizeEdge(view, event) {
+  const target = event.target;
+  if (!(target instanceof Element)) return null;
+  const cellEl = target.closest("td, th");
+  if (!(cellEl instanceof HTMLElement) || !view.dom.contains(cellEl)) return null;
+  const rect = cellEl.getBoundingClientRect();
+  const nearRight = rect.right - event.clientX <= EDGE_PX && event.clientX <= rect.right + 6;
+  const nearLeft = event.clientX - rect.left <= EDGE_PX;
+  if (!nearRight && !nearLeft) return null;
+  let pos;
+  try {
+    pos = view.posAtDOM(cellEl, 0);
+  } catch {
+    return null;
+  }
+  const $cell = cellAround(view.state.doc.resolve(pos));
+  if (!$cell || !$cell.nodeAfter) return null;
+  if (nearLeft) {
+    const table = $cell.node(-1);
+    const start = $cell.start(-1);
+    const map2 = TableMap.get(table);
+    const index = map2.map.indexOf($cell.pos - start);
+    if (index % map2.width === 0) return null;
+    const prevPos = start + map2.map[index - 1];
+    const prevCell = table.nodeAt(map2.map[index - 1]);
+    if (!prevCell) return null;
+    return { cellPos: prevPos, startWidth: Math.max(cellEl.previousElementSibling instanceof HTMLElement ? cellEl.previousElementSibling.offsetWidth : MIN_COL_WIDTH, MIN_COL_WIDTH) };
+  }
+  return { cellPos: $cell.pos, startWidth: Math.max(cellEl.offsetWidth, MIN_COL_WIDTH) };
+}
+function previewWidth(view, cellPos, width) {
+  const $cell = view.state.doc.resolve(cellPos);
+  const table = $cell.node(-1);
+  const start = $cell.start(-1);
+  const col = TableMap.get(table).colCount($cell.pos - start) + ($cell.nodeAfter?.attrs.colspan ?? 1) - 1;
+  let dom = view.domAtPos(start).node;
+  while (dom && !(dom instanceof HTMLTableElement)) dom = dom.parentNode;
+  if (!(dom instanceof HTMLTableElement) || !(dom.firstChild instanceof HTMLTableColElement)) return;
+  updateColumnsOnResize(table, dom.firstChild, dom, MIN_COL_WIDTH, col, width);
+}
+function commitWidth(view, cellPos, width) {
+  const $cell = view.state.doc.resolve(cellPos);
+  const table = $cell.node(-1);
+  const map2 = TableMap.get(table);
+  const start = $cell.start(-1);
+  const col = map2.colCount($cell.pos - start) + ($cell.nodeAfter?.attrs.colspan ?? 1) - 1;
+  const tr2 = view.state.tr;
+  for (let row = 0; row < map2.height; row += 1) {
+    const mapIndex = row * map2.width + col;
+    if (row && map2.map[mapIndex] === map2.map[mapIndex - map2.width]) continue;
+    const pos = map2.map[mapIndex];
+    const cell = table.nodeAt(pos);
+    if (!cell) continue;
+    const attrs = cell.attrs;
+    const index = attrs.colspan === 1 ? 0 : col - map2.colCount(pos);
+    const colwidth = attrs.colwidth ? [...attrs.colwidth] : Array.from({ length: attrs.colspan }, () => 0);
+    colwidth[index] = width;
+    tr2.setNodeMarkup(start + pos, null, { ...attrs, colwidth });
+  }
+  if (tr2.docChanged) view.dispatch(tr2);
+}
+const ResizableTable = Table.extend({
+  addProseMirrorPlugins() {
+    return [
+      ...this.parent?.() ?? [],
+      new Plugin({
+        props: {
+          handleDOMEvents: {
+            mousemove: (view, event) => {
+              if (!view.editable) {
+                view.dom.classList.remove("resize-cursor");
+                return false;
+              }
+              view.dom.classList.toggle("resize-cursor", Boolean(findResizeEdge(view, event)));
+              return false;
+            },
+            mouseleave: (view) => {
+              view.dom.classList.remove("resize-cursor");
+              return false;
+            },
+            mousedown: (view, event) => {
+              if (!view.editable || event.button !== 0) return false;
+              const edge = findResizeEdge(view, event);
+              if (!edge) return false;
+              event.preventDefault();
+              const startX = event.clientX;
+              const { cellPos, startWidth } = edge;
+              const onMove = (moveEvent) => {
+                previewWidth(view, cellPos, Math.max(MIN_COL_WIDTH, startWidth + (moveEvent.clientX - startX)));
+              };
+              const onUp = (upEvent) => {
+                window.removeEventListener("mousemove", onMove);
+                window.removeEventListener("mouseup", onUp);
+                commitWidth(view, cellPos, Math.max(MIN_COL_WIDTH, startWidth + (upEvent.clientX - startX)));
+                view.dom.classList.remove("resize-cursor");
+              };
+              window.addEventListener("mousemove", onMove);
+              window.addEventListener("mouseup", onUp);
+              return true;
+            }
+          }
+        }
+      })
+    ];
+  }
+});
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -87328,20 +88968,23 @@ function RichTextEditor({ value, onChange, readOnly = false }) {
   const [linkOpen, setLinkOpen] = reactExports.useState(false);
   const [linkHref, setLinkHref] = reactExports.useState("");
   const [previewImageSrc, setPreviewImageSrc] = reactExports.useState();
+  const [tableDialogOpen, setTableDialogOpen] = reactExports.useState(false);
+  const [tableMenuOpen, setTableMenuOpen] = reactExports.useState(false);
+  const [tableSize, setTableSize] = reactExports.useState({ rows: 3, cols: 3 });
   const fileInputRef = reactExports.useRef(null);
   const editor = useEditor({
     extensions: [
       index_default.configure({ link: false }),
-      index_default$8.configure({ openOnClick: false }),
-      index_default$9.configure({ types: ["textStyle"] }),
-      index_default$6,
-      index_default$7.configure({ types: ["heading", "paragraph"] }),
-      FontSize,
-      index_default$a.configure({ allowBase64: true }),
-      Table.configure({ resizable: true }),
+      index_default$5.configure({ openOnClick: false }),
+      index_default$6.configure({ types: ["textStyle"] }),
       index_default$3,
-      index_default$4,
-      index_default$5,
+      index_default$4.configure({ types: ["heading", "paragraph"] }),
+      FontSize,
+      index_default$7.configure({ allowBase64: true }),
+      ResizableTable.configure({ resizable: true, handleWidth: 12, cellMinWidth: 48, lastColumnResizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
       index_default$1,
       index_default$2.configure({ nested: true })
     ],
@@ -87387,6 +89030,31 @@ function RichTextEditor({ value, onChange, readOnly = false }) {
     if (!image) return;
     void insertImageFile(image, (src) => editor.chain().focus().setImage({ src }).run());
   };
+  const runTableCommand = (command2) => {
+    const chain = editor.chain().focus();
+    const commandMap = {
+      addRowAfter: () => chain.addRowAfter(),
+      addColumnAfter: () => chain.addColumnAfter(),
+      deleteRow: () => chain.deleteRow(),
+      deleteColumn: () => chain.deleteColumn(),
+      deleteTable: () => chain.deleteTable(),
+      mergeCells: () => chain.mergeCells(),
+      splitCell: () => chain.splitCell()
+    };
+    commandMap[command2]().run();
+  };
+  const tableMenuItems = [
+    { key: "addRowAfter", label: "在下方新增行", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Rows3, { size: 14 }) },
+    { key: "addColumnAfter", label: "在右侧新增列", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Columns3, { size: 14 }) },
+    { type: "divider" },
+    { key: "deleteRow", label: "删除当前行", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Rows3, { size: 14 }), danger: true },
+    { key: "deleteColumn", label: "删除当前列", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Columns3, { size: 14 }), danger: true },
+    { key: "deleteTable", label: "删除表格", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 }), danger: true },
+    { type: "divider" },
+    { key: "mergeCells", label: "合并单元格", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Merge, { size: 14 }) },
+    { key: "splitCell", label: "拆分单元格", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Split, { size: 14 }) },
+    { key: "hint", label: "快捷键：Tab 移动，末尾自动新增行", disabled: true }
+  ];
   const buttons = [
     { title: "二级标题", icon: Heading2, active: editor.isActive("heading", { level: 2 }), run: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
     { title: "粗体", icon: Bold$1, active: editor.isActive("bold"), run: () => editor.chain().focus().toggleBold().run() },
@@ -87425,7 +89093,7 @@ function RichTextEditor({ value, onChange, readOnly = false }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "toolbar-divider" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: editor.isActive("link") ? "active" : "", type: "button", title: "链接", onClick: openLinkDialog, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link2, { size: 16 }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", title: "插入图片", onClick: () => fileInputRef.current?.click(), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Image$1, { size: 16 }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", title: "插入表格", onClick: () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { size: 16 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", title: "插入表格", onClick: () => setTableDialogOpen(true), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Table2, { size: 16 }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", title: "代码块", onClick: () => editor.chain().focus().toggleCodeBlock().run(), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Braces, { size: 16 }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "toolbar-spacer" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", title: fullscreen ? "退出全屏" : "全屏编辑", onClick: () => setFullscreen((current) => !current), children: fullscreen ? /* @__PURE__ */ jsxRuntimeExports.jsx(Expand, { size: 16 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Maximize2, { size: 16 }) }),
@@ -87434,13 +89102,40 @@ function RichTextEditor({ value, onChange, readOnly = false }) {
         event.target.value = "";
       } })
     ] }) : null,
-    /* @__PURE__ */ jsxRuntimeExports.jsx(EditorContent, { editor }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown, { trigger: ["contextMenu"], open: tableMenuOpen, onOpenChange: setTableMenuOpen, menu: { items: tableMenuItems, onClick: ({ key }) => {
+      runTableCommand(key);
+      setTableMenuOpen(false);
+    } }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "rich-editor-content",
+        onContextMenu: (event) => {
+          if (readOnly || !editor.isActive("table")) return;
+          event.preventDefault();
+          setTableMenuOpen(true);
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditorContent, { editor })
+      }
+    ) }),
     readOnly ? /* @__PURE__ */ jsxRuntimeExports.jsx(Image$2, { className: "rich-editor-preview-image", src: previewImageSrc, preview: { visible: Boolean(previewImageSrc), onVisibleChange: (visible) => {
       if (!visible) setPreviewImageSrc(void 0);
     } } }) : null,
     /* @__PURE__ */ jsxRuntimeExports.jsx(Modal, { title: "设置链接", open: linkOpen, width: 420, onCancel: () => setLinkOpen(false), footer: null, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Space.Compact, { block: true, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { autoFocus: true, value: linkHref, placeholder: "https://example.com", onChange: (event) => setLinkHref(event.target.value), onPressEnter: applyLink }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { type: "primary", onClick: applyLink, children: "确定" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal, { title: "插入表格", open: tableDialogOpen, width: 360, okText: "插入", cancelText: "取消", onCancel: () => setTableDialogOpen(false), onOk: () => {
+      editor.chain().focus().insertTable({ rows: tableSize.rows, cols: tableSize.cols, withHeaderRow: true }).run();
+      setTableDialogOpen(false);
+    }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "table-size-form", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+        "行数",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 1, max: 30, value: tableSize.rows, onChange: (value2) => setTableSize((current) => ({ ...current, rows: value2 ?? 1 })) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+        "列数",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 1, max: 20, value: tableSize.cols, onChange: (value2) => setTableSize((current) => ({ ...current, cols: value2 ?? 1 })) })
+      ] })
     ] }) })
   ] });
 }
@@ -87987,7 +89682,7 @@ const statusViews = [
 ];
 function TaskSidebar() {
   const tasks = useTaskStore((state) => state.tasks);
-  useTaskStore((state) => state.dateRevision);
+  const dateRevision = useTaskStore((state) => state.dateRevision);
   const tags = useTaskStore((state) => state.tags);
   const workspace = useTaskStore((state) => state.workspace);
   const activeView = useTaskStore((state) => state.activeView);
@@ -87995,7 +89690,7 @@ function TaskSidebar() {
   const chooseWorkspace = useTaskStore((state) => state.chooseWorkspace);
   const exportData = useTaskStore((state) => state.exportData);
   const importData = useTaskStore((state) => state.importData);
-  const counts = reactExports.useMemo(() => getTaskCounts(tasks), [tasks]);
+  const counts = reactExports.useMemo(() => getTaskCounts(tasks), [tasks, dateRevision]);
   const [settingsOpen, setSettingsOpen] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: "task-sidebar", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "sidebar-scroll", "aria-label": "任务导航", children: [
@@ -88162,8 +89857,8 @@ function PanelLayout() {
   const [sidebarWidth, setSidebarWidth] = reactExports.useState(() => getStoredWidth(SIDEBAR_WIDTH_KEY, 182, 148, 280));
   const [listWidth, setListWidth] = reactExports.useState(() => getStoredWidth(LIST_WIDTH_KEY, 468, 390, 760));
   const [resizing, setResizing] = reactExports.useState(null);
-  const counts = reactExports.useMemo(() => getTaskCounts(tasks), [tasks]);
-  const visibleCount = reactExports.useMemo(() => getVisibleTasks(tasks, activeView).length, [activeView, tasks]);
+  const counts = reactExports.useMemo(() => getTaskCounts(tasks), [tasks, dateRevision]);
+  const visibleCount = reactExports.useMemo(() => getVisibleTasks(tasks, activeView).length, [activeView, tasks, dateRevision]);
   reactExports.useEffect(() => {
     if (!resizing) return;
     const handlePointerMove = (event) => {
@@ -88253,9 +89948,9 @@ function PanelLayout() {
         style: { "--sidebar-width": `${sidebarWidth}px`, "--list-width": `${listWidth}px` },
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TaskSidebar, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "column-resize-handle", role: "separator", "aria-orientation": "vertical", "aria-label": "调整左侧栏宽度", onPointerDown: (event) => startResize("sidebar", event) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "panel-resize-handle", role: "separator", "aria-orientation": "vertical", "aria-label": "调整左侧栏宽度", onPointerDown: (event) => startResize("sidebar", event) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TaskList, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "column-resize-handle", role: "separator", "aria-orientation": "vertical", "aria-label": "调整任务列表宽度", onPointerDown: (event) => startResize("list", event) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "panel-resize-handle", role: "separator", "aria-orientation": "vertical", "aria-label": "调整任务列表宽度", onPointerDown: (event) => startResize("list", event) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TaskDetail, {})
         ]
       }
@@ -88439,7 +90134,7 @@ function App() {
 var zhCn = { exports: {} };
 (function(module, exports) {
   !function(e, _) {
-    module.exports = _(dayjs_minExports);
+    module.exports = _(requireDayjs_min());
   }(commonjsGlobal, function(e) {
     function _(e2) {
       return e2 && "object" == typeof e2 && "default" in e2 ? e2 : { default: e2 };

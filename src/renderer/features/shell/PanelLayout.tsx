@@ -120,9 +120,9 @@ export function PanelLayout(): JSX.Element {
         style={{ '--sidebar-width': `${sidebarWidth}px`, '--list-width': `${listWidth}px` } as CSSProperties}
       >
         <TaskSidebar />
-        <div className="column-resize-handle" role="separator" aria-orientation="vertical" aria-label="调整左侧栏宽度" onPointerDown={(event) => startResize('sidebar', event)} />
+        <div className="panel-resize-handle" role="separator" aria-orientation="vertical" aria-label="调整左侧栏宽度" onPointerDown={(event) => startResize('sidebar', event)} />
         <TaskList />
-        <div className="column-resize-handle" role="separator" aria-orientation="vertical" aria-label="调整任务列表宽度" onPointerDown={(event) => startResize('list', event)} />
+        <div className="panel-resize-handle" role="separator" aria-orientation="vertical" aria-label="调整任务列表宽度" onPointerDown={(event) => startResize('list', event)} />
         <TaskDetail />
       </div>
       <footer className="statusbar">

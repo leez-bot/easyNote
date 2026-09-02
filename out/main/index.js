@@ -688,6 +688,9 @@ class WindowManager {
       }
     });
     this.loadRenderer(this.panelWindow);
+    this.panelWindow.on("maximize", () => this.hideLauncher());
+    this.panelWindow.on("unmaximize", () => this.hideLauncher());
+    this.panelWindow.on("show", () => this.hideLauncher());
     this.panelWindow.on("moved", () => this.savePanelBounds());
     this.panelWindow.on("resized", () => this.savePanelBounds());
     this.panelWindow.on("closed", () => {
@@ -708,7 +711,7 @@ class WindowManager {
   showPanel() {
     const panel = this.createPanelWindow();
     if (this.launcherWindow && !this.launcherWindow.isDestroyed()) {
-      this.launcherWindow.hide();
+      this.hideLauncher();
     }
     panel.show();
     panel.focus();
@@ -729,6 +732,11 @@ class WindowManager {
   }
   closePanel() {
     app.quit();
+  }
+  hideLauncher() {
+    if (this.launcherWindow && !this.launcherWindow.isDestroyed() && this.launcherWindow.isVisible()) {
+      this.launcherWindow.hide();
+    }
   }
   beginLauncherDrag() {
     if (!this.launcherWindow || this.launcherWindow.isDestroyed()) {
