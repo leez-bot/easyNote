@@ -1,7 +1,7 @@
 import { Button, Checkbox, DatePicker, Empty, Input, Popconfirm, Radio, Segmented, Select, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import { Check, Pencil, Save, Tag, Trash2, X } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Task, TaskInput, TaskPriority, TaskStatus } from '../../../shared/models'
 import { getDocumentStats } from '../../shared/editor'
 import { useTaskStore } from '../../store/taskStore'
@@ -74,9 +74,17 @@ export function TaskDetail(): JSX.Element {
     setEditorStats(content ? getDocumentStats(content) : { characters: 0, paragraphs: 0 })
   }, [draft?.content, isEditing, setEditorStats, task?.content])
 
+  const flushEdit = useCallback(async (): Promise<void> => {
+    if (!isEditing || !task || !draft) return
+    const saved = await updateTask(task.id, { ...draft, title: draft.title.trim() || '未命名任务' })
+    if (!saved) throw new Error('保存失败，请重试')
+    setIsEditing(false)
+  }, [draft, isEditing, task, updateTask])
+
   useEffect(() => {
-    setFlushPendingSave(null)
-  }, [setFlushPendingSave])
+    setFlushPendingSave(isEditing ? flushEdit : null)
+    return () => setFlushPendingSave(null)
+  }, [flushEdit, isEditing, setFlushPendingSave])
 
   if (!task || !draft) {
     return <section className="task-detail empty-detail"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="选择任务后查看详情" /></section>
@@ -87,10 +95,7 @@ export function TaskDetail(): JSX.Element {
     setDraft(toDraft(task))
     setIsEditing(false)
   }
-  const saveEdit = async (): Promise<void> => {
-    const saved = await updateTask(task.id, { ...draft, title: draft.title.trim() || '未命名任务' })
-    if (saved) setIsEditing(false)
-  }
+  const saveEdit = async (): Promise<void> => flushEdit()
 
   return (
     <section className={`task-detail ${isEditing ? 'editing' : 'viewing'}`} aria-label="任务详情">

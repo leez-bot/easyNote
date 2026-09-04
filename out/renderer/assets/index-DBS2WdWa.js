@@ -60308,9 +60308,23 @@ const useTaskStore = create((set2, get3) => ({
       set2({ error: getErrorMessage(error, "刷新任务失败") });
     }
   },
-  selectTask: (id2) => set2({ selectedTaskId: id2, pendingEditTaskId: null }),
+  selectTask: async (id2) => {
+    try {
+      await get3().flushPendingSave?.();
+      set2({ selectedTaskId: id2, pendingEditTaskId: null });
+    } catch (error) {
+      set2({ error: getErrorMessage(error, "切换前保存失败，请重试") });
+    }
+  },
   clearPendingEditTask: () => set2({ pendingEditTaskId: null }),
-  setActiveView: (activeView) => set2((state) => ({ activeView, selectedTaskId: ensureSelection(state.tasks, state.selectedTaskId, activeView) })),
+  setActiveView: async (activeView) => {
+    try {
+      await get3().flushPendingSave?.();
+      set2((state) => ({ activeView, selectedTaskId: ensureSelection(state.tasks, state.selectedTaskId, activeView) }));
+    } catch (error) {
+      set2({ error: getErrorMessage(error, "切换前保存失败，请重试") });
+    }
+  },
   setEditorStats: (editorStats) => set2({ editorStats }),
   setFlushPendingSave: (flushPendingSave) => set2({ flushPendingSave }),
   createTask: async (input) => {
@@ -89261,9 +89275,16 @@ function TaskDetail() {
     const content = isEditing ? draft?.content : task?.content;
     setEditorStats(content ? getDocumentStats(content) : { characters: 0, paragraphs: 0 });
   }, [draft?.content, isEditing, setEditorStats, task?.content]);
+  const flushEdit = reactExports.useCallback(async () => {
+    if (!isEditing || !task || !draft) return;
+    const saved = await updateTask(task.id, { ...draft, title: draft.title.trim() || "未命名任务" });
+    if (!saved) throw new Error("保存失败，请重试");
+    setIsEditing(false);
+  }, [draft, isEditing, task, updateTask]);
   reactExports.useEffect(() => {
-    setFlushPendingSave(null);
-  }, [setFlushPendingSave]);
+    setFlushPendingSave(isEditing ? flushEdit : null);
+    return () => setFlushPendingSave(null);
+  }, [flushEdit, isEditing, setFlushPendingSave]);
   if (!task || !draft) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "task-detail empty-detail", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { image: Empty.PRESENTED_IMAGE_SIMPLE, description: "选择任务后查看详情" }) });
   }
@@ -89272,10 +89293,7 @@ function TaskDetail() {
     setDraft(toDraft(task));
     setIsEditing(false);
   };
-  const saveEdit = async () => {
-    const saved = await updateTask(task.id, { ...draft, title: draft.title.trim() || "未命名任务" });
-    if (saved) setIsEditing(false);
-  };
+  const saveEdit = async () => flushEdit();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: `task-detail ${isEditing ? "editing" : "viewing"}`, "aria-label": "任务详情", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "detail-titlebar", children: [
       isEditing ? /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { className: "detail-title-input", variant: "borderless", value: draft.title, onChange: (event) => updateDraft({ title: event.target.value }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: task.title }),
@@ -89576,13 +89594,13 @@ function TaskList() {
             type: "button",
             draggable: true,
             "data-task-id": task.id,
-            onClick: () => selectTask(task.id),
-            onContextMenu: () => selectTask(task.id),
+            onClick: () => void selectTask(task.id),
+            onContextMenu: () => void selectTask(task.id),
             onDragStart: (event) => {
               event.dataTransfer.effectAllowed = "move";
               event.dataTransfer.setData("text/plain", task.id);
               setDragState({ groupId: group.id, taskId: task.id });
-              selectTask(task.id);
+              void selectTask(task.id);
             },
             onDragOver: (event) => {
               if (dragState?.groupId === group.id) event.preventDefault();
@@ -89701,7 +89719,7 @@ function TaskSidebar() {
           icon: item.icon,
           label: item.label,
           count: typeof counts[item.count] === "number" ? counts[item.count] : 0,
-          onClick: () => setActiveView(item.view)
+          onClick: () => void setActiveView(item.view)
         },
         item.label
       )) }),
@@ -89712,7 +89730,7 @@ function TaskSidebar() {
           icon: item.icon,
           label: item.label,
           count: counts.statuses[item.value],
-          onClick: () => setActiveView({ type: "status", value: item.value })
+          onClick: () => void setActiveView({ type: "status", value: item.value })
         },
         item.value
       )) }),
@@ -89726,7 +89744,7 @@ function TaskSidebar() {
             {
               className: `sidebar-item tag-nav ${activeView.type === "tag" && activeView.tagId === tag.id ? "active" : ""}`,
               type: "button",
-              onClick: () => setActiveView({ type: "tag", tagId: tag.id }),
+              onClick: () => void setActiveView({ type: "tag", tagId: tag.id }),
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "tag-outline", style: { color: tag.color } }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sidebar-item-label", children: tag.name }),

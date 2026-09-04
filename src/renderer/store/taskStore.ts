@@ -25,9 +25,9 @@ interface TaskState {
   bootstrap: () => Promise<void>
   chooseWorkspace: () => Promise<void>
   reloadData: () => Promise<void>
-  selectTask: (id: string | null) => void
+  selectTask: (id: string | null) => Promise<void>
   clearPendingEditTask: () => void
-  setActiveView: (view: TaskView) => void
+  setActiveView: (view: TaskView) => Promise<void>
   setEditorStats: (stats: { characters: number; paragraphs: number }) => void
   setFlushPendingSave: (flush: (() => Promise<void>) | null) => void
   createTask: (input: TaskInput) => Promise<Task | null>
@@ -126,9 +126,23 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     }
   },
 
-  selectTask: (id) => set({ selectedTaskId: id, pendingEditTaskId: null }),
+  selectTask: async (id) => {
+    try {
+      await get().flushPendingSave?.()
+      set({ selectedTaskId: id, pendingEditTaskId: null })
+    } catch (error) {
+      set({ error: getErrorMessage(error, '切换前保存失败，请重试') })
+    }
+  },
   clearPendingEditTask: () => set({ pendingEditTaskId: null }),
-  setActiveView: (activeView) => set((state) => ({ activeView, selectedTaskId: ensureSelection(state.tasks, state.selectedTaskId, activeView) })),
+  setActiveView: async (activeView) => {
+    try {
+      await get().flushPendingSave?.()
+      set((state) => ({ activeView, selectedTaskId: ensureSelection(state.tasks, state.selectedTaskId, activeView) }))
+    } catch (error) {
+      set({ error: getErrorMessage(error, '切换前保存失败，请重试') })
+    }
+  },
   setEditorStats: (editorStats) => set({ editorStats }),
   setFlushPendingSave: (flushPendingSave) => set({ flushPendingSave }),
 

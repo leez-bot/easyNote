@@ -207,13 +207,13 @@ export function TaskList(): JSX.Element {
                     type="button"
                     draggable
                     data-task-id={task.id}
-                    onClick={() => selectTask(task.id)}
-                    onContextMenu={() => selectTask(task.id)}
+                    onClick={() => void selectTask(task.id)}
+                    onContextMenu={() => void selectTask(task.id)}
                     onDragStart={(event) => {
                       event.dataTransfer.effectAllowed = 'move'
                       event.dataTransfer.setData('text/plain', task.id)
                       setDragState({ groupId: group.id, taskId: task.id })
-                      selectTask(task.id)
+                      void selectTask(task.id)
                     }}
                     onDragOver={(event) => {
                       if (dragState?.groupId === group.id) event.preventDefault()

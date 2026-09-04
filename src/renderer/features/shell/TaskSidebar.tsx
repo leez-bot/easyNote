@@ -47,7 +47,7 @@ export function TaskSidebar(): JSX.Element {
               icon={item.icon}
               label={item.label}
               count={typeof counts[item.count] === 'number' ? counts[item.count] as number : 0}
-              onClick={() => setActiveView(item.view)}
+              onClick={() => void setActiveView(item.view)}
             />
           ))}
         </SidebarSection>
@@ -59,7 +59,7 @@ export function TaskSidebar(): JSX.Element {
               icon={item.icon}
               label={item.label}
               count={counts.statuses[item.value]}
-              onClick={() => setActiveView({ type: 'status', value: item.value })}
+              onClick={() => void setActiveView({ type: 'status', value: item.value })}
             />
           ))}
         </SidebarSection>
@@ -72,7 +72,7 @@ export function TaskSidebar(): JSX.Element {
               className={`sidebar-item tag-nav ${activeView.type === 'tag' && activeView.tagId === tag.id ? 'active' : ''}`}
               type="button"
               key={tag.id}
-              onClick={() => setActiveView({ type: 'tag', tagId: tag.id })}
+              onClick={() => void setActiveView({ type: 'tag', tagId: tag.id })}
             >
               <span className="tag-outline" style={{ color: tag.color }} />
               <span className="sidebar-item-label">{tag.name}</span>
