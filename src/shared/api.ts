@@ -46,4 +46,8 @@ export interface EasyNoteApi {
     moveLauncher: () => Promise<void>
     quit: () => Promise<void>
   }
+  settings: {
+    getOpenAtLogin: () => Promise<boolean>
+    setOpenAtLogin: (enabled: boolean) => Promise<boolean>
+  }
 }

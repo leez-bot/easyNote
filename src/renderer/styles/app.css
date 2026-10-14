@@ -99,7 +99,19 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .sidebar-footer-button:hover { background: #e9edf3; }
 .workspace-settings { display: grid; gap: 18px; padding-top: 4px; }
 .workspace-settings section { display: grid; gap: 9px; }
+.settings-layout { display: grid; grid-template-columns: 132px minmax(0,1fr); min-height: 228px; }
+.settings-nav { display: grid; align-content: start; gap: 2px; padding: 2px 12px 0 0; border-right: 1px solid var(--color-border); }
+.settings-nav-item { height: 34px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: #3f4a5a; font-size: 13px; text-align: left; }
+.settings-nav-item:hover { background: #eef2f7; }
+.settings-nav-item.active { background: #e6efff; color: var(--color-primary); font-weight: 600; }
+.settings-pane { min-width: 0; display: grid; align-content: start; gap: 12px; padding: 2px 0 0 18px; }
+.settings-pane section { display: grid; gap: 9px; }
 .settings-section-title { color: #273142; font-size: 13px; font-weight: 650; }
+.settings-hint { margin: 0; color: #697386; font-size: 12px; line-height: 1.55; }
+.settings-toggle { display: flex; align-items: flex-start; gap: 8px; padding: 12px; border: 1px solid var(--color-border); border-radius: 7px; background: #f8fafc; }
+.settings-toggle span { display: grid; gap: 4px; color: #111827; font-size: 13px; }
+.settings-toggle strong { font-weight: 600; }
+.settings-toggle em { color: #697386; font-size: 12px; font-style: normal; }
 .workspace-summary { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--color-border); border-radius: 7px; background: #f8fafc; }
 .workspace-summary div { min-width: 0; display: grid; gap: 4px; }
 .workspace-summary strong { overflow: hidden; color: #111827; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
@@ -216,7 +228,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .rich-editor { position: relative; overflow: hidden; border: 1px solid #d5dce7; border-radius: 6px; background: #fff; }
 .rich-editor.readonly { overflow: visible; border: 0; border-radius: 0; }
 .rich-editor.readonly .tiptap-content { min-height: 80px; padding: 8px 0 18px; color: #394355; cursor: default; }
-.rich-editor-toolbar { min-height: 40px; display: flex; align-items: center; gap: 2px; padding: 4px 8px; border-bottom: 1px solid var(--color-border); background: #fff; }
+.rich-editor-toolbar { min-height: 40px; display: flex; align-items: center; gap: 2px; padding: 4px 8px; border-bottom: 1px solid var(--color-border); background: #fff; -webkit-app-region: no-drag; }
 .rich-editor-toolbar button { width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #303a49; }
 .rich-editor-toolbar button:hover, .rich-editor-toolbar button.active { background: #edf3ff; color: var(--color-primary); }
 .rich-toolbar-select { width: 25px; height: 25px; display: grid; place-items: center; overflow: hidden; border-radius: 4px; cursor: pointer; }
@@ -260,7 +272,8 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .tiptap-content img { max-width: 100%; height: auto; border-radius: 6px; }
 .rich-editor.readonly .tiptap-content img { cursor: zoom-in; }
 .rich-editor-preview-image { display: none; }
-.rich-editor-fullscreen { position: fixed; inset: 20px; z-index: 1000; display: grid; grid-template-rows: auto minmax(0,1fr); box-shadow: 0 18px 60px rgba(15,23,42,.24); }
+.rich-editor-fullscreen { position: fixed; top: var(--titlebar-height); right: 0; bottom: var(--statusbar-height); left: 0; z-index: 1000; display: grid; grid-template-rows: auto minmax(0,1fr); border-radius: 0; box-shadow: none; -webkit-app-region: no-drag; }
+.rich-editor-fullscreen .rich-editor-content { min-height: 0; height: 100%; overflow: auto; }
 .rich-editor-fullscreen .tiptap-content { height: 100%; overflow-y: auto; }
 .rich-editor.loading { min-height: 260px; display: grid; place-items: center; color: var(--color-muted); }
 

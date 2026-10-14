@@ -1,10 +1,11 @@
-import { Button, Modal, Popconfirm, Tooltip } from 'antd'
-import { AlertTriangle, Archive, CalendarDays, CheckCircle2, CirclePause, Clock3, Download, FolderOpen, Inbox, ListTodo, Pencil, Plus, Settings, Timer, XCircle } from 'lucide-react'
+import { Popconfirm, Tooltip } from 'antd'
+import { AlertTriangle, Archive, CalendarDays, CheckCircle2, CirclePause, Clock3, Inbox, ListTodo, Pencil, Plus, Settings, Timer, XCircle } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { TaskStatus } from '../../../shared/models'
 import { getTaskCounts, type TaskView } from '../../shared/taskViews'
 import { useTaskStore } from '../../store/taskStore'
 import { TagPicker } from '../tasks/TagPicker'
+import { SettingsModal } from './SettingsModal'
 
 const workspaceViews: Array<{ label: string; icon: typeof Inbox; view: TaskView; count: keyof ReturnType<typeof getTaskCounts> }> = [
   { label: '快速记录', icon: Pencil, view: { type: 'quick' }, count: 'all' },
@@ -27,12 +28,9 @@ export function TaskSidebar(): JSX.Element {
   const tasks = useTaskStore((state) => state.tasks)
   const dateRevision = useTaskStore((state) => state.dateRevision)
   const tags = useTaskStore((state) => state.tags)
-  const workspace = useTaskStore((state) => state.workspace)
   const activeView = useTaskStore((state) => state.activeView)
   const setActiveView = useTaskStore((state) => state.setActiveView)
-  const chooseWorkspace = useTaskStore((state) => state.chooseWorkspace)
   const exportData = useTaskStore((state) => state.exportData)
-  const importData = useTaskStore((state) => state.importData)
   const counts = useMemo(() => getTaskCounts(tasks), [tasks, dateRevision])
   const [settingsOpen, setSettingsOpen] = useState(false)
 
@@ -82,8 +80,8 @@ export function TaskSidebar(): JSX.Element {
         </SidebarSection>
       </nav>
       <div className="sidebar-footer">
-        <Tooltip title="工作区设置">
-          <button className="sidebar-footer-button" type="button" title="工作区设置" onClick={() => setSettingsOpen(true)}><Settings size={17} /></button>
+        <Tooltip title="设置">
+          <button className="sidebar-footer-button" type="button" title="设置" onClick={() => setSettingsOpen(true)}><Settings size={17} /></button>
         </Tooltip>
         <Popconfirm
           title="归档当前工作区"
@@ -97,42 +95,7 @@ export function TaskSidebar(): JSX.Element {
           </Tooltip>
         </Popconfirm>
       </div>
-      <Modal
-        title="工作区设置"
-        open={settingsOpen}
-        footer={null}
-        width={520}
-        onCancel={() => setSettingsOpen(false)}
-      >
-        <div className="workspace-settings">
-          <section>
-            <div className="settings-section-title">当前工作区</div>
-            <div className="workspace-summary">
-              <div>
-                <strong>{workspace?.name || '个人工作区'}</strong>
-                <span>{workspace?.rootPath || '未选择数据目录'}</span>
-              </div>
-              <Button icon={<FolderOpen size={15} />} onClick={() => void chooseWorkspace()}>更换目录</Button>
-            </div>
-          </section>
-          <section>
-            <div className="settings-section-title">数据管理</div>
-            <div className="settings-actions">
-              <Button icon={<Download size={15} />} onClick={() => void exportData()}>导出工作区</Button>
-              <Button onClick={() => void importData('merge')}>合并导入</Button>
-              <Popconfirm
-                title="覆盖导入"
-                description="覆盖导入会先备份当前工作区，然后用导入包替换现有任务。"
-                okText="覆盖导入"
-                cancelText="取消"
-                onConfirm={() => void importData('replace')}
-              >
-                <Button danger>覆盖导入</Button>
-              </Popconfirm>
-            </div>
-          </section>
-        </div>
-      </Modal>
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </aside>
   )
 }

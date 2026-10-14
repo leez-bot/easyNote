@@ -7868,24 +7868,24 @@ function getTargetScrollBarSize(target) {
 let warned$1 = {};
 const preMessage = (fn) => {
 };
-function warning$2(valid, message) {
+function warning$2(valid, message2) {
 }
-function note(valid, message) {
+function note(valid, message2) {
 }
 function resetWarned() {
   warned$1 = {};
 }
-function call(method2, valid, message) {
-  if (!valid && !warned$1[message]) {
-    method2(false, message);
-    warned$1[message] = true;
+function call(method2, valid, message2) {
+  if (!valid && !warned$1[message2]) {
+    method2(false, message2);
+    warned$1[message2] = true;
   }
 }
-function warningOnce$1(valid, message) {
-  call(warning$2, valid, message);
+function warningOnce$1(valid, message2) {
+  call(warning$2, valid, message2);
 }
-function noteOnce(valid, message) {
-  call(note, valid, message);
+function noteOnce(valid, message2) {
+  call(note, valid, message2);
 }
 warningOnce$1.preMessage = preMessage;
 warningOnce$1.resetWarned = resetWarned;
@@ -12438,17 +12438,17 @@ function getShadowRoot(ele) {
   return typeof ShadowRoot !== "undefined" && root instanceof ShadowRoot ? root : null;
 }
 const warned = {};
-function warningOnce(valid, message) {
-  if (valid || warned[message]) {
+function warningOnce(valid, message2) {
+  if (valid || warned[message2]) {
     return;
   }
-  warned[message] = true;
+  warned[message2] = true;
 }
 function camelCase(input) {
   return input.replace(/-(.)/g, (match2, g) => g.toUpperCase());
 }
-function warning$1(valid, message) {
-  warningOnce(valid, `[@ant-design/icons] ${message}`);
+function warning$1(valid, message2) {
+  warningOnce(valid, `[@ant-design/icons] ${message2}`);
 }
 function isIconDefinition(target) {
   return typeof target === "object" && typeof target.name === "string" && typeof target.theme === "string" && (typeof target.icon === "object" || typeof target.icon === "function");
@@ -13787,7 +13787,7 @@ const Alert$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
     description,
     prefixCls: customizePrefixCls,
-    message,
+    message: message2,
     title,
     banner,
     className,
@@ -13807,7 +13807,7 @@ const Alert$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     classNames,
     ...otherProps
   } = props;
-  const mergedTitle = title ?? message;
+  const mergedTitle = title ?? message2;
   const [closed, setClosed] = reactExports.useState(false);
   const internalRef = reactExports.useRef(null);
   reactExports.useImperativeHandle(ref, () => ({
@@ -13995,7 +13995,7 @@ let ErrorBoundary = /* @__PURE__ */ function(_React$PureComponent) {
     key: "render",
     value: function render2() {
       const {
-        message,
+        message: message2,
         title,
         description,
         id: id2,
@@ -14005,7 +14005,7 @@ let ErrorBoundary = /* @__PURE__ */ function(_React$PureComponent) {
         error,
         info
       } = this.state;
-      const mergedTitle = title ?? message;
+      const mergedTitle = title ?? message2;
       const componentStack = info?.componentStack || null;
       const errorMessage = isNonNullable(mergedTitle) ? mergedTitle : error?.toString();
       const errorDescription = isNonNullable(description) ? description : componentStack;
@@ -14419,7 +14419,7 @@ function detachGlobalEventListeners() {
     window.removeEventListener("compositionend", onGlobalCompositionEnd);
   }
 }
-function useEscKeyDown(open, onEsc) {
+function useEscKeyDown(open2, onEsc) {
   const id2 = useId();
   const onEventEsc = useEvent(onEsc);
   const ensure = () => {
@@ -14434,14 +14434,14 @@ function useEscKeyDown(open, onEsc) {
     stack = stack.filter((item) => item.id !== id2);
   };
   reactExports.useMemo(() => {
-    if (open) {
+    if (open2) {
       ensure();
-    } else if (!open) {
+    } else if (!open2) {
       clear();
     }
-  }, [open]);
+  }, [open2]);
   reactExports.useEffect(() => {
-    if (open) {
+    if (open2) {
       ensure();
       attachGlobalEventListeners();
       return () => {
@@ -14449,7 +14449,7 @@ function useEscKeyDown(open, onEsc) {
         detachGlobalEventListeners();
       };
     }
-  }, [open]);
+  }, [open2]);
 }
 const getPortalContainer = (getContainer2) => {
   if (getContainer2 === false) {
@@ -14468,7 +14468,7 @@ const getPortalContainer = (getContainer2) => {
 };
 const Portal = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
-    open,
+    open: open2,
     autoLock,
     getContainer: getContainer2,
     debug,
@@ -14476,13 +14476,13 @@ const Portal = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     children,
     onEsc
   } = props;
-  const [shouldRender, setShouldRender] = reactExports.useState(open);
-  const mergedRender = shouldRender || open;
+  const [shouldRender, setShouldRender] = reactExports.useState(open2);
+  const mergedRender = shouldRender || open2;
   reactExports.useEffect(() => {
-    if (autoDestroy || open) {
-      setShouldRender(open);
+    if (autoDestroy || open2) {
+      setShouldRender(open2);
     }
-  }, [open, autoDestroy]);
+  }, [open2, autoDestroy]);
   const [innerContainer, setInnerContainer] = reactExports.useState(() => getPortalContainer(getContainer2));
   reactExports.useEffect(() => {
     const customizeContainer = getPortalContainer(getContainer2);
@@ -14494,8 +14494,8 @@ const Portal = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   });
   const [defaultContainer, queueCreate] = useDom(mergedRender && !innerContainer);
   const mergedContainer = innerContainer ?? defaultContainer;
-  useScrollLocker(autoLock && open && canUseDom$1() && (mergedContainer === defaultContainer || mergedContainer === document.body));
-  useEscKeyDown(open, onEsc);
+  useScrollLocker(autoLock && open2 && canUseDom$1() && (mergedContainer === defaultContainer || mergedContainer === document.body));
+  useEscKeyDown(open2, onEsc);
   let childRef = null;
   if (children && supportRef(children) && ref) {
     childRef = getNodeRef(children);
@@ -14586,7 +14586,7 @@ function _extends$1i() {
 function Mask$1(props) {
   const {
     prefixCls,
-    open,
+    open: open2,
     zIndex,
     mask,
     motion: motion2,
@@ -14597,7 +14597,7 @@ function Mask$1(props) {
   }
   return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1i({}, motion2, {
     motionAppear: true,
-    visible: open,
+    visible: open2,
     removeOnLeave: true
   }), ({
     className
@@ -14611,7 +14611,7 @@ function Mask$1(props) {
 const PopupContent = /* @__PURE__ */ reactExports.memo(({
   children
 }) => children, (_, next2) => next2.cache);
-function useOffsetStyle(isMobile2, ready, open, align, offsetR, offsetB, offsetX, offsetY) {
+function useOffsetStyle(isMobile2, ready, open2, align, offsetR, offsetB, offsetX, offsetY) {
   const AUTO = "auto";
   const offsetStyle = isMobile2 ? {} : {
     left: "-1000vw",
@@ -14619,7 +14619,7 @@ function useOffsetStyle(isMobile2, ready, open, align, offsetR, offsetB, offsetX
     right: AUTO,
     bottom: AUTO
   };
-  if (!isMobile2 && (ready || !open)) {
+  if (!isMobile2 && (ready || !open2)) {
     const {
       points
     } = align;
@@ -14667,7 +14667,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     target,
     onVisibleChanged,
     // Open
-    open,
+    open: open2,
     keepDom,
     fresh,
     // Click
@@ -14708,7 +14708,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     targetHeight
   } = props;
   const popupContent = typeof popup === "function" ? popup() : popup;
-  const isNodeVisible = open || keepDom;
+  const isNodeVisible = open2 || keepDom;
   const isMobile2 = !!mobile;
   const [mergedMask, mergedMaskMotion, mergedPopupMotion] = reactExports.useMemo(() => {
     if (mobile) {
@@ -14727,7 +14727,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onResize2?.(size, ele);
     onAlign();
   });
-  const offsetStyle = useOffsetStyle(isMobile2, ready, open, align, offsetR, offsetB, offsetX, offsetY);
+  const offsetStyle = useOffsetStyle(isMobile2, ready, open2, align, offsetR, offsetB, offsetX, offsetY);
   if (!show) {
     return null;
   }
@@ -14744,7 +14744,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       miscStyle.minWidth = targetWidth;
     }
   }
-  if (!open) {
+  if (!open2) {
     miscStyle.pointerEvents = "none";
   }
   return /* @__PURE__ */ reactExports.createElement(Portal2, {
@@ -14754,14 +14754,14 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onEsc
   }, /* @__PURE__ */ reactExports.createElement(Mask$1, {
     prefixCls,
-    open,
+    open: open2,
     zIndex,
     mask: mergedMask,
     motion: mergedMaskMotion,
     mobile: isMobile2
   }), /* @__PURE__ */ reactExports.createElement(RefResizeObserver, {
     onResize: onInternalResize,
-    disabled: !open
+    disabled: !open2
   }, (resizeObserverRef) => {
     return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1h({
       motionAppear: true,
@@ -14773,7 +14773,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     }, mergedPopupMotion, {
       onAppearPrepare: onPrepare,
       onEnterPrepare: onPrepare,
-      visible: open,
+      visible: open2,
       onVisibleChanged: (nextVisible) => {
         motion2?.onVisibleChanged?.(nextVisible);
         onVisibleChanged(nextVisible);
@@ -14809,7 +14809,7 @@ const Popup$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
         arrowPos,
         align
       }), /* @__PURE__ */ reactExports.createElement(PopupContent, {
-        cache: !open && !fresh
+        cache: !open2 && !fresh
       }, popupContent));
     });
   }), children);
@@ -14986,7 +14986,7 @@ function reversePoints(points, index) {
 function flatPoints(points) {
   return points.join("");
 }
-function useAlign(open, popupEle, target, placement, builtinPlacements, popupAlign, onPopupAlign, mobile) {
+function useAlign(open2, popupEle, target, placement, builtinPlacements, popupAlign, onPopupAlign, mobile) {
   const [offsetInfo, setOffsetInfo] = reactExports.useState({
     ready: false,
     offsetX: 0,
@@ -15010,11 +15010,11 @@ function useAlign(open, popupEle, target, placement, builtinPlacements, popupAli
   const resetFlipCache = () => {
     prevFlipRef.current = {};
   };
-  if (!open) {
+  if (!open2) {
     resetFlipCache();
   }
   const onAlign = useEvent(() => {
-    if (popupEle && target && open && !mobile) {
+    if (popupEle && target && open2 && !mobile) {
       let getIntersectionVisibleArea2 = function(offsetX, offsetY, area = visibleArea) {
         const l2 = popupRect.x + offsetX;
         const t2 = popupRect.y + offsetY;
@@ -15368,10 +15368,10 @@ function useAlign(open, popupEle, target, placement, builtinPlacements, popupAli
   };
   useLayoutEffect$1(resetReady, [placement]);
   useLayoutEffect$1(() => {
-    if (!open) {
+    if (!open2) {
       resetReady();
     }
-  }, [open]);
+  }, [open2]);
   return [offsetInfo.ready, offsetInfo.offsetX, offsetInfo.offsetY, offsetInfo.offsetR, offsetInfo.offsetB, offsetInfo.arrowX, offsetInfo.arrowY, offsetInfo.scaleX, offsetInfo.scaleY, offsetInfo.align, triggerAlign];
 }
 function useDelay() {
@@ -15399,9 +15399,9 @@ function useDelay() {
   }, []);
   return delayInvoke;
 }
-function useWatch$1(open, target, popup, onAlign, onScroll) {
+function useWatch$1(open2, target, popup, onAlign, onScroll) {
   useLayoutEffect$1(() => {
-    if (open && target && popup) {
+    if (open2 && target && popup) {
       let notifyScroll2 = function() {
         onAlign();
         onScroll();
@@ -15429,11 +15429,11 @@ function useWatch$1(open, target, popup, onAlign, onScroll) {
         });
       };
     }
-  }, [open, target, popup]);
+  }, [open2, target, popup]);
 }
-function useWinClick(open, clickToHide, targetEle, popupEle, mask, maskClosable, inPopupOrChild, triggerOpen) {
-  const openRef = reactExports.useRef(open);
-  openRef.current = open;
+function useWinClick(open2, clickToHide, targetEle, popupEle, mask, maskClosable, inPopupOrChild, triggerOpen) {
+  const openRef = reactExports.useRef(open2);
+  openRef.current = open2;
   const popupPointerDownRef = reactExports.useRef(false);
   reactExports.useEffect(() => {
     if (clickToHide && popupEle && (!mask || maskClosable)) {
@@ -15472,7 +15472,7 @@ function useWinClick(open, clickToHide, targetEle, popupEle, mask, maskClosable,
 }
 function useTargetState() {
   const [options, setOptions] = React$2.useState(null);
-  const [open, setOpen] = React$2.useState(false);
+  const [open2, setOpen] = React$2.useState(false);
   const [isAnimating, setIsAnimating] = React$2.useState(false);
   const pendingOptionsRef = React$2.useRef(null);
   const trigger = useEvent((nextOptions) => {
@@ -15480,13 +15480,13 @@ function useTargetState() {
       pendingOptionsRef.current = null;
       setOpen(false);
     } else {
-      if (isAnimating && open) {
+      if (isAnimating && open2) {
         pendingOptionsRef.current = nextOptions;
       } else {
         setOpen(true);
         setOptions(nextOptions);
         pendingOptionsRef.current = null;
-        if (!open) {
+        if (!open2) {
           setIsAnimating(true);
         }
       }
@@ -15504,7 +15504,7 @@ function useTargetState() {
       pendingOptionsRef.current = null;
     }
   });
-  return [trigger, open, options, onVisibleChanged];
+  return [trigger, open2, options, onVisibleChanged];
 }
 function _extends$1g() {
   _extends$1g = Object.assign ? Object.assign.bind() : function(target) {
@@ -15525,7 +15525,7 @@ const UniqueContainer = (props) => {
     prefixCls,
     isMobile: isMobile2,
     ready,
-    open,
+    open: open2,
     align,
     offsetR,
     offsetB,
@@ -15539,7 +15539,7 @@ const UniqueContainer = (props) => {
   } = props;
   const containerCls = `${prefixCls}-unique-container`;
   const [motionVisible, setMotionVisible] = React$2.useState(false);
-  const offsetStyle = useOffsetStyle(isMobile2, ready, open, align, offsetR, offsetB, offsetX, offsetY);
+  const offsetStyle = useOffsetStyle(isMobile2, ready, open2, align, offsetR, offsetB, offsetX, offsetY);
   const cachedOffsetStyleRef = React$2.useRef(offsetStyle);
   if (ready) {
     cachedOffsetStyleRef.current = offsetStyle;
@@ -15556,7 +15556,7 @@ const UniqueContainer = (props) => {
     removeOnLeave: false,
     leavedClassName: `${containerCls}-hidden`
   }, motion2, {
-    visible: open,
+    visible: open2,
     onVisibleChanged: (nextVisible) => {
       setMotionVisible(nextVisible);
     }
@@ -15584,7 +15584,7 @@ const UniqueProvider$1 = ({
   children,
   postTriggerProps
 }) => {
-  const [trigger, open, options, onTargetVisibleChanged] = useTargetState();
+  const [trigger, open2, options, onTargetVisibleChanged] = useTargetState();
   const mergedOptions = reactExports.useMemo(() => {
     if (!options || !postTriggerProps) {
       return options;
@@ -15634,7 +15634,7 @@ const UniqueProvider$1 = ({
     alignInfo,
     onAlign
   ] = useAlign(
-    open,
+    open2,
     popupEle,
     mergedOptions?.target,
     mergedOptions?.popupPlacement,
@@ -15691,7 +15691,7 @@ const UniqueProvider$1 = ({
     className: clsx(mergedOptions.popupClassName, alignedClassName, `${prefixCls}-unique-controlled`),
     style: mergedOptions.popupStyle,
     target: mergedOptions.target,
-    open,
+    open: open2,
     keepDom: true,
     fresh: true,
     autoDestroy: false,
@@ -15722,7 +15722,7 @@ const UniqueProvider$1 = ({
     prefixCls,
     isMobile: false,
     ready,
-    open,
+    open: open2,
     align: alignInfo,
     offsetR,
     offsetB,
@@ -16441,7 +16441,7 @@ const ProviderChildren = (props) => {
     switch: SWITCH,
     transfer,
     avatar,
-    message,
+    message: message2,
     tag,
     table,
     card,
@@ -16549,7 +16549,7 @@ const ProviderChildren = (props) => {
     switch: SWITCH,
     transfer,
     avatar,
-    message,
+    message: message2,
     tag,
     table,
     card,
@@ -17456,7 +17456,7 @@ function useNotification$1(rootConfig = {}) {
   };
   const [container, setContainer] = reactExports.useState();
   const notificationsRef = reactExports.useRef(null);
-  const [taskQueue, setTaskQueue] = reactExports.useState([]);
+  const [taskQueue2, setTaskQueue] = reactExports.useState([]);
   const contextHolder = /* @__PURE__ */ reactExports.createElement(Notifications, {
     container,
     ref: notificationsRef,
@@ -17473,7 +17473,7 @@ function useNotification$1(rootConfig = {}) {
     stack: stack2,
     renderNotifications: renderNotifications2
   });
-  const open = useEvent((config) => {
+  const open2 = useEvent((config) => {
     const mergedConfig = mergeConfig(shareConfig, config);
     if (mergedConfig.key === null || mergedConfig.key === void 0) {
       mergedConfig.key = `rc-notification-${uniqueKey}`;
@@ -17485,7 +17485,7 @@ function useNotification$1(rootConfig = {}) {
     }]);
   });
   const api = reactExports.useMemo(() => ({
-    open,
+    open: open2,
     close: (key) => {
       setTaskQueue((queue) => [...queue, {
         type: "close",
@@ -17502,8 +17502,8 @@ function useNotification$1(rootConfig = {}) {
     setContainer(getContainer2());
   });
   reactExports.useEffect(() => {
-    if (notificationsRef.current && taskQueue.length) {
-      taskQueue.forEach((task) => {
+    if (notificationsRef.current && taskQueue2.length) {
+      taskQueue2.forEach((task) => {
         switch (task.type) {
           case "open":
             notificationsRef.current?.open(task.config);
@@ -17517,11 +17517,11 @@ function useNotification$1(rootConfig = {}) {
         }
       });
       setTaskQueue((originQueue) => {
-        const targetTaskQueue = originQueue.filter((task) => !taskQueue.includes(task));
+        const targetTaskQueue = originQueue.filter((task) => !taskQueue2.includes(task));
         return targetTaskQueue.length === originQueue.length ? originQueue : targetTaskQueue;
       });
     }
-  }, [taskQueue]);
+  }, [taskQueue2]);
   return [api, contextHolder];
 }
 const useStackConfig = (stackConfig, defaultStackConfig) => reactExports.useMemo(() => {
@@ -18471,7 +18471,7 @@ const generateMessagePurePanelStyle = (token2) => {
     }
   };
 };
-genSubStyleComponent(["Message", "PurePanel"], (token2) => generateMessagePurePanelStyle(prepareMessageToken(token2)), prepareComponentToken$h);
+const PurePanelStyle = genSubStyleComponent(["Message", "PurePanel"], (token2) => generateMessagePurePanelStyle(prepareMessageToken(token2)), prepareComponentToken$h);
 const generateMessageStyle = (token2) => ({
   [token2.componentCls]: genMessageItemStyle(token2)
 });
@@ -18490,6 +18490,64 @@ const TypeIcon$1 = {
   loading: /* @__PURE__ */ reactExports.createElement(RefIcon$j, null)
 };
 const getMessageIcon = (type2, icon) => icon || type2 && TypeIcon$1[type2] || null;
+const PurePanel$8 = (props) => {
+  const {
+    prefixCls: staticPrefixCls,
+    className,
+    style: style2,
+    type: type2,
+    icon,
+    content,
+    classNames: messageClassNames,
+    styles,
+    ...restProps
+  } = props;
+  const {
+    getPrefixCls,
+    className: contextClassName,
+    style: contextStyle,
+    classNames: contextClassNames,
+    styles: contextStyles
+  } = useComponentConfig("message");
+  const prefixCls = staticPrefixCls || getPrefixCls("message");
+  const noticePrefixCls = `${prefixCls}-notice`;
+  const rootCls = useCSSVarCls(prefixCls);
+  const [hashId, cssVarCls] = useStyle$q(prefixCls, rootCls);
+  const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, messageClassNames], [contextStyles, styles], {
+    props
+  });
+  const iconNode = getMessageIcon(type2, icon);
+  const typeIconCls = type2 ? `${noticePrefixCls}-icon-${type2}` : void 0;
+  const rcClassNames = {
+    wrapper: clsx(type2 && `${prefixCls}-${type2}`, mergedClassNames.wrapper),
+    icon: clsx(typeIconCls, mergedClassNames.icon),
+    title: mergedClassNames.title
+  };
+  const rcStyles = {
+    wrapper: mergedStyles.wrapper,
+    icon: mergedStyles.icon,
+    title: mergedStyles.title
+  };
+  return /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${noticePrefixCls}-pure-panel`, hashId, className, cssVarCls, rootCls, mergedClassNames.root),
+    style: mergedStyles.root
+  }, /* @__PURE__ */ reactExports.createElement(PurePanelStyle, {
+    prefixCls
+  }), /* @__PURE__ */ reactExports.createElement(Notification, {
+    ...restProps,
+    prefixCls,
+    className: contextClassName,
+    style: {
+      ...contextStyle,
+      ...style2
+    },
+    duration: null,
+    icon: iconNode,
+    title: content,
+    classNames: rcClassNames,
+    styles: rcStyles
+  }));
+};
 function getMotion$1(prefixCls, transitionName) {
   return {
     motionName: transitionName ?? `${prefixCls}-fade`
@@ -18558,10 +18616,10 @@ const Holder$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     getPopupContainer
   } = useComponentConfig("message");
   const {
-    message
+    message: message2
   } = reactExports.useContext(ConfigContext);
   const prefixCls = staticPrefixCls || getPrefixCls("message");
-  const [mergedClassNames, mergedStyles] = useMergeSemantic([message?.classNames, classNames], [message?.styles, styles], {
+  const [mergedClassNames, mergedStyles] = useMergeSemantic([message2?.classNames, classNames], [message2?.styles, styles], {
     props
   });
   const getStyle2 = () => getPlacementOffsetStyle(top ?? DEFAULT_OFFSET);
@@ -18590,7 +18648,7 @@ const Holder$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   reactExports.useImperativeHandle(ref, () => ({
     ...api,
     prefixCls,
-    message
+    message: message2
   }));
   return holder;
 });
@@ -18601,7 +18659,7 @@ function useInternalMessage(messageConfig) {
     const close2 = (key) => {
       holderRef.current?.close(key);
     };
-    const open = (config) => {
+    const open2 = (config) => {
       if (!holderRef.current) {
         const fakeResult = () => {
         };
@@ -18612,10 +18670,10 @@ function useInternalMessage(messageConfig) {
       const {
         open: originOpen,
         prefixCls,
-        message
+        message: message2
       } = holderRef.current;
-      const contextClassName = message?.className || {};
-      const contextStyle = message?.style || {};
+      const contextClassName = message2?.className || {};
+      const contextStyle = message2?.style || {};
       const noticePrefixCls = `${prefixCls}-notice`;
       const {
         content,
@@ -18676,7 +18734,7 @@ function useInternalMessage(messageConfig) {
         };
       });
     };
-    const destroy = (key) => {
+    const destroy2 = (key) => {
       if (key !== void 0) {
         close2(key);
       } else {
@@ -18684,12 +18742,12 @@ function useInternalMessage(messageConfig) {
       }
     };
     const clone = {
-      open,
-      destroy
+      open: open2,
+      destroy: destroy2
     };
     const keys2 = ["info", "success", "warning", "error", "loading"];
     keys2.forEach((type2) => {
-      const typeOpen = (jointContent, duration, onClose) => {
+      const typeOpen2 = (jointContent, duration, onClose) => {
         let config;
         if (isPlainObject$1(jointContent) && "content" in jointContent) {
           config = jointContent;
@@ -18712,9 +18770,9 @@ function useInternalMessage(messageConfig) {
           ...config,
           type: type2
         };
-        return open(mergedConfig);
+        return open2(mergedConfig);
       };
-      clone[type2] = typeOpen;
+      clone[type2] = typeOpen2;
     });
     return clone;
   }, []);
@@ -22941,9 +22999,9 @@ async function validateRule(name, value, rule, options, messageVariables) {
   } catch (errObj) {
     if (errObj.errors) {
       result = errObj.errors.map(({
-        message
+        message: message2
       }, index) => {
-        const mergedMessage = message === CODE_LOGIC_ERROR ? messages2.default : message;
+        const mergedMessage = message2 === CODE_LOGIC_ERROR ? messages2.default : message2;
         return /* @__PURE__ */ reactExports.isValidElement(mergedMessage) ? (
           // Wrap ReactNode with `key`
           /* @__PURE__ */ reactExports.cloneElement(mergedMessage, {
@@ -23320,14 +23378,14 @@ class Field extends reactExports.PureComponent {
   };
   // Event should only trigger when meta changed
   metaCache = null;
-  triggerMetaEvent = (destroy) => {
+  triggerMetaEvent = (destroy2) => {
     const {
       onMetaChange
     } = this.props;
     if (onMetaChange) {
       const meta = {
         ...this.getMeta(),
-        destroy
+        destroy: destroy2
       };
       if (!isEqual(this.metaCache, meta)) {
         onMetaChange(meta);
@@ -26347,7 +26405,7 @@ const Modal$1 = (props) => {
     prefixCls: customizePrefixCls,
     className,
     rootClassName,
-    open,
+    open: open2,
     wrapClassName,
     centered,
     getContainer: getContainer2,
@@ -26511,7 +26569,7 @@ const Modal$1 = (props) => {
     rootClassName: clsx(hashId, rootClassName, cssVarCls, rootCls, dialogClassNames.root),
     rootStyle: dialogStyles.root,
     footer: dialogFooter,
-    visible: open,
+    visible: open2,
     mousePosition: customizeMousePosition ?? mousePosition,
     onClose: handleCancel,
     closable: mergedClosable,
@@ -26890,7 +26948,7 @@ function confirm(config) {
     open: true
   };
   let timeoutId;
-  function destroy(...args) {
+  function destroy2(...args) {
     const triggerCancel = args.some((param) => param?.triggerCancel);
     if (triggerCancel) {
       config.onCancel?.(() => {
@@ -26930,7 +26988,7 @@ function confirm(config) {
         if (isFunction$1(config.afterClose)) {
           config.afterClose();
         }
-        destroy.apply(this, args);
+        destroy2.apply(this, args);
       }
     };
     scheduleRender(currentConfig);
@@ -26994,7 +27052,7 @@ const HookModal = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     config,
     ...restProps
   } = props;
-  const [open, setOpen] = reactExports.useState(true);
+  const [open2, setOpen] = reactExports.useState(true);
   const [innerConfig, setInnerConfig] = reactExports.useState(config);
   const {
     direction,
@@ -27033,7 +27091,7 @@ const HookModal = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     rootPrefixCls,
     ...innerConfig,
     close: close2,
-    open,
+    open: open2,
     afterClose,
     okText: innerConfig.okText || (mergedOkCancel ? contextLocale?.okText : contextLocale?.justOkText),
     direction: innerConfig.direction || direction,
@@ -27230,7 +27288,7 @@ function useInternalNotification(notificationConfig) {
     notification: notificationContext
   } = React$2.useContext(ConfigContext);
   const wrapAPI = React$2.useMemo(() => {
-    const open = (config) => {
+    const open2 = (config) => {
       if (!holderRef.current) {
         return;
       }
@@ -27244,7 +27302,7 @@ function useInternalNotification(notificationConfig) {
       const noticePrefixCls = `${prefixCls}-notice`;
       const {
         title,
-        message,
+        message: message2,
         description,
         icon,
         type: type2,
@@ -27259,7 +27317,7 @@ function useInternalNotification(notificationConfig) {
         styles = {},
         ...restConfig
       } = config;
-      const mergedTitle = title ?? message;
+      const mergedTitle = title ?? message2;
       const hasTitle = isReactRenderable(mergedTitle);
       const mergedActions = actions ?? btn;
       const realCloseIcon = getCloseIcon(noticePrefixCls, getCloseIconConfig(closeIcon, notificationConfig, notification));
@@ -27310,7 +27368,7 @@ function useInternalNotification(notificationConfig) {
         closable: mergedClosable
       });
     };
-    const destroy = (key) => {
+    const destroy2 = (key) => {
       if (key !== void 0) {
         holderRef.current?.close(key);
       } else {
@@ -27318,12 +27376,12 @@ function useInternalNotification(notificationConfig) {
       }
     };
     const clone = {
-      open,
-      destroy
+      open: open2,
+      destroy: destroy2
     };
     const keys2 = ["success", "info", "warning", "error"];
     keys2.forEach((type2) => {
-      clone[type2] = (config) => open({
+      clone[type2] = (config) => open2({
         ...config,
         type: type2
       });
@@ -27373,7 +27431,7 @@ const App$2 = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
     children,
     className,
     rootClassName,
-    message,
+    message: message2,
     notification,
     style: style2,
     component = "div"
@@ -27393,13 +27451,13 @@ const App$2 = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
   const mergedAppConfig = React$2.useMemo(() => ({
     message: {
       ...appConfig.message,
-      ...message
+      ...message2
     },
     notification: {
       ...appConfig.notification,
       ...notification
     }
-  }), [message, notification, appConfig.message, appConfig.notification]);
+  }), [message2, notification, appConfig.message, appConfig.notification]);
   const [messageApi, messageContextHolder] = useMessage(mergedAppConfig.message);
   const [notificationApi, notificationContextHolder] = useNotification(mergedAppConfig.notification);
   const [ModalApi, ModalContextHolder] = useModal();
@@ -27451,7 +27509,7 @@ const genPurePanel = (Component, alignPropName, postProps, defaultPrefixCls2, ge
     const holderRef = reactExports.useRef(null);
     const [popupHeight, setPopupHeight] = reactExports.useState(0);
     const [popupWidth, setPopupWidth] = reactExports.useState(0);
-    const [open, setOpen] = useControlledState(false, props.open);
+    const [open2, setOpen] = useControlledState(false, props.open);
     const {
       getPrefixCls
     } = reactExports.useContext(ConfigContext);
@@ -27484,7 +27542,7 @@ const genPurePanel = (Component, alignPropName, postProps, defaultPrefixCls2, ge
         ...style2,
         margin: 0
       },
-      open,
+      open: open2,
       getPopupContainer: () => holderRef.current
     };
     if (alignPropName) {
@@ -27558,7 +27616,7 @@ function useLock(duration = 250) {
 function isInside(elements, target) {
   return elements.filter((element) => element).some((element) => element.contains(target) || element === target);
 }
-function useSelectTriggerControl(elements, open, triggerOpen, customizedTrigger) {
+function useSelectTriggerControl(elements, open2, triggerOpen, customizedTrigger) {
   const onGlobalMouseDown = useEvent((event) => {
     if (customizedTrigger) {
       return;
@@ -27570,7 +27628,7 @@ function useSelectTriggerControl(elements, open, triggerOpen, customizedTrigger)
     if (event._ori_target) {
       target = event._ori_target;
     }
-    if (open && // Marked by SelectInput mouseDown event
+    if (open2 && // Marked by SelectInput mouseDown event
     !isInside(elements(), target)) {
       triggerOpen(false);
     }
@@ -27946,7 +28004,7 @@ const Input$4 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     id: id2,
     classNames,
     styles,
-    open,
+    open: open2,
     activeDescendantId,
     role,
     disabled
@@ -27977,7 +28035,7 @@ const Input$4 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     const {
       value: nextVal
     } = event.currentTarget;
-    if (key === "Enter" && mode === "tags" && !open && !compositionStatusRef.current && onSearchSubmit) {
+    if (key === "Enter" && mode === "tags" && !open2 && !compositionStatusRef.current && onSearchSubmit) {
       onSearchSubmit(nextVal);
     }
     onKeyDown?.(event);
@@ -28038,12 +28096,12 @@ const Input$4 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onCompositionEnd: handleCompositionEnd,
     // Accessibility attributes
     role: role || "combobox",
-    "aria-expanded": open || false,
+    "aria-expanded": open2 || false,
     "aria-haspopup": "listbox",
-    "aria-owns": open ? `${id2}_list` : void 0,
+    "aria-owns": open2 ? `${id2}_list` : void 0,
     "aria-autocomplete": "list",
-    "aria-controls": open ? `${id2}_list` : void 0,
-    "aria-activedescendant": open ? activeDescendantId : void 0
+    "aria-controls": open2 ? `${id2}_list` : void 0,
+    "aria-activedescendant": open2 ? activeDescendantId : void 0
   };
   if (/* @__PURE__ */ reactExports.isValidElement(InputComponent)) {
     const existingProps = InputComponent.props || {};
@@ -29069,7 +29127,7 @@ const BaseSelect = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     getInputElement,
     getRawInputElement,
     // Open
-    open,
+    open: open2,
     defaultOpen,
     onPopupVisibleChange,
     // Active
@@ -29134,7 +29192,7 @@ const BaseSelect = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, [searchValue, mode, displayValues]);
   const customizeInputElement = mode === "combobox" && typeof getInputElement === "function" && getInputElement() || null;
   const emptyListContent = !notFoundContent && emptyOptions;
-  const [rawOpen, mergedOpen, triggerOpen, lockOptions] = useOpen$1(defaultOpen || false, open, onPopupVisibleChange, (nextOpen) => disabled || emptyListContent ? false : nextOpen);
+  const [rawOpen, mergedOpen, triggerOpen, lockOptions] = useOpen$1(defaultOpen || false, open2, onPopupVisibleChange, (nextOpen) => disabled || emptyListContent ? false : nextOpen);
   const tokenWithEnter = reactExports.useMemo(() => typeof tokenSeparators === "function" || (tokenSeparators || []).some((tokenSeparator) => ["\n", "\r\n"].includes(tokenSeparator)), [tokenSeparators]);
   const splitByTokenSeparators = reactExports.useMemo(() => {
     if (typeof tokenSeparators === "function") {
@@ -30816,7 +30874,7 @@ const OptionList = (_, ref) => {
   const {
     prefixCls,
     id: id2,
-    open,
+    open: open2,
     multiple,
     mode,
     searchValue,
@@ -30844,7 +30902,7 @@ const OptionList = (_, ref) => {
     styles: contextStyles
   } = reactExports.useContext(SelectContext);
   const itemPrefixCls = `${prefixCls}-item`;
-  const memoFlattenOptions = useMemo$1(() => flattenOptions2, [open, lockOptions], (prev2, next2) => next2[0] && !next2[1]);
+  const memoFlattenOptions = useMemo$1(() => flattenOptions2, [open2, lockOptions], (prev2, next2) => next2[0] && !next2[1]);
   const listRef = reactExports.useRef(null);
   const overMaxCount = reactExports.useMemo(() => multiple && isValidCount(maxCount) && rawValues?.size >= maxCount, [multiple, maxCount, rawValues?.size]);
   const onListMouseDown = (event) => {
@@ -30899,7 +30957,7 @@ const OptionList = (_, ref) => {
   }, [mode, searchValue, [...rawValues].toString(), rawValues.size]);
   reactExports.useEffect(() => {
     let timeoutId;
-    if (!multiple && open && rawValues.size === 1) {
+    if (!multiple && open2 && rawValues.size === 1) {
       const value = Array.from(rawValues)[0];
       const index = memoFlattenOptions.findIndex(({
         data
@@ -30911,11 +30969,11 @@ const OptionList = (_, ref) => {
         });
       }
     }
-    if (open) {
+    if (open2) {
       listRef.current?.scrollTo(void 0);
     }
     return () => clearTimeout(timeoutId);
-  }, [open, searchValue]);
+  }, [open2, searchValue]);
   const onSelectValue = (value) => {
     if (value !== void 0) {
       onSelect(value, {
@@ -30967,14 +31025,14 @@ const OptionList = (_, ref) => {
           } else {
             onSelectValue(void 0);
           }
-          if (open) {
+          if (open2) {
             event.preventDefault();
           }
           break;
         }
         case KeyCode.ESC: {
           toggleOpen(false);
-          if (open) {
+          if (open2) {
             event.stopPropagation();
           }
         }
@@ -33083,10 +33141,10 @@ function useIcons$1({
       })));
     } else {
       mergedSuffixIcon = ({
-        open,
+        open: open2,
         showSearch
       }) => {
-        if (open && showSearch) {
+        if (open2 && showSearch) {
           return getSuffixIconNode(fallbackProp(searchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$f, null)));
         }
         return getSuffixIconNode(fallbackProp(contextSuffixIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$g, null)));
@@ -33508,11 +33566,11 @@ const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     };
   }, [showArrow, classNames?.arrow, styles?.arrow, arrowContent]);
   const getChildren = ({
-    open
+    open: open2
   }) => {
     const child = reactExports.Children.only(children);
     const ariaProps = {
-      "aria-describedby": overlay && open ? mergedId : void 0
+      "aria-describedby": overlay && open2 ? mergedId : void 0
     };
     return /* @__PURE__ */ reactExports.cloneElement(child, ariaProps);
   };
@@ -34259,7 +34317,7 @@ const InternalTooltip = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     nativeElement: tooltipRef.current?.nativeElement,
     popupElement: tooltipRef.current?.popupElement
   }));
-  const [open, setOpen] = useControlledState(props.defaultOpen ?? false, props.open);
+  const [open2, setOpen] = useControlledState(props.defaultOpen ?? false, props.open);
   const noTitle = !title && !overlay && title !== 0;
   const onInternalOpenChange = (vis) => {
     setOpen(noTitle ? false : vis);
@@ -34299,7 +34357,7 @@ const InternalTooltip = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   });
   const prefixCls = getPrefixCls("tooltip", customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
-  let tempOpen = open;
+  let tempOpen = open2;
   if (!("open" in props) && noTitle || inTableMeasureRow) {
     tempOpen = false;
   }
@@ -34658,7 +34716,7 @@ const InternalPopover = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     props: mergedProps
   });
   const rootClassNames = clsx(overlayClassName, hashId, cssVarCls, contextClassName, mergedClassNames.root);
-  const [open, setOpen] = useControlledState(props.defaultOpen ?? false, props.open);
+  const [open2, setOpen] = useControlledState(props.defaultOpen ?? false, props.open);
   const settingOpen = (value) => {
     setOpen(value);
     onOpenChange?.(value);
@@ -34689,7 +34747,7 @@ const InternalPopover = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
       arrow: mergedStyles.arrow
     },
     ref,
-    open,
+    open: open2,
     onOpenChange: settingOpen,
     overlay: isReactRenderable(titleNode) || isReactRenderable(contentNode) ? /* @__PURE__ */ reactExports.createElement(Overlay$2, {
       prefixCls,
@@ -35833,7 +35891,7 @@ function _extends$N() {
 }
 function InlineSubMenuList({
   id: id2,
-  open,
+  open: open2,
   keyPath,
   children
 }) {
@@ -35847,8 +35905,8 @@ function InlineSubMenuList({
   } = reactExports.useContext(MenuContext$1);
   const sameModeRef = reactExports.useRef(false);
   sameModeRef.current = mode === fixedMode;
-  const [destroy, setDestroy] = reactExports.useState(!sameModeRef.current);
-  const mergedOpen = sameModeRef.current ? open : false;
+  const [destroy2, setDestroy] = reactExports.useState(!sameModeRef.current);
+  const mergedOpen = sameModeRef.current ? open2 : false;
   reactExports.useEffect(() => {
     if (sameModeRef.current) {
       setDestroy(false);
@@ -35867,7 +35925,7 @@ function InlineSubMenuList({
     }
     return originOnVisibleChanged?.(newVisible);
   };
-  if (destroy) {
+  if (destroy2) {
     return null;
   }
   return /* @__PURE__ */ reactExports.createElement(InheritableContextProvider, {
@@ -35968,7 +36026,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   const mergedItemIcon = itemIcon ?? contextItemIcon;
   const mergedExpandIcon = expandIcon ?? contextExpandIcon;
   const originOpen = openKeys.includes(eventKey);
-  const open = !overflowDisabled && originOpen;
+  const open2 = !overflowDisabled && originOpen;
   const childrenSelected = isSubPathKey(selectedKeys, eventKey);
   const {
     active,
@@ -36033,13 +36091,13 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     icon: mode !== "horizontal" ? mergedExpandIcon : void 0,
     props: {
       ...props,
-      isOpen: open,
+      isOpen: open2,
       // [Legacy] Not sure why need this mark
       isSubMenu: true
     }
   }, /* @__PURE__ */ reactExports.createElement("i", {
     className: `${subMenuPrefixCls}-arrow`
-  })), [mode, mergedExpandIcon, props, open, subMenuPrefixCls]);
+  })), [mode, mergedExpandIcon, props, open2, subMenuPrefixCls]);
   let titleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$M({
     role: "menuitem",
     style: directionStyle,
@@ -36048,7 +36106,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     ref: elementRef,
     title: typeof title === "string" ? title : null,
     "data-menu-id": overflowDisabled && domDataId ? null : domDataId,
-    "aria-expanded": open,
+    "aria-expanded": open2,
     "aria-haspopup": true,
     "aria-controls": popupId,
     "aria-disabled": mergedDisabled,
@@ -36086,7 +36144,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     titleNode = /* @__PURE__ */ reactExports.createElement(PopupTrigger, {
       mode: triggerMode,
       prefixCls: subMenuPrefixCls,
-      visible: !internalPopupClose && open && mode !== "inline",
+      visible: !internalPopupClose && open2 && mode !== "inline",
       popupClassName,
       popupOffset,
       popupStyle,
@@ -36102,7 +36160,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     component: "li",
     style: style2,
     className: clsx(subMenuPrefixCls, `${subMenuPrefixCls}-${mode}`, className, {
-      [`${subMenuPrefixCls}-open`]: open,
+      [`${subMenuPrefixCls}-open`]: open2,
       [`${subMenuPrefixCls}-active`]: mergedActive,
       [`${subMenuPrefixCls}-selected`]: childrenSelected,
       [`${subMenuPrefixCls}-disabled`]: mergedDisabled
@@ -36111,14 +36169,14 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
     onMouseLeave: onInternalMouseLeave
   }), titleNode, !overflowDisabled && /* @__PURE__ */ reactExports.createElement(InlineSubMenuList, {
     id: popupId,
-    open,
+    open: open2,
     keyPath: connectedPath
   }, children));
   if (_internalRenderSubMenuItem) {
     listNode = _internalRenderSubMenuItem(listNode, props, {
       selected: childrenSelected,
       active: mergedActive,
-      open,
+      open: open2,
       disabled: mergedDisabled
     });
   }
@@ -36556,9 +36614,9 @@ const Menu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onClick?.(warnItemProp(info));
     triggerSelection(info);
   });
-  const onInternalOpenChange = useMemoCallback((key, open) => {
+  const onInternalOpenChange = useMemoCallback((key, open2) => {
     let newOpenKeys = mergedOpenKeys.filter((k2) => k2 !== key);
-    if (open) {
+    if (open2) {
       newOpenKeys.push(key);
     } else if (internalMode !== "inline") {
       const subPathKeys = getSubPathKeys(key);
@@ -36568,8 +36626,8 @@ const Menu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       triggerOpenKeys(newOpenKeys, true);
     }
   });
-  const triggerAccessibilityOpen = (key, open) => {
-    const nextOpen = open ?? !mergedOpenKeys.includes(key);
+  const triggerAccessibilityOpen = (key, open2) => {
+    const nextOpen = open2 ?? !mergedOpenKeys.includes(key);
     onInternalOpenChange(key, nextOpen);
   };
   const onInternalKeyDown = useAccessibility(internalMode, mergedActiveKey, isRtl, uuid2, containerRef, getKeys, getKeyPath, setMergedActiveKey, triggerAccessibilityOpen, onKeyDown);
@@ -38466,7 +38524,7 @@ const Dropdown$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     overlayClassName,
     rootClassName,
     overlayStyle,
-    open,
+    open: open2,
     onOpenChange,
     mouseEnterDelay = 0.15,
     mouseLeaveDelay = 0.1,
@@ -38542,7 +38600,7 @@ const Dropdown$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   });
   const triggerActions = disabled ? [] : trigger;
   const alignPoint = !!triggerActions?.includes("contextMenu");
-  const [mergedOpen, setOpen] = useControlledState(false, open);
+  const [mergedOpen, setOpen] = useControlledState(false, open2);
   const onInnerOpenChange = useEvent((nextOpen) => {
     onOpenChange?.(nextOpen, {
       source: "trigger"
@@ -38648,288 +38706,282 @@ const WrapPurePanel = (props) => /* @__PURE__ */ reactExports.createElement(Pure
 }, /* @__PURE__ */ reactExports.createElement("span", null));
 Dropdown$1._InternalPanelDoNotUseOrYouWillBeFired = WrapPurePanel;
 var dayjs_min = { exports: {} };
-var hasRequiredDayjs_min;
-function requireDayjs_min() {
-  if (hasRequiredDayjs_min) return dayjs_min.exports;
-  hasRequiredDayjs_min = 1;
-  (function(module, exports) {
-    !function(t2, e) {
-      module.exports = e();
-    }(commonjsGlobal, function() {
-      var t2 = 1e3, e = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s = "minute", u2 = "hour", a = "day", o = "week", c = "month", f2 = "quarter", h2 = "year", d = "date", l2 = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|YYYY|YY|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M2 = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
-        var e2 = ["th", "st", "nd", "rd"], n3 = t3 % 100;
-        return "[" + t3 + (e2[(n3 - 20) % 10] || e2[n3] || e2[0]) + "]";
-      } }, m2 = function(t3, e2, n3) {
-        var r3 = String(t3);
-        return !r3 || r3.length >= e2 ? t3 : "" + Array(e2 + 1 - r3.length).join(n3) + t3;
-      }, v2 = { s: m2, z: function(t3) {
-        var e2 = -t3.utcOffset(), n3 = Math.abs(e2), r3 = Math.floor(n3 / 60), i2 = n3 % 60;
-        return (e2 <= 0 ? "+" : "-") + m2(r3, 2, "0") + ":" + m2(i2, 2, "0");
-      }, m: function t3(e2, n3) {
-        if (e2.date() < n3.date()) return -t3(n3, e2);
-        var r3 = 12 * (n3.year() - e2.year()) + (n3.month() - e2.month()), i2 = e2.clone().add(r3, c), s2 = n3 - i2 < 0, u3 = e2.clone().add(r3 + (s2 ? -1 : 1), c);
-        return +(-(r3 + (n3 - i2) / (s2 ? i2 - u3 : u3 - i2)) || 0);
-      }, a: function(t3) {
-        return t3 < 0 ? Math.ceil(t3) || 0 : Math.floor(t3);
-      }, p: function(t3) {
-        return { M: c, y: h2, w: o, d: a, D: d, h: u2, m: s, s: i, ms: r2, Q: f2 }[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
-      }, u: function(t3) {
-        return void 0 === t3;
-      } }, g = "en", D2 = {};
-      D2[g] = M2;
-      var p2 = "$isDayjsObject", S2 = function(t3) {
-        return t3 instanceof _ || !(!t3 || !t3[p2]);
-      }, w2 = function t3(e2, n3, r3) {
-        var i2;
-        if (!e2) return g;
-        if ("string" == typeof e2) {
-          var s2 = e2.toLowerCase();
-          D2[s2] && (i2 = s2), n3 && (D2[s2] = n3, i2 = s2);
-          var u3 = e2.split("-");
-          if (!i2 && u3.length > 1) return t3(u3[0]);
-        } else {
-          var a2 = e2.name;
-          D2[a2] = e2, i2 = a2;
-        }
-        return !r3 && i2 && (g = i2), i2 || !r3 && g;
-      }, O2 = function(t3, e2) {
-        if (S2(t3)) return t3.clone();
-        var n3 = "object" == typeof e2 ? e2 : {};
-        return n3.date = t3, n3.args = arguments, new _(n3);
-      }, b = v2;
-      b.l = w2, b.i = S2, b.w = function(t3, e2) {
-        return O2(t3, { locale: e2.$L, utc: e2.$u, x: e2.$x, $offset: e2.$offset });
-      };
-      var _ = function() {
-        function M3(t3) {
-          this.$L = w2(t3.locale, null, true), this.parse(t3), this.$x = this.$x || t3.x || {}, this[p2] = true;
-        }
-        var m3 = M3.prototype;
-        return m3.parse = function(t3) {
-          this.$d = function(t4) {
-            var e2 = t4.date, n3 = t4.utc;
-            if (null === e2) return /* @__PURE__ */ new Date(NaN);
-            if (b.u(e2)) return /* @__PURE__ */ new Date();
-            if (e2 instanceof Date) return new Date(e2);
-            if ("string" == typeof e2 && !/Z$/i.test(e2)) {
-              var r3 = e2.match($);
-              if (r3) {
-                var i2 = r3[2] - 1 || 0, s2 = (r3[7] || "0").substring(0, 3);
-                return n3 ? new Date(Date.UTC(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2)) : new Date(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2);
-              }
+(function(module, exports) {
+  !function(t2, e) {
+    module.exports = e();
+  }(commonjsGlobal, function() {
+    var t2 = 1e3, e = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s = "minute", u2 = "hour", a = "day", o = "week", c = "month", f2 = "quarter", h2 = "year", d = "date", l2 = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y2 = /\[([^\]]+)]|YYYY|YY|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M2 = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
+      var e2 = ["th", "st", "nd", "rd"], n3 = t3 % 100;
+      return "[" + t3 + (e2[(n3 - 20) % 10] || e2[n3] || e2[0]) + "]";
+    } }, m2 = function(t3, e2, n3) {
+      var r3 = String(t3);
+      return !r3 || r3.length >= e2 ? t3 : "" + Array(e2 + 1 - r3.length).join(n3) + t3;
+    }, v2 = { s: m2, z: function(t3) {
+      var e2 = -t3.utcOffset(), n3 = Math.abs(e2), r3 = Math.floor(n3 / 60), i2 = n3 % 60;
+      return (e2 <= 0 ? "+" : "-") + m2(r3, 2, "0") + ":" + m2(i2, 2, "0");
+    }, m: function t3(e2, n3) {
+      if (e2.date() < n3.date()) return -t3(n3, e2);
+      var r3 = 12 * (n3.year() - e2.year()) + (n3.month() - e2.month()), i2 = e2.clone().add(r3, c), s2 = n3 - i2 < 0, u3 = e2.clone().add(r3 + (s2 ? -1 : 1), c);
+      return +(-(r3 + (n3 - i2) / (s2 ? i2 - u3 : u3 - i2)) || 0);
+    }, a: function(t3) {
+      return t3 < 0 ? Math.ceil(t3) || 0 : Math.floor(t3);
+    }, p: function(t3) {
+      return { M: c, y: h2, w: o, d: a, D: d, h: u2, m: s, s: i, ms: r2, Q: f2 }[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
+    }, u: function(t3) {
+      return void 0 === t3;
+    } }, g = "en", D2 = {};
+    D2[g] = M2;
+    var p2 = "$isDayjsObject", S2 = function(t3) {
+      return t3 instanceof _ || !(!t3 || !t3[p2]);
+    }, w2 = function t3(e2, n3, r3) {
+      var i2;
+      if (!e2) return g;
+      if ("string" == typeof e2) {
+        var s2 = e2.toLowerCase();
+        D2[s2] && (i2 = s2), n3 && (D2[s2] = n3, i2 = s2);
+        var u3 = e2.split("-");
+        if (!i2 && u3.length > 1) return t3(u3[0]);
+      } else {
+        var a2 = e2.name;
+        D2[a2] = e2, i2 = a2;
+      }
+      return !r3 && i2 && (g = i2), i2 || !r3 && g;
+    }, O2 = function(t3, e2) {
+      if (S2(t3)) return t3.clone();
+      var n3 = "object" == typeof e2 ? e2 : {};
+      return n3.date = t3, n3.args = arguments, new _(n3);
+    }, b = v2;
+    b.l = w2, b.i = S2, b.w = function(t3, e2) {
+      return O2(t3, { locale: e2.$L, utc: e2.$u, x: e2.$x, $offset: e2.$offset });
+    };
+    var _ = function() {
+      function M3(t3) {
+        this.$L = w2(t3.locale, null, true), this.parse(t3), this.$x = this.$x || t3.x || {}, this[p2] = true;
+      }
+      var m3 = M3.prototype;
+      return m3.parse = function(t3) {
+        this.$d = function(t4) {
+          var e2 = t4.date, n3 = t4.utc;
+          if (null === e2) return /* @__PURE__ */ new Date(NaN);
+          if (b.u(e2)) return /* @__PURE__ */ new Date();
+          if (e2 instanceof Date) return new Date(e2);
+          if ("string" == typeof e2 && !/Z$/i.test(e2)) {
+            var r3 = e2.match($);
+            if (r3) {
+              var i2 = r3[2] - 1 || 0, s2 = (r3[7] || "0").substring(0, 3);
+              return n3 ? new Date(Date.UTC(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2)) : new Date(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2);
             }
-            return new Date(e2);
-          }(t3), this.init();
-        }, m3.init = function() {
-          var t3 = this.$d;
-          this.$y = t3.getFullYear(), this.$M = t3.getMonth(), this.$D = t3.getDate(), this.$W = t3.getDay(), this.$H = t3.getHours(), this.$m = t3.getMinutes(), this.$s = t3.getSeconds(), this.$ms = t3.getMilliseconds();
-        }, m3.$utils = function() {
-          return b;
-        }, m3.isValid = function() {
-          return !(this.$d.toString() === l2);
-        }, m3.isSame = function(t3, e2) {
-          var n3 = O2(t3);
-          return this.startOf(e2) <= n3 && n3 <= this.endOf(e2);
-        }, m3.isAfter = function(t3, e2) {
-          return O2(t3) < this.startOf(e2);
-        }, m3.isBefore = function(t3, e2) {
-          return this.endOf(e2) < O2(t3);
-        }, m3.$g = function(t3, e2, n3) {
-          return b.u(t3) ? this[e2] : this.set(n3, t3);
-        }, m3.unix = function() {
-          return Math.floor(this.valueOf() / 1e3);
-        }, m3.valueOf = function() {
-          return this.$d.getTime();
-        }, m3.startOf = function(t3, e2) {
-          var n3 = this, r3 = !!b.u(e2) || e2, f3 = b.p(t3), l3 = function(t4, e3) {
-            var i2 = b.w(n3.$u ? Date.UTC(n3.$y, e3, t4) : new Date(n3.$y, e3, t4), n3);
-            return r3 ? i2 : i2.endOf(a);
-          }, $2 = function(t4, e3) {
-            return b.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e3)), n3);
-          }, y3 = this.$W, M4 = this.$M, m4 = this.$D, v3 = "set" + (this.$u ? "UTC" : "");
-          switch (f3) {
-            case h2:
-              return r3 ? l3(1, 0) : l3(31, 11);
-            case c:
-              return r3 ? l3(1, M4) : l3(0, M4 + 1);
-            case o:
-              var g2 = this.$locale().weekStart || 0, D3 = (y3 < g2 ? y3 + 7 : y3) - g2;
-              return l3(r3 ? m4 - D3 : m4 + (6 - D3), M4);
-            case a:
-            case d:
-              return $2(v3 + "Hours", 0);
-            case u2:
-              return $2(v3 + "Minutes", 1);
-            case s:
-              return $2(v3 + "Seconds", 2);
-            case i:
-              return $2(v3 + "Milliseconds", 3);
-            default:
-              return this.clone();
           }
-        }, m3.endOf = function(t3) {
-          return this.startOf(t3, false);
-        }, m3.$set = function(t3, e2) {
-          var n3, o2 = b.p(t3), f3 = "set" + (this.$u ? "UTC" : ""), l3 = (n3 = {}, n3[a] = f3 + "Date", n3[d] = f3 + "Date", n3[c] = f3 + "Month", n3[h2] = f3 + "FullYear", n3[u2] = f3 + "Hours", n3[s] = f3 + "Minutes", n3[i] = f3 + "Seconds", n3[r2] = f3 + "Milliseconds", n3)[o2], $2 = o2 === a ? this.$D + (e2 - this.$W) : e2;
-          if (o2 === c || o2 === h2) {
-            var y3 = this.clone().set(d, 1);
-            y3.$d[l3]($2), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
-          } else l3 && this.$d[l3]($2);
-          return this.init(), this;
-        }, m3.set = function(t3, e2) {
-          return this.clone().$set(t3, e2);
-        }, m3.get = function(t3) {
-          return this[b.p(t3)]();
-        }, m3.add = function(r3, f3) {
-          var d2, l3 = this;
-          r3 = Number(r3);
-          var $2 = b.p(f3), y3 = function(t3) {
-            var e2 = O2(l3);
-            return b.w(e2.date(e2.date() + Math.round(t3 * r3)), l3);
-          };
-          if ($2 === c) return this.set(c, this.$M + r3);
-          if ($2 === h2) return this.set(h2, this.$y + r3);
-          if ($2 === a) return y3(1);
-          if ($2 === o) return y3(7);
-          var M4 = (d2 = {}, d2[s] = e, d2[u2] = n2, d2[i] = t2, d2)[$2] || 1, m4 = this.$d.getTime() + r3 * M4;
-          return b.w(m4, this);
-        }, m3.subtract = function(t3, e2) {
-          return this.add(-1 * t3, e2);
-        }, m3.format = function(t3) {
-          var e2 = this, n3 = this.$locale();
-          if (!this.isValid()) return n3.invalidDate || l2;
-          var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = b.z(this), s2 = this.$H, u3 = this.$m, a2 = this.$M, o2 = n3.weekdays, c2 = n3.months, f3 = n3.meridiem, h3 = function(t4, n4, i3, s3) {
-            return t4 && (t4[n4] || t4(e2, r3)) || i3[n4].slice(0, s3);
-          }, d2 = function(t4) {
-            return b.s(s2 % 12 || 12, t4, "0");
-          }, $2 = f3 || function(t4, e3, n4) {
-            var r4 = t4 < 12 ? "AM" : "PM";
-            return n4 ? r4.toLowerCase() : r4;
-          };
-          return r3.replace(y2, function(t4, r4) {
-            return r4 || function(t5) {
-              switch (t5) {
-                case "YY":
-                  return String(e2.$y).slice(-2);
-                case "YYYY":
-                  return b.s(e2.$y, 4, "0");
-                case "M":
-                  return a2 + 1;
-                case "MM":
-                  return b.s(a2 + 1, 2, "0");
-                case "MMM":
-                  return h3(n3.monthsShort, a2, c2, 3);
-                case "MMMM":
-                  return h3(c2, a2);
-                case "D":
-                  return e2.$D;
-                case "DD":
-                  return b.s(e2.$D, 2, "0");
-                case "d":
-                  return String(e2.$W);
-                case "dd":
-                  return h3(n3.weekdaysMin, e2.$W, o2, 2);
-                case "ddd":
-                  return h3(n3.weekdaysShort, e2.$W, o2, 3);
-                case "dddd":
-                  return o2[e2.$W];
-                case "H":
-                  return String(s2);
-                case "HH":
-                  return b.s(s2, 2, "0");
-                case "h":
-                  return d2(1);
-                case "hh":
-                  return d2(2);
-                case "a":
-                  return $2(s2, u3, true);
-                case "A":
-                  return $2(s2, u3, false);
-                case "m":
-                  return String(u3);
-                case "mm":
-                  return b.s(u3, 2, "0");
-                case "s":
-                  return String(e2.$s);
-                case "ss":
-                  return b.s(e2.$s, 2, "0");
-                case "SSS":
-                  return b.s(e2.$ms, 3, "0");
-                case "Z":
-                  return i2;
-              }
-              return null;
-            }(t4) || i2.replace(":", "");
-          });
-        }, m3.utcOffset = function() {
-          return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
-        }, m3.diff = function(r3, d2, l3) {
-          var $2, y3 = this, M4 = b.p(d2), m4 = O2(r3), v3 = (m4.utcOffset() - this.utcOffset()) * e, g2 = this - m4, D3 = function() {
-            return b.m(y3, m4);
-          };
-          switch (M4) {
-            case h2:
-              $2 = D3() / 12;
-              break;
-            case c:
-              $2 = D3();
-              break;
-            case f2:
-              $2 = D3() / 3;
-              break;
-            case o:
-              $2 = (g2 - v3) / 6048e5;
-              break;
-            case a:
-              $2 = (g2 - v3) / 864e5;
-              break;
-            case u2:
-              $2 = g2 / n2;
-              break;
-            case s:
-              $2 = g2 / e;
-              break;
-            case i:
-              $2 = g2 / t2;
-              break;
-            default:
-              $2 = g2;
-          }
-          return l3 ? $2 : b.a($2);
-        }, m3.daysInMonth = function() {
-          return this.endOf(c).$D;
-        }, m3.$locale = function() {
-          return D2[this.$L];
-        }, m3.locale = function(t3, e2) {
-          if (!t3) return this.$L;
-          var n3 = this.clone(), r3 = w2(t3, e2, true);
-          return r3 && (n3.$L = r3), n3;
-        }, m3.clone = function() {
-          return b.w(this.$d, this);
-        }, m3.toDate = function() {
-          return new Date(this.valueOf());
-        }, m3.toJSON = function() {
-          return this.isValid() ? this.toISOString() : null;
-        }, m3.toISOString = function() {
-          return this.$d.toISOString();
-        }, m3.toString = function() {
-          return this.$d.toUTCString();
-        }, M3;
-      }(), Y2 = _.prototype;
-      return O2.prototype = Y2, [["$ms", r2], ["$s", i], ["$m", s], ["$H", u2], ["$W", a], ["$M", c], ["$y", h2], ["$D", d]].forEach(function(t3) {
-        Y2[t3[1]] = function(e2) {
-          return this.$g(e2, t3[0], t3[1]);
+          return new Date(e2);
+        }(t3), this.init();
+      }, m3.init = function() {
+        var t3 = this.$d;
+        this.$y = t3.getFullYear(), this.$M = t3.getMonth(), this.$D = t3.getDate(), this.$W = t3.getDay(), this.$H = t3.getHours(), this.$m = t3.getMinutes(), this.$s = t3.getSeconds(), this.$ms = t3.getMilliseconds();
+      }, m3.$utils = function() {
+        return b;
+      }, m3.isValid = function() {
+        return !(this.$d.toString() === l2);
+      }, m3.isSame = function(t3, e2) {
+        var n3 = O2(t3);
+        return this.startOf(e2) <= n3 && n3 <= this.endOf(e2);
+      }, m3.isAfter = function(t3, e2) {
+        return O2(t3) < this.startOf(e2);
+      }, m3.isBefore = function(t3, e2) {
+        return this.endOf(e2) < O2(t3);
+      }, m3.$g = function(t3, e2, n3) {
+        return b.u(t3) ? this[e2] : this.set(n3, t3);
+      }, m3.unix = function() {
+        return Math.floor(this.valueOf() / 1e3);
+      }, m3.valueOf = function() {
+        return this.$d.getTime();
+      }, m3.startOf = function(t3, e2) {
+        var n3 = this, r3 = !!b.u(e2) || e2, f3 = b.p(t3), l3 = function(t4, e3) {
+          var i2 = b.w(n3.$u ? Date.UTC(n3.$y, e3, t4) : new Date(n3.$y, e3, t4), n3);
+          return r3 ? i2 : i2.endOf(a);
+        }, $2 = function(t4, e3) {
+          return b.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e3)), n3);
+        }, y3 = this.$W, M4 = this.$M, m4 = this.$D, v3 = "set" + (this.$u ? "UTC" : "");
+        switch (f3) {
+          case h2:
+            return r3 ? l3(1, 0) : l3(31, 11);
+          case c:
+            return r3 ? l3(1, M4) : l3(0, M4 + 1);
+          case o:
+            var g2 = this.$locale().weekStart || 0, D3 = (y3 < g2 ? y3 + 7 : y3) - g2;
+            return l3(r3 ? m4 - D3 : m4 + (6 - D3), M4);
+          case a:
+          case d:
+            return $2(v3 + "Hours", 0);
+          case u2:
+            return $2(v3 + "Minutes", 1);
+          case s:
+            return $2(v3 + "Seconds", 2);
+          case i:
+            return $2(v3 + "Milliseconds", 3);
+          default:
+            return this.clone();
+        }
+      }, m3.endOf = function(t3) {
+        return this.startOf(t3, false);
+      }, m3.$set = function(t3, e2) {
+        var n3, o2 = b.p(t3), f3 = "set" + (this.$u ? "UTC" : ""), l3 = (n3 = {}, n3[a] = f3 + "Date", n3[d] = f3 + "Date", n3[c] = f3 + "Month", n3[h2] = f3 + "FullYear", n3[u2] = f3 + "Hours", n3[s] = f3 + "Minutes", n3[i] = f3 + "Seconds", n3[r2] = f3 + "Milliseconds", n3)[o2], $2 = o2 === a ? this.$D + (e2 - this.$W) : e2;
+        if (o2 === c || o2 === h2) {
+          var y3 = this.clone().set(d, 1);
+          y3.$d[l3]($2), y3.init(), this.$d = y3.set(d, Math.min(this.$D, y3.daysInMonth())).$d;
+        } else l3 && this.$d[l3]($2);
+        return this.init(), this;
+      }, m3.set = function(t3, e2) {
+        return this.clone().$set(t3, e2);
+      }, m3.get = function(t3) {
+        return this[b.p(t3)]();
+      }, m3.add = function(r3, f3) {
+        var d2, l3 = this;
+        r3 = Number(r3);
+        var $2 = b.p(f3), y3 = function(t3) {
+          var e2 = O2(l3);
+          return b.w(e2.date(e2.date() + Math.round(t3 * r3)), l3);
         };
-      }), O2.extend = function(t3, e2) {
-        return t3.$i || (t3(e2, _, O2), t3.$i = true), O2;
-      }, O2.locale = w2, O2.isDayjs = S2, O2.unix = function(t3) {
-        return O2(1e3 * t3);
-      }, O2.en = D2[g], O2.Ls = D2, O2.p = {}, O2;
-    });
-  })(dayjs_min);
-  return dayjs_min.exports;
-}
-var dayjs_minExports = requireDayjs_min();
+        if ($2 === c) return this.set(c, this.$M + r3);
+        if ($2 === h2) return this.set(h2, this.$y + r3);
+        if ($2 === a) return y3(1);
+        if ($2 === o) return y3(7);
+        var M4 = (d2 = {}, d2[s] = e, d2[u2] = n2, d2[i] = t2, d2)[$2] || 1, m4 = this.$d.getTime() + r3 * M4;
+        return b.w(m4, this);
+      }, m3.subtract = function(t3, e2) {
+        return this.add(-1 * t3, e2);
+      }, m3.format = function(t3) {
+        var e2 = this, n3 = this.$locale();
+        if (!this.isValid()) return n3.invalidDate || l2;
+        var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = b.z(this), s2 = this.$H, u3 = this.$m, a2 = this.$M, o2 = n3.weekdays, c2 = n3.months, f3 = n3.meridiem, h3 = function(t4, n4, i3, s3) {
+          return t4 && (t4[n4] || t4(e2, r3)) || i3[n4].slice(0, s3);
+        }, d2 = function(t4) {
+          return b.s(s2 % 12 || 12, t4, "0");
+        }, $2 = f3 || function(t4, e3, n4) {
+          var r4 = t4 < 12 ? "AM" : "PM";
+          return n4 ? r4.toLowerCase() : r4;
+        };
+        return r3.replace(y2, function(t4, r4) {
+          return r4 || function(t5) {
+            switch (t5) {
+              case "YY":
+                return String(e2.$y).slice(-2);
+              case "YYYY":
+                return b.s(e2.$y, 4, "0");
+              case "M":
+                return a2 + 1;
+              case "MM":
+                return b.s(a2 + 1, 2, "0");
+              case "MMM":
+                return h3(n3.monthsShort, a2, c2, 3);
+              case "MMMM":
+                return h3(c2, a2);
+              case "D":
+                return e2.$D;
+              case "DD":
+                return b.s(e2.$D, 2, "0");
+              case "d":
+                return String(e2.$W);
+              case "dd":
+                return h3(n3.weekdaysMin, e2.$W, o2, 2);
+              case "ddd":
+                return h3(n3.weekdaysShort, e2.$W, o2, 3);
+              case "dddd":
+                return o2[e2.$W];
+              case "H":
+                return String(s2);
+              case "HH":
+                return b.s(s2, 2, "0");
+              case "h":
+                return d2(1);
+              case "hh":
+                return d2(2);
+              case "a":
+                return $2(s2, u3, true);
+              case "A":
+                return $2(s2, u3, false);
+              case "m":
+                return String(u3);
+              case "mm":
+                return b.s(u3, 2, "0");
+              case "s":
+                return String(e2.$s);
+              case "ss":
+                return b.s(e2.$s, 2, "0");
+              case "SSS":
+                return b.s(e2.$ms, 3, "0");
+              case "Z":
+                return i2;
+            }
+            return null;
+          }(t4) || i2.replace(":", "");
+        });
+      }, m3.utcOffset = function() {
+        return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
+      }, m3.diff = function(r3, d2, l3) {
+        var $2, y3 = this, M4 = b.p(d2), m4 = O2(r3), v3 = (m4.utcOffset() - this.utcOffset()) * e, g2 = this - m4, D3 = function() {
+          return b.m(y3, m4);
+        };
+        switch (M4) {
+          case h2:
+            $2 = D3() / 12;
+            break;
+          case c:
+            $2 = D3();
+            break;
+          case f2:
+            $2 = D3() / 3;
+            break;
+          case o:
+            $2 = (g2 - v3) / 6048e5;
+            break;
+          case a:
+            $2 = (g2 - v3) / 864e5;
+            break;
+          case u2:
+            $2 = g2 / n2;
+            break;
+          case s:
+            $2 = g2 / e;
+            break;
+          case i:
+            $2 = g2 / t2;
+            break;
+          default:
+            $2 = g2;
+        }
+        return l3 ? $2 : b.a($2);
+      }, m3.daysInMonth = function() {
+        return this.endOf(c).$D;
+      }, m3.$locale = function() {
+        return D2[this.$L];
+      }, m3.locale = function(t3, e2) {
+        if (!t3) return this.$L;
+        var n3 = this.clone(), r3 = w2(t3, e2, true);
+        return r3 && (n3.$L = r3), n3;
+      }, m3.clone = function() {
+        return b.w(this.$d, this);
+      }, m3.toDate = function() {
+        return new Date(this.valueOf());
+      }, m3.toJSON = function() {
+        return this.isValid() ? this.toISOString() : null;
+      }, m3.toISOString = function() {
+        return this.$d.toISOString();
+      }, m3.toString = function() {
+        return this.$d.toUTCString();
+      }, M3;
+    }(), Y2 = _.prototype;
+    return O2.prototype = Y2, [["$ms", r2], ["$s", i], ["$m", s], ["$H", u2], ["$W", a], ["$M", c], ["$y", h2], ["$D", d]].forEach(function(t3) {
+      Y2[t3[1]] = function(e2) {
+        return this.$g(e2, t3[0], t3[1]);
+      };
+    }), O2.extend = function(t3, e2) {
+      return t3.$i || (t3(e2, _, O2), t3.$i = true), O2;
+    }, O2.locale = w2, O2.isDayjs = S2, O2.unix = function(t3) {
+      return O2(1e3 * t3);
+    }, O2.en = D2[g], O2.Ls = D2, O2.p = {}, O2;
+  });
+})(dayjs_min);
+var dayjs_minExports = dayjs_min.exports;
 const dayjs = /* @__PURE__ */ getDefaultExportFromCjs(dayjs_minExports);
 var weekday$1 = { exports: {} };
 (function(module, exports) {
@@ -40124,8 +40176,8 @@ function useDelayState(value, defaultValue, onChange) {
   React$2.useEffect(() => cancelRaf, []);
   return [state, updateValue];
 }
-function useOpen(open, defaultOpen, disabledList = [], onOpenChange) {
-  const mergedOpen = disabledList.every((disabled) => disabled) ? false : open;
+function useOpen(open2, defaultOpen, disabledList = [], onOpenChange) {
+  const mergedOpen = disabledList.every((disabled) => disabled) ? false : open2;
   const [rafOpen, setRafOpen] = useDelayState(mergedOpen, defaultOpen || false, onOpenChange);
   function setOpen(next2, config = {}) {
     if (!config.inherit || rafOpen) {
@@ -40260,7 +40312,7 @@ function offsetPanelDate(generateConfig2, picker, date2, offset2) {
   }
 }
 const EMPTY_LIST = [];
-function useRangePickerValue(generateConfig2, locale2, calendarValue, modes, open, activeIndex, pickerMode, multiplePanel, defaultPickerValue = EMPTY_LIST, pickerValue = EMPTY_LIST, timeDefaultValue = EMPTY_LIST, onPickerValueChange, minDate, maxDate) {
+function useRangePickerValue(generateConfig2, locale2, calendarValue, modes, open2, activeIndex, pickerMode, multiplePanel, defaultPickerValue = EMPTY_LIST, pickerValue = EMPTY_LIST, timeDefaultValue = EMPTY_LIST, onPickerValueChange, minDate, maxDate) {
   const isTimePicker = pickerMode === "time";
   const mergedActiveIndex = activeIndex || 0;
   const getDefaultPickerValue = (index) => {
@@ -40314,7 +40366,7 @@ function useRangePickerValue(generateConfig2, locale2, calendarValue, modes, ope
   };
   const prevActiveIndexRef = reactExports.useRef(null);
   useLayoutEffect$1(() => {
-    if (open) {
+    if (open2) {
       if (!defaultPickerValue[mergedActiveIndex]) {
         let nextPickerValue = isTimePicker ? null : generateConfig2.getNow();
         if (prevActiveIndexRef.current !== null && prevActiveIndexRef.current !== mergedActiveIndex) {
@@ -40336,21 +40388,21 @@ function useRangePickerValue(generateConfig2, locale2, calendarValue, modes, ope
         }
       }
     }
-  }, [open, mergedActiveIndex, calendarValue[mergedActiveIndex]]);
+  }, [open2, mergedActiveIndex, calendarValue[mergedActiveIndex]]);
   reactExports.useEffect(() => {
-    if (open) {
+    if (open2) {
       prevActiveIndexRef.current = mergedActiveIndex;
     } else {
       prevActiveIndexRef.current = null;
     }
-  }, [open, mergedActiveIndex]);
+  }, [open2, mergedActiveIndex]);
   useLayoutEffect$1(() => {
-    if (open && defaultPickerValue) {
+    if (open2 && defaultPickerValue) {
       if (defaultPickerValue[mergedActiveIndex]) {
         setCurrentPickerValue(defaultPickerValue[mergedActiveIndex], "reset");
       }
     }
-  }, [open, mergedActiveIndex]);
+  }, [open2, mergedActiveIndex]);
   return [currentPickerValue, setCurrentPickerValue];
 }
 function useSyncState$1(defaultValue, controlledValue) {
@@ -40432,7 +40484,7 @@ function useInnerValue(generateConfig2, locale2, formatList, rangeValue, order, 
   };
   return [mergedValue, setInnerValue, calendarValue, triggerCalendarChange, triggerOk];
 }
-function useRangeValue(info, mergedValue, setInnerValue, getCalendarValue, triggerCalendarChange, disabled, formatList, focused, open, isInvalidateDate) {
+function useRangeValue(info, mergedValue, setInnerValue, getCalendarValue, triggerCalendarChange, disabled, formatList, focused, open2, isInvalidateDate) {
   const {
     // MISC
     generateConfig: generateConfig2,
@@ -40512,7 +40564,7 @@ function useRangeValue(info, mergedValue, setInnerValue, getCalendarValue, trigg
       triggerSubmit();
     }
   });
-  const interactiveFinished = !focused && !open;
+  const interactiveFinished = !focused && !open2;
   useLockEffect(!interactiveFinished, () => {
     if (interactiveFinished) {
       triggerSubmit();
@@ -42526,7 +42578,7 @@ function useInputProps(props, postProps) {
     onBlur,
     onInputChange,
     onInvalid,
-    open,
+    open: open2,
     onOpenChange,
     onKeyDown,
     onChange,
@@ -42634,7 +42686,7 @@ function useInputProps(props, postProps) {
               });
               break;
             case "Enter":
-              if (!open) {
+              if (!open2) {
                 onOpenChange(true);
               }
               break;
@@ -43340,7 +43392,7 @@ function RangePicker(props, ref) {
     maxDate,
     // Open
     defaultOpen,
-    open,
+    open: open2,
     onOpenChange,
     // Picker
     locale: locale2,
@@ -43377,7 +43429,7 @@ function RangePicker(props, ref) {
   } = filledProps;
   const selectorRef = usePickerRef(ref);
   const [mergedClassNames, mergedStyles] = useSemantic(propClassNames, propStyles);
-  const [mergedOpen, setMergeOpen] = useOpen(open, defaultOpen, disabled, onOpenChange);
+  const [mergedOpen, setMergeOpen] = useOpen(open2, defaultOpen, disabled, onOpenChange);
   const triggerOpen = (nextOpen, config) => {
     if (disabled.some((fieldDisabled) => !fieldDisabled) || !nextOpen) {
       setMergeOpen(nextOpen, config);
@@ -43783,7 +43835,7 @@ function _extends$r() {
 function SingleSelector(props, ref) {
   const {
     id: id2,
-    open,
+    open: open2,
     prefix: prefix2,
     clearIcon,
     suffixIcon,
@@ -43859,7 +43911,7 @@ function SingleSelector(props, ref) {
   const onMultipleRemove = (date2) => {
     const nextValues = value.filter((oriDate) => oriDate && !isSame(generateConfig2, locale2, oriDate, date2, internalPicker));
     onChange(nextValues);
-    if (!open) {
+    if (!open2) {
       onSubmit();
     }
   };
@@ -43971,7 +44023,7 @@ function Picker(props, ref) {
     maxDate,
     // Open
     defaultOpen,
-    open,
+    open: open2,
     onOpenChange,
     // Picker
     locale: locale2,
@@ -44017,7 +44069,7 @@ function Picker(props, ref) {
   }
   const toggleDates = useToggleDates(generateConfig2, locale2, internalPicker);
   const [mergedClassNames, mergedStyles] = useSemantic(propClassNames, propStyles);
-  const [mergedOpen, triggerOpen] = useOpen(open, defaultOpen, [disabled], onOpenChange);
+  const [mergedOpen, triggerOpen] = useOpen(open2, defaultOpen, [disabled], onOpenChange);
   const onInternalCalendarChange = (dates, dateStrings, info) => {
     if (onCalendarChange) {
       const filteredInfo = {
@@ -47925,7 +47977,7 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     classNames,
     styles
   } = props;
-  const [open, setOpen] = reactExports.useState(false);
+  const [open2, setOpen] = reactExports.useState(false);
   const [selectedKey, setSelectedKey] = reactExports.useState(null);
   const {
     icon: moreIcon = "More"
@@ -48001,7 +48053,7 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     const {
       which
     } = e;
-    if (!open) {
+    if (!open2) {
       if ([KeyCode.DOWN, KeyCode.SPACE, KeyCode.ENTER].includes(which)) {
         setOpen(true);
         e.preventDefault();
@@ -48035,10 +48087,10 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     }
   }, [selectedItemId, selectedKey]);
   reactExports.useEffect(() => {
-    if (!open) {
+    if (!open2) {
       setSelectedKey(null);
     }
-  }, [open]);
+  }, [open2]);
   const moreStyle = {
     marginInlineStart: tabBarGutter
   };
@@ -48052,7 +48104,7 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const moreNode = mobile ? null : /* @__PURE__ */ reactExports.createElement(Dropdown$2, _extends$n({
     prefixCls: dropdownPrefix,
     overlay: menu,
-    visible: tabs.length ? open : false,
+    visible: tabs.length ? open2 : false,
     onVisibleChange: setOpen,
     overlayClassName,
     overlayStyle: popupStyle,
@@ -48066,7 +48118,7 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     "aria-haspopup": "listbox",
     "aria-controls": popupId,
     id: `${id2}-more`,
-    "aria-expanded": open,
+    "aria-expanded": open2,
     onKeyDown
   }, moreIcon));
   return /* @__PURE__ */ reactExports.createElement("div", {
@@ -55222,7 +55274,7 @@ const DropdownButton = (props) => {
     autoFocus,
     trigger,
     align,
-    open,
+    open: open2,
     onOpenChange,
     placement,
     getPopupContainer,
@@ -55272,7 +55324,7 @@ const DropdownButton = (props) => {
     dropdownProps.destroyPopupOnHide = destroyPopupOnHide;
   }
   if ("open" in props) {
-    dropdownProps.open = open;
+    dropdownProps.open = open2;
   }
   if ("placement" in props) {
     dropdownProps.placement = placement;
@@ -55469,7 +55521,7 @@ function getFixScaleEleTransPosition(width, height, left, top) {
 }
 const BASE_SCALE_RATIO = 1;
 const WHEEL_MAX_SCALE_RATIO = 1;
-function useMouseEvent(imgRef, movable, open, scaleStep, transform, updateTransform, dispatchZoomChange) {
+function useMouseEvent(imgRef, movable, open2, scaleStep, transform, updateTransform, dispatchZoomChange) {
   const {
     rotate,
     scale,
@@ -55496,7 +55548,7 @@ function useMouseEvent(imgRef, movable, open, scaleStep, transform, updateTransf
     setMoving(true);
   };
   const onMouseMove = (event) => {
-    if (open && isMoving) {
+    if (open2 && isMoving) {
       updateTransform({
         x: event.pageX - startPositionInfo.current.diffX,
         y: event.pageY - startPositionInfo.current.diffY
@@ -55504,7 +55556,7 @@ function useMouseEvent(imgRef, movable, open, scaleStep, transform, updateTransf
     }
   };
   const onMouseUp = () => {
-    if (open && isMoving) {
+    if (open2 && isMoving) {
       setMoving(false);
       const {
         transformX,
@@ -55528,7 +55580,7 @@ function useMouseEvent(imgRef, movable, open, scaleStep, transform, updateTransf
     }
   };
   const onWheel = (event) => {
-    if (!open || event.deltaY == 0) return;
+    if (!open2 || event.deltaY == 0) return;
     const scaleRatio = Math.abs(event.deltaY / 100);
     const mergedScaleRatio = Math.min(scaleRatio, WHEEL_MAX_SCALE_RATIO);
     let ratio = BASE_SCALE_RATIO + mergedScaleRatio * scaleStep;
@@ -55558,7 +55610,7 @@ function useMouseEvent(imgRef, movable, open, scaleStep, transform, updateTransf
       } catch (error) {
       }
     };
-  }, [open, isMoving, x2, y2, rotate, movable]);
+  }, [open2, isMoving, x2, y2, rotate, movable]);
   return {
     isMoving,
     onMouseDown,
@@ -55627,7 +55679,7 @@ function getCenter(oldPoint1, oldPoint2, newPoint1, newPoint2) {
   const y2 = oldPoint1.y + ratio * (oldPoint2.y - oldPoint1.y);
   return [x2, y2];
 }
-function useTouchEvent(imgRef, movable, open, minScale, transform, updateTransform, dispatchZoomChange) {
+function useTouchEvent(imgRef, movable, open2, minScale, transform, updateTransform, dispatchZoomChange) {
   const {
     rotate,
     scale,
@@ -55718,7 +55770,7 @@ function useTouchEvent(imgRef, movable, open, minScale, transform, updateTransfo
     }
   };
   const onTouchEnd = () => {
-    if (!open) return;
+    if (!open2) return;
     if (isTouching) {
       setIsTouching(false);
     }
@@ -55750,7 +55802,7 @@ function useTouchEvent(imgRef, movable, open, minScale, transform, updateTransfo
     const preventDefault = (e) => {
       e.preventDefault();
     };
-    if (open && movable) {
+    if (open2 && movable) {
       window.addEventListener("touchmove", preventDefault, {
         passive: false
       });
@@ -55758,7 +55810,7 @@ function useTouchEvent(imgRef, movable, open, minScale, transform, updateTransfo
     return () => {
       window.removeEventListener("touchmove", preventDefault);
     };
-  }, [open, movable]);
+  }, [open2, movable]);
   return {
     isTouching,
     onTouchStart,
@@ -55995,7 +56047,7 @@ const Preview = (props) => {
     fallback,
     movable = true,
     onClose,
-    open,
+    open: open2,
     afterOpenChange,
     maskClosable = true,
     icons: icons2 = {},
@@ -56036,13 +56088,13 @@ const Preview = (props) => {
     isMoving,
     onMouseDown,
     onWheel
-  } = useMouseEvent(imgRef, movable, open, scaleStep, transform, updateTransform, dispatchZoomChange);
+  } = useMouseEvent(imgRef, movable, open2, scaleStep, transform, updateTransform, dispatchZoomChange);
   const {
     isTouching,
     onTouchStart,
     onTouchMove,
     onTouchEnd
-  } = useTouchEvent(imgRef, movable, open, minScale, transform, updateTransform, dispatchZoomChange);
+  } = useTouchEvent(imgRef, movable, open2, minScale, transform, updateTransform, dispatchZoomChange);
   const {
     rotate,
     scale
@@ -56053,12 +56105,12 @@ const Preview = (props) => {
     }
   }, [enableTransition]);
   reactExports.useEffect(() => {
-    if (!open) {
+    if (!open2) {
       resetTransform("close");
     }
-  }, [open]);
+  }, [open2]);
   const onDoubleClick = (event) => {
-    if (open) {
+    if (open2) {
       if (scale !== 1) {
         updateTransform({
           x: 0,
@@ -56133,7 +56185,7 @@ const Preview = (props) => {
     }
   };
   const onKeyDown = useEvent((event) => {
-    if (open) {
+    if (open2) {
       const {
         keyCode
       } = event;
@@ -56147,19 +56199,19 @@ const Preview = (props) => {
     }
   });
   reactExports.useEffect(() => {
-    if (open) {
+    if (open2) {
       window.addEventListener("keydown", onKeyDown);
       return () => {
         window.removeEventListener("keydown", onKeyDown);
       };
     }
-  }, [open]);
+  }, [open2]);
   const [lockScroll, setLockScroll] = reactExports.useState(false);
   React$2.useEffect(() => {
-    if (open) {
+    if (open2) {
       setLockScroll(true);
     }
-  }, [open]);
+  }, [open2]);
   const onVisibleChanged = (nextVisible) => {
     if (!nextVisible) {
       setLockScroll(false);
@@ -56170,10 +56222,10 @@ const Preview = (props) => {
   };
   const [portalRender, setPortalRender] = reactExports.useState(false);
   useLayoutEffect$1(() => {
-    if (open) {
+    if (open2) {
       setPortalRender(true);
     }
-  }, [open]);
+  }, [open2]);
   const onEsc = ({
     top
   }) => {
@@ -56182,11 +56234,11 @@ const Preview = (props) => {
     }
   };
   useLayoutEffect$1(() => {
-    if (open) {
+    if (open2) {
       triggerRef.current = document.activeElement;
     }
-  }, [open]);
-  useLockFocus(focusTrap && open && portalRender, () => wrapperRef.current);
+  }, [open2]);
+  useLockFocus(focusTrap && open2 && portalRender, () => wrapperRef.current);
   const bodyStyle = {
     ...styles.body
   };
@@ -56194,14 +56246,14 @@ const Preview = (props) => {
     bodyStyle.transformOrigin = `${mousePosition2.x}px ${mousePosition2.y}px`;
   }
   return /* @__PURE__ */ React$2.createElement(Portal, {
-    open: portalRender && open,
+    open: portalRender && open2,
     autoDestroy: false,
     getContainer: getContainer2,
     autoLock: lockScroll,
     onEsc
   }, /* @__PURE__ */ React$2.createElement(CSSMotion, {
     motionName,
-    visible: portalRender && open,
+    visible: portalRender && open2,
     motionAppear: true,
     motionEnter: true,
     motionLeave: true,
@@ -56706,7 +56758,7 @@ function usePreviewConfig(preview) {
       return [rawPreviewConfig, "", ""];
     }
     const {
-      open,
+      open: open2,
       onOpenChange,
       cover,
       actionsRender,
@@ -56738,7 +56790,7 @@ function usePreviewConfig(preview) {
     const [coverElement, maskConfig] = normalizeMask(mask);
     return [{
       ...restPreviewConfig,
-      open: open ?? visible,
+      open: open2 ?? visible,
       onOpenChange: onInternalOpenChange,
       cover: cover ?? coverElement,
       mask: maskConfig,
@@ -58563,6 +58615,273 @@ Input.Search = Search$1;
 Input.TextArea = TextArea;
 Input.Password = Password;
 Input.OTP = OTP;
+const PureList = (props) => {
+  const {
+    items,
+    classNames,
+    style: style2
+  } = props;
+  const {
+    getPrefixCls
+  } = useComponentConfig("message");
+  const prefixCls = getPrefixCls("message");
+  const rootCls = useCSSVarCls(prefixCls);
+  const [hashId, cssVarCls] = useStyle$q(prefixCls, rootCls);
+  const noticePrefixCls = `${prefixCls}-notice`;
+  const configList = items.map((item) => {
+    const {
+      content,
+      duration,
+      key,
+      type: type2
+    } = item;
+    const typeIconCls = type2 ? `${noticePrefixCls}-icon-${type2}` : void 0;
+    return {
+      key,
+      duration,
+      icon: getMessageIcon(type2),
+      title: content,
+      className: `${noticePrefixCls}-${type2}`,
+      classNames: {
+        wrapper: `${prefixCls}-${type2}`,
+        icon: typeIconCls
+      }
+    };
+  });
+  return /* @__PURE__ */ reactExports.createElement(NotificationList, {
+    prefixCls,
+    placement: "top",
+    configList,
+    className: clsx(hashId, cssVarCls, rootCls),
+    classNames: {
+      ...classNames,
+      wrapper: classNames?.wrapper,
+      title: classNames?.title
+    },
+    style: style2,
+    stack: false
+  });
+};
+let message = null;
+let act = (callback) => callback();
+let taskQueue = [];
+let defaultGlobalConfig = {};
+function getGlobalContext() {
+  const {
+    getContainer: getContainer2,
+    duration,
+    rtl,
+    maxCount,
+    top,
+    stack: stack2
+  } = defaultGlobalConfig;
+  const mergedContainer = getContainer2?.() || document.body;
+  return {
+    getContainer: () => mergedContainer,
+    duration,
+    rtl,
+    maxCount,
+    top,
+    stack: stack2
+  };
+}
+const GlobalHolder = /* @__PURE__ */ React$2.forwardRef((props, ref) => {
+  const {
+    messageConfig,
+    sync
+  } = props;
+  const {
+    getPrefixCls
+  } = reactExports.useContext(ConfigContext);
+  const prefixCls = defaultGlobalConfig.prefixCls || getPrefixCls("message");
+  const appConfig = reactExports.useContext(AppConfigContext);
+  const [api, holder] = useInternalMessage({
+    ...messageConfig,
+    prefixCls,
+    ...appConfig.message
+  });
+  React$2.useImperativeHandle(ref, () => {
+    const instance = {
+      ...api
+    };
+    Object.keys(instance).forEach((method2) => {
+      instance[method2] = (...args) => {
+        sync();
+        return api[method2].apply(api, args);
+      };
+    });
+    return {
+      instance,
+      sync
+    };
+  });
+  return holder;
+});
+const GlobalHolderWrapper = /* @__PURE__ */ React$2.forwardRef((_, ref) => {
+  const [messageConfig, setMessageConfig] = React$2.useState(getGlobalContext);
+  const sync = () => {
+    setMessageConfig(getGlobalContext);
+  };
+  React$2.useEffect(sync, []);
+  const global2 = globalConfig();
+  const rootPrefixCls = global2.getRootPrefixCls();
+  const rootIconPrefixCls = global2.getIconPrefixCls();
+  const theme2 = global2.getTheme();
+  const dom = /* @__PURE__ */ React$2.createElement(GlobalHolder, {
+    ref,
+    sync,
+    messageConfig
+  });
+  return /* @__PURE__ */ React$2.createElement(ConfigProvider, {
+    prefixCls: rootPrefixCls,
+    iconPrefixCls: rootIconPrefixCls,
+    theme: theme2
+  }, global2.holderRender ? global2.holderRender(dom) : dom);
+});
+const flushMessageQueue = () => {
+  if (!message) {
+    const holderFragment = document.createDocumentFragment();
+    const newMessage = {
+      fragment: holderFragment
+    };
+    message = newMessage;
+    act(() => {
+      render(/* @__PURE__ */ React$2.createElement(GlobalHolderWrapper, {
+        ref: (node2) => {
+          const {
+            instance,
+            sync
+          } = node2 || {};
+          Promise.resolve().then(() => {
+            if (!newMessage.instance && instance) {
+              newMessage.instance = instance;
+              newMessage.sync = sync;
+              flushMessageQueue();
+            }
+          });
+        }
+      }), holderFragment);
+    });
+    return;
+  }
+  if (!message.instance) {
+    return;
+  }
+  taskQueue.forEach((task) => {
+    const {
+      type: type2,
+      skipped
+    } = task;
+    if (!skipped) {
+      switch (type2) {
+        case "open": {
+          act(() => {
+            const closeFn = message.instance.open({
+              ...defaultGlobalConfig,
+              ...task.config
+            });
+            closeFn?.then(task.resolve);
+            task.setCloseFn(closeFn);
+          });
+          break;
+        }
+        case "destroy":
+          act(() => {
+            message?.instance.destroy(task.key);
+          });
+          break;
+        default: {
+          act(() => {
+            var _message$instance;
+            const closeFn = (_message$instance = message.instance)[type2].apply(_message$instance, _toConsumableArray(task.args));
+            closeFn?.then(task.resolve);
+            task.setCloseFn(closeFn);
+          });
+        }
+      }
+    }
+  });
+  taskQueue = [];
+};
+function setMessageGlobalConfig(config) {
+  defaultGlobalConfig = {
+    ...defaultGlobalConfig,
+    ...config
+  };
+  act(() => {
+    message?.sync?.();
+  });
+}
+function open(config) {
+  const result = wrapPromiseFn((resolve) => {
+    let closeFn;
+    const task = {
+      type: "open",
+      config,
+      resolve,
+      setCloseFn: (fn) => {
+        closeFn = fn;
+      }
+    };
+    taskQueue.push(task);
+    return () => {
+      if (closeFn) {
+        act(() => {
+          closeFn();
+        });
+      } else {
+        task.skipped = true;
+      }
+    };
+  });
+  flushMessageQueue();
+  return result;
+}
+function typeOpen(type2, args) {
+  const result = wrapPromiseFn((resolve) => {
+    let closeFn;
+    const task = {
+      type: type2,
+      args,
+      resolve,
+      setCloseFn: (fn) => {
+        closeFn = fn;
+      }
+    };
+    taskQueue.push(task);
+    return () => {
+      if (closeFn) {
+        act(() => {
+          closeFn();
+        });
+      } else {
+        task.skipped = true;
+      }
+    };
+  });
+  flushMessageQueue();
+  return result;
+}
+const destroy = (key) => {
+  taskQueue.push({
+    type: "destroy",
+    key
+  });
+  flushMessageQueue();
+};
+const methods = ["success", "info", "warning", "error", "loading"];
+const baseStaticMethods = {
+  open,
+  destroy,
+  config: setMessageGlobalConfig,
+  useMessage,
+  _InternalPanelDoNotUseOrYouWillBeFired: PurePanel$8,
+  _InternalListDoNotUseOrYouWillBeFired: PureList
+};
+const staticMethods = baseStaticMethods;
+methods.forEach((type2) => {
+  staticMethods[type2] = (...args) => typeOpen(type2, args);
+});
 const PurePanel$1 = (props) => {
   const {
     prefixCls: customizePrefixCls,
@@ -58837,7 +59156,7 @@ const InternalPopconfirm = /* @__PURE__ */ reactExports.forwardRef((props, ref) 
     arrow: contextArrow,
     trigger: contextTrigger
   } = useComponentConfig("popconfirm");
-  const [open, setOpen] = useControlledState(props.defaultOpen ?? false, props.open);
+  const [open2, setOpen] = useControlledState(props.defaultOpen ?? false, props.open);
   const mergedArrow = useMergedArrow(popconfirmArrow, contextArrow);
   const mergedTrigger = trigger || contextTrigger || "click";
   const settingOpen = (value) => {
@@ -58882,7 +59201,7 @@ const InternalPopconfirm = /* @__PURE__ */ reactExports.forwardRef((props, ref) 
     trigger: mergedTrigger,
     placement,
     onOpenChange: onInternalOpenChange,
-    open,
+    open: open2,
     ref,
     classNames: {
       root: rootClassNames,
@@ -64186,8 +64505,8 @@ class StepResult {
   /**
   Create a failed step result.
   */
-  static fail(message) {
-    return new StepResult(null, message);
+  static fail(message2) {
+    return new StepResult(null, message2);
   }
   /**
   Call [`Node.replace`](https://prosemirror.net/docs/ref/#model.Node.replace) with the given
@@ -65161,8 +65480,8 @@ class Fitter {
     this.frontier.push({ type: type2, match: type2.contentMatch });
   }
   closeFrontierNode() {
-    let open = this.frontier.pop();
-    let add = open.match.fillBefore(Fragment.empty, true);
+    let open2 = this.frontier.pop();
+    let add = open2.match.fillBefore(Fragment.empty, true);
     if (add.childCount)
       this.placed = addToFragment(this.placed, this.frontier.length, add);
   }
@@ -65195,8 +65514,8 @@ function closeNodeStart(node2, openStart, openEnd) {
   }
   return node2.copy(frag);
 }
-function contentAfterFits($to, depth, type2, match2, open) {
-  let node2 = $to.node(depth), index = open ? $to.indexAfter(depth) : $to.index(depth);
+function contentAfterFits($to, depth, type2, match2, open2) {
+  let node2 = $to.node(depth), index = open2 ? $to.indexAfter(depth) : $to.index(depth);
   if (index == node2.childCount && !type2.compatibleContent(node2.type))
     return null;
   let fit = match2.fillBefore(node2.content, true, index);
@@ -65418,8 +65737,8 @@ class DocAttrStep extends Step {
 Step.jsonID("docAttr", DocAttrStep);
 let TransformError = class extends Error {
 };
-TransformError = function TransformError2(message) {
-  let err = Error.call(this, message);
+TransformError = function TransformError2(message2) {
+  let err = Error.call(this, message2);
   err.__proto__ = TransformError2.prototype;
   return err;
 };
@@ -89683,6 +90002,98 @@ function formatTaskTime(task) {
   if (task.dueDate === today) return new Date(task.updatedAt).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
   return task.dueDate.slice(5).replace("-", "/");
 }
+const categories = [
+  { key: "workspace", label: "工作区设置" },
+  { key: "data", label: "数据管理" },
+  { key: "startup", label: "开机管理" }
+];
+function SettingsModal({ open: open2, onClose }) {
+  const workspace = useTaskStore((state) => state.workspace);
+  const chooseWorkspace = useTaskStore((state) => state.chooseWorkspace);
+  const exportData = useTaskStore((state) => state.exportData);
+  const importData = useTaskStore((state) => state.importData);
+  const [category, setCategory] = reactExports.useState("workspace");
+  const [openAtLogin, setOpenAtLogin] = reactExports.useState(false);
+  const [savingStartup, setSavingStartup] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    if (!open2) return;
+    setCategory("workspace");
+    void window.easyNoteApi.settings.getOpenAtLogin().then(setOpenAtLogin).catch(() => setOpenAtLogin(false));
+  }, [open2]);
+  const toggleOpenAtLogin = async (enabled) => {
+    setSavingStartup(true);
+    setOpenAtLogin(enabled);
+    try {
+      const next2 = await window.easyNoteApi.settings.setOpenAtLogin(enabled);
+      setOpenAtLogin(next2);
+    } catch (error) {
+      setOpenAtLogin(!enabled);
+      staticMethods.error(error instanceof Error ? error.message : "开机启动设置失败");
+    } finally {
+      setSavingStartup(false);
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Modal, { title: "设置", open: open2, footer: null, width: 640, onCancel: onClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "settings-layout", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "settings-nav", "aria-label": "设置分类", children: categories.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: `settings-nav-item ${category === item.key ? "active" : ""}`,
+        type: "button",
+        onClick: () => setCategory(item.key),
+        children: item.label
+      },
+      item.key
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "settings-pane", children: [
+      category === "workspace" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "settings-section-title", children: "当前工作区" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "workspace-summary", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: workspace?.name || "个人工作区" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: workspace?.rootPath || "未选择数据目录" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FolderOpen, { size: 15 }), onClick: () => void chooseWorkspace(), children: "更换目录" })
+        ] })
+      ] }) : null,
+      category === "data" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "settings-section-title", children: "数据管理" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "settings-hint", children: "导出当前工作区，或从备份包合并、覆盖导入任务数据。" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "settings-actions", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 15 }), onClick: () => void exportData(), children: "导出工作区" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { onClick: () => void importData("merge"), children: "合并导入" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Popconfirm,
+            {
+              title: "覆盖导入",
+              description: "覆盖导入会先备份当前工作区，然后用导入包替换现有任务。",
+              okText: "覆盖导入",
+              cancelText: "取消",
+              onConfirm: () => void importData("replace"),
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { danger: true, children: "覆盖导入" })
+            }
+          )
+        ] })
+      ] }) : null,
+      category === "startup" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "settings-section-title", children: "开机管理" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "settings-toggle", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Checkbox,
+            {
+              checked: openAtLogin,
+              disabled: savingStartup,
+              onChange: (event) => void toggleOpenAtLogin(event.target.checked)
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "开机自动启动" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("em", { children: "勾选后，下次开机将自动启动 easyNote。" })
+          ] })
+        ] })
+      ] }) : null
+    ] })
+  ] }) });
+}
 const workspaceViews = [
   { label: "快速记录", icon: Pencil, view: { type: "quick" }, count: "all" },
   { label: "今天", icon: CalendarDays, view: { type: "date", value: "today" }, count: "today" },
@@ -89702,12 +90113,9 @@ function TaskSidebar() {
   const tasks = useTaskStore((state) => state.tasks);
   const dateRevision = useTaskStore((state) => state.dateRevision);
   const tags = useTaskStore((state) => state.tags);
-  const workspace = useTaskStore((state) => state.workspace);
   const activeView = useTaskStore((state) => state.activeView);
   const setActiveView = useTaskStore((state) => state.setActiveView);
-  const chooseWorkspace = useTaskStore((state) => state.chooseWorkspace);
   const exportData = useTaskStore((state) => state.exportData);
-  const importData = useTaskStore((state) => state.importData);
   const counts = reactExports.useMemo(() => getTaskCounts(tasks), [tasks, dateRevision]);
   const [settingsOpen, setSettingsOpen] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: "task-sidebar", children: [
@@ -89757,7 +90165,7 @@ function TaskSidebar() {
       )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "sidebar-footer", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "工作区设置", children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "sidebar-footer-button", type: "button", title: "工作区设置", onClick: () => setSettingsOpen(true), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 17 }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "设置", children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "sidebar-footer-button", type: "button", title: "设置", onClick: () => setSettingsOpen(true), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { size: 17 }) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Popconfirm,
         {
@@ -89770,46 +90178,7 @@ function TaskSidebar() {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Modal,
-      {
-        title: "工作区设置",
-        open: settingsOpen,
-        footer: null,
-        width: 520,
-        onCancel: () => setSettingsOpen(false),
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "workspace-settings", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "settings-section-title", children: "当前工作区" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "workspace-summary", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: workspace?.name || "个人工作区" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: workspace?.rootPath || "未选择数据目录" })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FolderOpen, { size: 15 }), onClick: () => void chooseWorkspace(), children: "更换目录" })
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "settings-section-title", children: "数据管理" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "settings-actions", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 15 }), onClick: () => void exportData(), children: "导出工作区" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { onClick: () => void importData("merge"), children: "合并导入" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Popconfirm,
-                {
-                  title: "覆盖导入",
-                  description: "覆盖导入会先备份当前工作区，然后用导入包替换现有任务。",
-                  okText: "覆盖导入",
-                  cancelText: "取消",
-                  onConfirm: () => void importData("replace"),
-                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { danger: true, children: "覆盖导入" })
-                }
-              )
-            ] })
-          ] })
-        ] })
-      }
-    )
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsModal, { open: settingsOpen, onClose: () => setSettingsOpen(false) })
   ] });
 }
 function SidebarSection({ title, action, children }) {
@@ -90152,7 +90521,7 @@ function App() {
 var zhCn = { exports: {} };
 (function(module, exports) {
   !function(e, _) {
-    module.exports = _(requireDayjs_min());
+    module.exports = _(dayjs_minExports);
   }(commonjsGlobal, function(e) {
     function _(e2) {
       return e2 && "object" == typeof e2 && "default" in e2 ? e2 : { default: e2 };

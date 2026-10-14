@@ -36,6 +36,10 @@ const api = {
     beginLauncherDrag: () => electron.ipcRenderer.invoke("window:beginLauncherDrag"),
     moveLauncher: () => electron.ipcRenderer.invoke("window:moveLauncher"),
     quit: () => electron.ipcRenderer.invoke("window:quit")
+  },
+  settings: {
+    getOpenAtLogin: () => electron.ipcRenderer.invoke("settings:getOpenAtLogin"),
+    setOpenAtLogin: (enabled) => electron.ipcRenderer.invoke("settings:setOpenAtLogin", enabled)
   }
 };
 electron.contextBridge.exposeInMainWorld("easyNoteApi", api);

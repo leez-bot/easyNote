@@ -1,4 +1,4 @@
-import { dialog, shell, ipcMain, app, screen, BrowserWindow } from "electron";
+import { dialog, shell, app, ipcMain, screen, BrowserWindow } from "electron";
 import { access, readFile, mkdir, writeFile, rename, stat, copyFile, unlink, rm, mkdtemp, cp } from "node:fs/promises";
 import { dirname, resolve, relative, isAbsolute, join, extname, basename } from "node:path";
 import { nanoid } from "nanoid";
@@ -352,6 +352,16 @@ function normalizeTaskFields(task) {
   const startDate = task.startDate || (Number.isNaN(created.getTime()) ? (/* @__PURE__ */ new Date()).toISOString().slice(0, 10) : `${created.getFullYear()}-${String(created.getMonth() + 1).padStart(2, "0")}-${String(created.getDate()).padStart(2, "0")}`);
   return { ...task, startDate, relatedTaskIds: Array.isArray(task.relatedTaskIds) ? task.relatedTaskIds : [] };
 }
+function getOpenAtLogin() {
+  return app.getLoginItemSettings().openAtLogin;
+}
+function setOpenAtLogin(enabled) {
+  app.setLoginItemSettings({
+    openAtLogin: enabled,
+    name: "easyNote"
+  });
+  return app.getLoginItemSettings().openAtLogin;
+}
 function registerIpcHandlers(services) {
   ipcMain.handle("window:showPanel", () => {
     services.windows.showPanel();
@@ -388,6 +398,8 @@ function registerIpcHandlers(services) {
   ipcMain.handle("attachments:openFile", (_event, relativePath) => services.attachments.openFile(relativePath));
   ipcMain.handle("importExport:exportData", () => services.importExport.exportData());
   ipcMain.handle("importExport:importData", (_event, mode) => services.importExport.importData(mode));
+  ipcMain.handle("settings:getOpenAtLogin", () => getOpenAtLogin());
+  ipcMain.handle("settings:setOpenAtLogin", (_event, enabled) => setOpenAtLogin(Boolean(enabled)));
 }
 const EMPTY_DOCUMENT = { type: "doc", content: [{ type: "paragraph" }] };
 class TaskRepository {

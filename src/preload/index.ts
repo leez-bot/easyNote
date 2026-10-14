@@ -38,6 +38,10 @@ const api: EasyNoteApi = {
     moveLauncher: () => ipcRenderer.invoke('window:moveLauncher'),
     quit: () => ipcRenderer.invoke('window:quit'),
   },
+  settings: {
+    getOpenAtLogin: () => ipcRenderer.invoke('settings:getOpenAtLogin'),
+    setOpenAtLogin: (enabled) => ipcRenderer.invoke('settings:setOpenAtLogin', enabled),
+  },
 }
 
 contextBridge.exposeInMainWorld('easyNoteApi', api)

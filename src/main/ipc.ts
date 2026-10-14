@@ -1,4 +1,5 @@
 import { app, ipcMain } from 'electron'
+import { getOpenAtLogin, setOpenAtLogin } from './settings/loginItem'
 import type { AttachmentService } from './attachments/AttachmentService'
 import type { ImportExportService } from './importExport/ImportExportService'
 import type { TaskRepository } from './tasks/TaskRepository'
@@ -60,4 +61,7 @@ export function registerIpcHandlers(services: MainServices): void {
 
   ipcMain.handle('importExport:exportData', () => services.importExport.exportData())
   ipcMain.handle('importExport:importData', (_event, mode) => services.importExport.importData(mode))
+
+  ipcMain.handle('settings:getOpenAtLogin', () => getOpenAtLogin())
+  ipcMain.handle('settings:setOpenAtLogin', (_event, enabled: boolean) => setOpenAtLogin(Boolean(enabled)))
 }
