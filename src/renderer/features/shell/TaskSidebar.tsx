@@ -1,5 +1,5 @@
 import { Popconfirm, Tooltip } from 'antd'
-import { AlertTriangle, Archive, CalendarDays, CheckCircle2, CirclePause, Clock3, Inbox, ListTodo, Pencil, Plus, Settings, Timer, XCircle } from 'lucide-react'
+import { AlertTriangle, Archive, CalendarDays, CalendarRange, CheckCircle2, CirclePause, Clock3, Inbox, ListTodo, Pencil, Plus, Settings, Timer, XCircle } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { TaskStatus } from '../../../shared/models'
 import { getTaskCounts, type TaskView } from '../../shared/taskViews'
@@ -10,6 +10,7 @@ import { SettingsModal } from './SettingsModal'
 const workspaceViews: Array<{ label: string; icon: typeof Inbox; view: TaskView; count: keyof ReturnType<typeof getTaskCounts> }> = [
   { label: '快速记录', icon: Pencil, view: { type: 'quick' }, count: 'all' },
   { label: '今天', icon: CalendarDays, view: { type: 'date', value: 'today' }, count: 'today' },
+  { label: '本周', icon: CalendarRange, view: { type: 'date', value: 'week' }, count: 'week' },
   { label: '逾期', icon: AlertTriangle, view: { type: 'date', value: 'overdue' }, count: 'overdue' },
   { label: '即将到期', icon: Clock3, view: { type: 'date', value: 'upcoming' }, count: 'upcoming' },
   { label: '已完成', icon: CheckCircle2, view: { type: 'date', value: 'done' }, count: 'completed' },

@@ -78,7 +78,6 @@ export function TaskDetail(): JSX.Element {
     if (!isEditing || !task || !draft) return
     const saved = await updateTask(task.id, { ...draft, title: draft.title.trim() || '未命名任务' })
     if (!saved) throw new Error('保存失败，请重试')
-    setIsEditing(false)
   }, [draft, isEditing, task, updateTask])
 
   useEffect(() => {
@@ -95,7 +94,10 @@ export function TaskDetail(): JSX.Element {
     setDraft(toDraft(task))
     setIsEditing(false)
   }
-  const saveEdit = async (): Promise<void> => flushEdit()
+  const saveEdit = async (): Promise<void> => {
+    await flushEdit()
+    setIsEditing(false)
+  }
 
   return (
     <section className={`task-detail ${isEditing ? 'editing' : 'viewing'}`} aria-label="任务详情">

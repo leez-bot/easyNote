@@ -45,7 +45,7 @@ export function TaskList(): JSX.Element {
   const selectTask = useTaskStore((state) => state.selectTask)
   const setTaskStatus = useTaskStore((state) => state.setTaskStatus)
   const removeTask = useTaskStore((state) => state.removeTask)
-  useTaskStore((state) => state.dateRevision)
+  const dateRevision = useTaskStore((state) => state.dateRevision)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null)
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -54,7 +54,7 @@ export function TaskList(): JSX.Element {
   const searchTriggerRef = useRef<HTMLButtonElement>(null)
   const [taskOrders, setTaskOrders] = useState<Record<string, string[]>>(() => readTaskOrders())
   const [dragState, setDragState] = useState<DragState | null>(null)
-  const groups = useMemo(() => groupTasks(tasks, activeView), [activeView, tasks])
+  const groups = useMemo(() => groupTasks(tasks, activeView), [activeView, dateRevision, tasks])
   const tagMap = useMemo(() => new Map(tags.map((tag) => [tag.id, tag])), [tags])
   const viewKey = useMemo(() => getViewOrderKey(activeView), [activeView])
   const workspaceId = workspace?.id ?? 'default'
@@ -107,8 +107,11 @@ export function TaskList(): JSX.Element {
     <section className="task-list-pane" aria-label="任务列表">
       {activeView.type === 'quick' ? <QuickCapture /> : null}
       <div className="task-groups">
+        {activeView.type === 'date' && activeView.value === 'week' && orderedGroups.length === 0 ? (
+          <div className="task-group-empty week-empty">本周暂无待办</div>
+        ) : null}
         {orderedGroups.map((group) => (
-          <section className="task-group" key={group.id}>
+          <section className={`task-group ${group.highlighted ? 'current-weekday' : ''}`} key={group.id}>
             <div className="task-group-heading">
               <button className="task-group-title" type="button" aria-expanded={Boolean(!collapsed[group.id])} onClick={() => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] }))}>
                 <ChevronDown className={collapsed[group.id] ? 'collapsed' : ''} size={15} />

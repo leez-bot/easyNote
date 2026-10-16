@@ -126,6 +126,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .quick-capture button:hover { background: #f0f3f7; }
 .task-groups { grid-row: 2; height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; padding: 10px 22px 14px; }
 .task-group { margin-bottom: 13px; }
+.task-group.current-weekday .task-group-heading { margin-bottom: 5px; padding: 0 8px; border-radius: 6px; background: var(--color-primary-soft); }
+.task-group.current-weekday .task-group-title { color: var(--color-primary); }
+.week-empty { min-height: 180px; margin-top: 8px; }
 .task-group-heading { min-width: 0; height: 34px; display: flex; align-items: center; gap: 8px; }
 .task-group-title { min-width: 0; flex: 1; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 2px; border: 0; background: transparent; color: #4d5666; font-size: 13px; text-align: left; }
 .task-group-filters { flex: 0 0 auto; display: flex; align-items: center; gap: 2px; }
