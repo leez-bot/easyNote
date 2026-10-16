@@ -2,7 +2,7 @@
 
 给自己用的 Windows 桌面任务本。一条任务里既能写下需求，也能盯着它从待办走到完成。数据放在你选定的本地文件夹里，不注册账号，也不依赖网络。
 
-当前版本 `0.1.0`，只提供 Windows。
+当前版本 `0.1.0`，只提供 Windows。[下载最新安装包](https://github.com/leez-bot/easyNote/releases/latest)。
 
 ## 预览
 
@@ -66,9 +66,9 @@
 
 ## 开始使用
 
-安装包发布后，可以从 [Releases](../../releases) 下载 Windows 安装程序。在那之前，用下面的方式从源码运行。
+到 [Releases](https://github.com/leez-bot/easyNote/releases/latest) 下载最新的 Windows 安装包，文件名类似 `easyNote Setup 0.1.0.exe`。运行后按提示安装。如果 Windows 提示未知发布者，点「更多信息」，再选择仍要运行。当前安装包还没有代码签名证书。
 
-环境：Windows、Node.js、npm。
+也可以从源码运行。环境：Windows、Node.js、npm。
 
 ```powershell
 npm install
