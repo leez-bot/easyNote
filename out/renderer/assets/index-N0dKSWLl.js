@@ -89489,7 +89489,7 @@ function RichTextEditor({ value, onChange, readOnly = false }) {
         event.target.value = "";
       } })
     ] }) : null,
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown, { trigger: ["contextMenu"], open: tableMenuOpen, onOpenChange: setTableMenuOpen, menu: { items: tableMenuItems, onClick: ({ key }) => {
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rich-editor-body", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown, { trigger: ["contextMenu"], open: tableMenuOpen, onOpenChange: setTableMenuOpen, menu: { items: tableMenuItems, onClick: ({ key }) => {
       runTableCommand(key);
       setTableMenuOpen(false);
     } }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -89503,7 +89503,7 @@ function RichTextEditor({ value, onChange, readOnly = false }) {
         },
         children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditorContent, { editor })
       }
-    ) }),
+    ) }) }),
     readOnly ? /* @__PURE__ */ jsxRuntimeExports.jsx(Image$2, { className: "rich-editor-preview-image", src: previewImageSrc, preview: { visible: Boolean(previewImageSrc), onVisibleChange: (visible) => {
       if (!visible) setPreviewImageSrc(void 0);
     } } }) : null,
@@ -89652,7 +89652,6 @@ function TaskDetail() {
     if (!isEditing || !task || !draft) return;
     const saved = await updateTask(task.id, { ...draft, title: draft.title.trim() || "未命名任务" });
     if (!saved) throw new Error("保存失败，请重试");
-    setIsEditing(false);
   }, [draft, isEditing, task, updateTask]);
   reactExports.useEffect(() => {
     setFlushPendingSave(isEditing ? flushEdit : null);
@@ -89666,7 +89665,10 @@ function TaskDetail() {
     setDraft(toDraft(task));
     setIsEditing(false);
   };
-  const saveEdit = async () => flushEdit();
+  const saveEdit = async () => {
+    await flushEdit();
+    setIsEditing(false);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: `task-detail ${isEditing ? "editing" : "viewing"}`, "aria-label": "任务详情", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "detail-titlebar", children: [
       isEditing ? /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { className: "detail-title-input", variant: "borderless", value: draft.title, onChange: (event) => updateDraft({ title: event.target.value }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: task.title }),
@@ -89883,6 +89885,7 @@ function TaskList() {
                   ref: searchInputRef,
                   size: "small",
                   allowClear: true,
+                  placeholder: "输入标题或内容",
                   "aria-label": "搜索任务",
                   value: searchKeyword,
                   onBlur: () => {
@@ -90051,7 +90054,11 @@ function filterTasks(tasks, dateRange, view, searchKeyword) {
     return !date2.isBefore(start, "day") && !date2.isAfter(end, "day");
   });
   const normalizedKeyword = searchKeyword.trim().toLocaleLowerCase();
-  return normalizedKeyword ? dateFilteredTasks.filter((task) => task.title.toLocaleLowerCase().includes(normalizedKeyword)) : dateFilteredTasks;
+  if (!normalizedKeyword) return dateFilteredTasks;
+  return dateFilteredTasks.filter((task) => {
+    if (task.title.toLocaleLowerCase().includes(normalizedKeyword)) return true;
+    return getDocumentText(task.content).toLocaleLowerCase().includes(normalizedKeyword);
+  });
 }
 function formatTaskTime(task) {
   if (!task.dueDate) return "无日期";
@@ -90565,6 +90572,12 @@ function App() {
   reactExports.useEffect(() => {
     void bootstrap();
   }, [bootstrap]);
+  reactExports.useEffect(() => {
+    if (isLauncher || !window.easyNoteApi) return;
+    return window.easyNoteApi.window.onImageCopied(() => {
+      staticMethods.success("复制成功");
+    });
+  }, [isLauncher]);
   if (isLauncher) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(LauncherView, {});
   }
