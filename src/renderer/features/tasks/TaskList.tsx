@@ -18,6 +18,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Task, TaskStatus } from '../../../shared/models'
 import { groupTasks, type TaskView } from '../../shared/taskViews'
 import { todayAsLocalDateString } from '../../shared/date'
+import { getDocumentText } from '../../shared/editor'
 import { useTaskStore } from '../../store/taskStore'
 import { QuickCapture } from './QuickCapture'
 
@@ -125,6 +126,7 @@ export function TaskList(): JSX.Element {
                         ref={searchInputRef}
                         size="small"
                         allowClear
+                        placeholder="输入标题或内容"
                         aria-label="搜索任务"
                         value={searchKeyword}
                         onBlur={() => {
@@ -302,7 +304,11 @@ function filterTasks(tasks: Task[], dateRange: [Dayjs, Dayjs] | null, view: Task
       return !date.isBefore(start, 'day') && !date.isAfter(end, 'day')
     })
   const normalizedKeyword = searchKeyword.trim().toLocaleLowerCase()
-  return normalizedKeyword ? dateFilteredTasks.filter((task) => task.title.toLocaleLowerCase().includes(normalizedKeyword)) : dateFilteredTasks
+  if (!normalizedKeyword) return dateFilteredTasks
+  return dateFilteredTasks.filter((task) => {
+    if (task.title.toLocaleLowerCase().includes(normalizedKeyword)) return true
+    return getDocumentText(task.content).toLocaleLowerCase().includes(normalizedKeyword)
+  })
 }
 
 function formatTaskTime(task: Task): string {

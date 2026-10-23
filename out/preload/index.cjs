@@ -35,7 +35,12 @@ const api = {
     close: () => electron.ipcRenderer.invoke("window:close"),
     beginLauncherDrag: () => electron.ipcRenderer.invoke("window:beginLauncherDrag"),
     moveLauncher: () => electron.ipcRenderer.invoke("window:moveLauncher"),
-    quit: () => electron.ipcRenderer.invoke("window:quit")
+    quit: () => electron.ipcRenderer.invoke("window:quit"),
+    onImageCopied: (listener) => {
+      const handler = () => listener();
+      electron.ipcRenderer.on("clipboard:imageCopied", handler);
+      return () => electron.ipcRenderer.removeListener("clipboard:imageCopied", handler);
+    }
   },
   settings: {
     getOpenAtLogin: () => electron.ipcRenderer.invoke("settings:getOpenAtLogin"),

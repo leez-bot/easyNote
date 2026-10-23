@@ -161,18 +161,20 @@ export function RichTextEditor({ value, onChange, readOnly = false }: { value: E
         <button type="button" title={fullscreen ? '退出全屏' : '全屏编辑'} onClick={() => setFullscreen((current) => !current)}>{fullscreen ? <Expand size={16} /> : <Maximize2 size={16} />}</button>
         <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={(event) => { addImageFiles(event.target.files); event.target.value = '' }} />
       </div> : null}
-      <Dropdown trigger={['contextMenu']} open={tableMenuOpen} onOpenChange={setTableMenuOpen} menu={{ items: tableMenuItems, onClick: ({ key }) => { runTableCommand(key as Parameters<typeof runTableCommand>[0]); setTableMenuOpen(false) } }}>
-        <div
-          className="rich-editor-content"
-          onContextMenu={(event) => {
-            if (readOnly || !editor.isActive('table')) return
-            event.preventDefault()
-            setTableMenuOpen(true)
-          }}
-        >
-          <EditorContent editor={editor} />
-        </div>
-      </Dropdown>
+      <div className="rich-editor-body">
+        <Dropdown trigger={['contextMenu']} open={tableMenuOpen} onOpenChange={setTableMenuOpen} menu={{ items: tableMenuItems, onClick: ({ key }) => { runTableCommand(key as Parameters<typeof runTableCommand>[0]); setTableMenuOpen(false) } }}>
+          <div
+            className="rich-editor-content"
+            onContextMenu={(event) => {
+              if (readOnly || !editor.isActive('table')) return
+              event.preventDefault()
+              setTableMenuOpen(true)
+            }}
+          >
+            <EditorContent editor={editor} />
+          </div>
+        </Dropdown>
+      </div>
       {readOnly ? <AntImage className="rich-editor-preview-image" src={previewImageSrc} preview={{ visible: Boolean(previewImageSrc), onVisibleChange: (visible) => { if (!visible) setPreviewImageSrc(undefined) } }} /> : null}
       <Modal title="设置链接" open={linkOpen} width={420} onCancel={() => setLinkOpen(false)} footer={null}>
         <Space.Compact block>

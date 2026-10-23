@@ -1,4 +1,4 @@
-import { BrowserWindow, screen, type Rectangle } from 'electron'
+import { BrowserWindow, Menu, clipboard, nativeImage, screen, type Rectangle } from 'electron'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -99,6 +99,7 @@ export class WindowManager {
     })
 
     this.loadRenderer(this.panelWindow)
+    attachImageContextMenu(this.panelWindow)
     this.panelWindow.on('maximize', () => this.hideLauncher())
     this.panelWindow.on('unmaximize', () => this.hideLauncher())
     this.panelWindow.on('show', () => this.hideLauncher())
@@ -283,6 +284,32 @@ export class WindowManager {
       height,
     }
   }
+}
+
+/** Electron 默认不弹出系统右键菜单；为大图预览等 img 提供「复制图片」。 */
+function attachImageContextMenu(window: BrowserWindow): void {
+  window.webContents.on('context-menu', (_event, params) => {
+    if (params.mediaType !== 'image') return
+
+    const menu = Menu.buildFromTemplate([
+      {
+        label: '复制图片',
+        click: () => {
+          try {
+            if (params.srcURL.startsWith('data:')) {
+              clipboard.writeImage(nativeImage.createFromDataURL(params.srcURL))
+            } else {
+              window.webContents.copyImageAt(params.x, params.y)
+            }
+          } catch {
+            window.webContents.copyImageAt(params.x, params.y)
+          }
+          window.webContents.send('clipboard:imageCopied')
+        },
+      },
+    ])
+    menu.popup({ window })
+  })
 }
 
 function hasUsableIntersection(bounds: Rectangle, workArea: Rectangle): boolean {

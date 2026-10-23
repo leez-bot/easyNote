@@ -1,4 +1,4 @@
-import { dialog, shell, app, ipcMain, screen, BrowserWindow } from "electron";
+import { dialog, shell, app, ipcMain, screen, BrowserWindow, Menu, clipboard, nativeImage } from "electron";
 import { access, readFile, mkdir, writeFile, rename, stat, copyFile, unlink, rm, mkdtemp, cp } from "node:fs/promises";
 import { dirname, resolve, relative, isAbsolute, join, extname, basename } from "node:path";
 import { nanoid } from "nanoid";
@@ -700,6 +700,7 @@ class WindowManager {
       }
     });
     this.loadRenderer(this.panelWindow);
+    attachImageContextMenu(this.panelWindow);
     this.panelWindow.on("maximize", () => this.hideLauncher());
     this.panelWindow.on("unmaximize", () => this.hideLauncher());
     this.panelWindow.on("show", () => this.hideLauncher());
@@ -855,6 +856,29 @@ class WindowManager {
       height
     };
   }
+}
+function attachImageContextMenu(window) {
+  window.webContents.on("context-menu", (_event, params) => {
+    if (params.mediaType !== "image") return;
+    const menu = Menu.buildFromTemplate([
+      {
+        label: "复制图片",
+        click: () => {
+          try {
+            if (params.srcURL.startsWith("data:")) {
+              clipboard.writeImage(nativeImage.createFromDataURL(params.srcURL));
+            } else {
+              window.webContents.copyImageAt(params.x, params.y);
+            }
+          } catch {
+            window.webContents.copyImageAt(params.x, params.y);
+          }
+          window.webContents.send("clipboard:imageCopied");
+        }
+      }
+    ]);
+    menu.popup({ window });
+  });
 }
 function hasUsableIntersection(bounds, workArea) {
   const visibleWidth = Math.min(bounds.x + bounds.width, workArea.x + workArea.width) - Math.max(bounds.x, workArea.x);

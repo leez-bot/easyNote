@@ -37,6 +37,11 @@ const api: EasyNoteApi = {
     beginLauncherDrag: () => ipcRenderer.invoke('window:beginLauncherDrag'),
     moveLauncher: () => ipcRenderer.invoke('window:moveLauncher'),
     quit: () => ipcRenderer.invoke('window:quit'),
+    onImageCopied: (listener) => {
+      const handler = (): void => listener()
+      ipcRenderer.on('clipboard:imageCopied', handler)
+      return () => ipcRenderer.removeListener('clipboard:imageCopied', handler)
+    },
   },
   settings: {
     getOpenAtLogin: () => ipcRenderer.invoke('settings:getOpenAtLogin'),

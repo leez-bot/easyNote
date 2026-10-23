@@ -45,6 +45,7 @@ export interface EasyNoteApi {
     beginLauncherDrag: () => Promise<void>
     moveLauncher: () => Promise<void>
     quit: () => Promise<void>
+    onImageCopied: (listener: () => void) => () => void
   }
   settings: {
     getOpenAtLogin: () => Promise<boolean>
