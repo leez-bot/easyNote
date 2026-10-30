@@ -388,6 +388,11 @@ function registerIpcHandlers(services) {
     await services.tasks.remove(id);
     await services.attachments.removeTaskAttachments(id);
   });
+  ipcMain.handle("tasks:batchUpdate", (_event, ids, patch) => services.tasks.batchUpdate(ids, patch));
+  ipcMain.handle("tasks:batchRemove", async (_event, ids) => {
+    await services.tasks.batchRemove(ids);
+    await Promise.all(ids.map((id) => services.attachments.removeTaskAttachments(id)));
+  });
   ipcMain.handle("tags:list", () => services.tasks.listTags());
   ipcMain.handle("tags:create", (_event, input) => services.tasks.createTag(input));
   ipcMain.handle("tags:update", (_event, id, input) => services.tasks.updateTag(id, input));
@@ -502,6 +507,38 @@ class TaskRepository {
     task.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
     await this.writeData(data);
     return task;
+  }
+  async batchUpdate(ids, patch) {
+    const data = await this.readData();
+    const idSet = new Set(ids);
+    const targets = data.tasks.filter((task) => idSet.has(task.id));
+    if (targets.length === 0) return [];
+    if (patch.addTagIds && patch.addTagIds.length > 0) this.assertTagIds(data, patch.addTagIds);
+    const now = (/* @__PURE__ */ new Date()).toISOString();
+    for (const task of targets) {
+      if (patch.status !== void 0) applyStatus(task, patch.status);
+      if (patch.priority !== void 0) task.priority = patch.priority;
+      if (patch.dueDate !== void 0) task.dueDate = patch.dueDate || void 0;
+      if (patch.addTagIds && patch.addTagIds.length > 0) task.tagIds = [.../* @__PURE__ */ new Set([...task.tagIds, ...patch.addTagIds])];
+      if (patch.removeTagIds && patch.removeTagIds.length > 0) {
+        const removeSet = new Set(patch.removeTagIds);
+        task.tagIds = task.tagIds.filter((tagId) => !removeSet.has(tagId));
+      }
+      task.updatedAt = now;
+    }
+    await this.writeData(data);
+    return targets;
+  }
+  async batchRemove(ids) {
+    const data = await this.readData();
+    const idSet = new Set(ids);
+    const nextTasks = data.tasks.filter((task) => !idSet.has(task.id));
+    if (nextTasks.length === data.tasks.length) throw new Error("任务不存在");
+    nextTasks.forEach((task) => {
+      task.relatedTaskIds = (task.relatedTaskIds ?? []).filter((relatedId) => !idSet.has(relatedId));
+    });
+    data.tasks = nextTasks;
+    await this.writeData(data);
   }
   async updateAttachments(taskId, attachments) {
     const data = await this.readData();

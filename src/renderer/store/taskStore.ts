@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { EditorDocument, TagInput, Task, TaskInput, TaskStatus, TaskTag, WorkspaceMeta } from '../../shared/models'
+import type { BatchTaskPatch, EditorDocument, TagInput, Task, TaskInput, TaskStatus, TaskTag, WorkspaceMeta } from '../../shared/models'
 import { todayAsLocalDateString } from '../shared/date'
 import { EMPTY_DOCUMENT } from '../shared/editor'
 import { getVisibleTasks, type TaskView } from '../shared/taskViews'
@@ -34,6 +34,8 @@ interface TaskState {
   createQuickTask: (title: string, options?: { dueToday?: boolean; addImage?: boolean }) => Promise<Task | null>
   updateTask: (id: string, input: Partial<TaskInput>) => Promise<Task | null>
   setTaskStatus: (id: string, status: TaskStatus) => Promise<void>
+  batchUpdateTasks: (ids: string[], patch: BatchTaskPatch) => Promise<boolean>
+  batchRemoveTasks: (ids: string[]) => Promise<boolean>
   removeTask: (id: string) => Promise<void>
   createTag: (input: TagInput) => Promise<TaskTag | null>
   updateTag: (id: string, input: TagInput) => Promise<void>
@@ -187,6 +189,35 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       set((state) => ({ tasks: replaceTask(state.tasks, task) }))
     } catch (error) {
       set({ error: getErrorMessage(error, '更新状态失败') })
+    }
+  },
+
+  batchUpdateTasks: async (ids, patch) => {
+    try {
+      await get().flushPendingSave?.()
+      const updated = await getApi().tasks.batchUpdate(ids, patch)
+      set((state) => ({ tasks: updated.reduce(replaceTask, state.tasks) }))
+      return true
+    } catch (error) {
+      set({ error: getErrorMessage(error, '批量更新失败') })
+      return false
+    }
+  },
+
+  batchRemoveTasks: async (ids) => {
+    set({ loading: true, error: null })
+    try {
+      await get().flushPendingSave?.()
+      await getApi().tasks.batchRemove(ids)
+      set((state) => {
+        const removeSet = new Set(ids)
+        const tasks = state.tasks.filter((task) => !removeSet.has(task.id))
+        return { tasks, selectedTaskId: ensureSelection(tasks, state.selectedTaskId, state.activeView), loading: false }
+      })
+      return true
+    } catch (error) {
+      set({ error: getErrorMessage(error, '批量删除失败'), loading: false })
+      return false
     }
   },
 

@@ -10,7 +10,9 @@ const api = {
     create: (input) => electron.ipcRenderer.invoke("tasks:create", input),
     update: (id, input) => electron.ipcRenderer.invoke("tasks:update", id, input),
     remove: (id) => electron.ipcRenderer.invoke("tasks:remove", id),
-    setStatus: (id, status) => electron.ipcRenderer.invoke("tasks:setStatus", id, status)
+    setStatus: (id, status) => electron.ipcRenderer.invoke("tasks:setStatus", id, status),
+    batchUpdate: (ids, patch) => electron.ipcRenderer.invoke("tasks:batchUpdate", ids, patch),
+    batchRemove: (ids) => electron.ipcRenderer.invoke("tasks:batchRemove", ids)
   },
   tags: {
     list: () => electron.ipcRenderer.invoke("tags:list"),

@@ -48,6 +48,11 @@ export function registerIpcHandlers(services: MainServices): void {
     await services.tasks.remove(id)
     await services.attachments.removeTaskAttachments(id)
   })
+  ipcMain.handle('tasks:batchUpdate', (_event, ids, patch) => services.tasks.batchUpdate(ids, patch))
+  ipcMain.handle('tasks:batchRemove', async (_event, ids) => {
+    await services.tasks.batchRemove(ids)
+    await Promise.all(ids.map((id: string) => services.attachments.removeTaskAttachments(id)))
+  })
 
   ipcMain.handle('tags:list', () => services.tasks.listTags())
   ipcMain.handle('tags:create', (_event, input) => services.tasks.createTag(input))

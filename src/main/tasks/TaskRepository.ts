@@ -3,6 +3,7 @@ import { join } from 'node:path'
 import { nanoid } from 'nanoid'
 import type {
   Attachment,
+  BatchTaskPatch,
   TagInput,
   Task,
   TaskDataFile,
@@ -122,6 +123,38 @@ export class TaskRepository {
     task.updatedAt = new Date().toISOString()
     await this.writeData(data)
     return task
+  }
+
+  async batchUpdate(ids: string[], patch: BatchTaskPatch): Promise<Task[]> {
+    const data = await this.readData()
+    const idSet = new Set(ids)
+    const targets = data.tasks.filter((task) => idSet.has(task.id))
+    if (targets.length === 0) return []
+    if (patch.addTagIds && patch.addTagIds.length > 0) this.assertTagIds(data, patch.addTagIds)
+    const now = new Date().toISOString()
+    for (const task of targets) {
+      if (patch.status !== undefined) applyStatus(task, patch.status)
+      if (patch.priority !== undefined) task.priority = patch.priority
+      if (patch.dueDate !== undefined) task.dueDate = patch.dueDate || undefined
+      if (patch.addTagIds && patch.addTagIds.length > 0) task.tagIds = [...new Set([...task.tagIds, ...patch.addTagIds])]
+      if (patch.removeTagIds && patch.removeTagIds.length > 0) {
+        const removeSet = new Set(patch.removeTagIds)
+        task.tagIds = task.tagIds.filter((tagId) => !removeSet.has(tagId))
+      }
+      task.updatedAt = now
+    }
+    await this.writeData(data)
+    return targets
+  }
+
+  async batchRemove(ids: string[]): Promise<void> {
+    const data = await this.readData()
+    const idSet = new Set(ids)
+    const nextTasks = data.tasks.filter((task) => !idSet.has(task.id))
+    if (nextTasks.length === data.tasks.length) throw new Error('任务不存在')
+    nextTasks.forEach((task) => { task.relatedTaskIds = (task.relatedTaskIds ?? []).filter((relatedId) => !idSet.has(relatedId)) })
+    data.tasks = nextTasks
+    await this.writeData(data)
   }
 
   async updateAttachments(taskId: string, attachments: Attachment[]): Promise<Task> {

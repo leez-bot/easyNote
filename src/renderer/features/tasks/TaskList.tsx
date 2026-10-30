@@ -1,4 +1,4 @@
-import { Checkbox, DatePicker, Dropdown, Input, Popover, Tooltip, type InputRef, type MenuProps } from 'antd'
+import { Checkbox, DatePicker, Dropdown, Input, Popconfirm, Popover, Tooltip, type InputRef, type MenuProps } from 'antd'
 import dayjs, { type Dayjs } from 'dayjs'
 import {
   CheckCircle2,
@@ -6,6 +6,7 @@ import {
   ChevronDown,
   CirclePause,
   Flag,
+  ListChecks,
   ListTodo,
   Paperclip,
   Pin,
@@ -15,7 +16,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { Task, TaskStatus } from '../../../shared/models'
+import type { BatchTaskPatch, Task, TaskPriority, TaskStatus } from '../../../shared/models'
 import { groupTasks, type TaskView } from '../../shared/taskViews'
 import { todayAsLocalDateString } from '../../shared/date'
 import { getDocumentText } from '../../shared/editor'
@@ -32,6 +33,13 @@ const statusOptions: Array<{ value: TaskStatus; label: string; icon: JSX.Element
   { value: 'waiting', label: '正在等待', icon: <CirclePause size={14} /> },
 ]
 
+const priorityOptions: Array<{ value: TaskPriority; label: string }> = [
+  { value: 'none', label: '无' },
+  { value: 'low', label: '低' },
+  { value: 'medium', label: '中' },
+  { value: 'high', label: '高' },
+]
+
 interface DragState {
   groupId: string
   taskId: string
@@ -45,6 +53,8 @@ export function TaskList(): JSX.Element {
   const selectedTaskId = useTaskStore((state) => state.selectedTaskId)
   const selectTask = useTaskStore((state) => state.selectTask)
   const setTaskStatus = useTaskStore((state) => state.setTaskStatus)
+  const batchUpdateTasks = useTaskStore((state) => state.batchUpdateTasks)
+  const batchRemoveTasks = useTaskStore((state) => state.batchRemoveTasks)
   const removeTask = useTaskStore((state) => state.removeTask)
   const dateRevision = useTaskStore((state) => state.dateRevision)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
@@ -55,8 +65,39 @@ export function TaskList(): JSX.Element {
   const searchTriggerRef = useRef<HTMLButtonElement>(null)
   const [taskOrders, setTaskOrders] = useState<Record<string, string[]>>(() => readTaskOrders())
   const [dragState, setDragState] = useState<DragState | null>(null)
+  const [batchMode, setBatchMode] = useState(false)
+  const [batchSelected, setBatchSelected] = useState<Set<string>>(new Set())
+
+  const exitBatch = (): void => {
+    setBatchMode(false)
+    setBatchSelected(new Set())
+  }
+
+  const toggleBatchTask = (taskId: string): void => {
+    setBatchSelected((current) => {
+      const next = new Set(current)
+      if (next.has(taskId)) next.delete(taskId)
+      else next.add(taskId)
+      return next
+    })
+  }
+
+  const runBatchAction = async (patch: BatchTaskPatch): Promise<void> => {
+    const ids = [...batchSelected]
+    if (ids.length === 0) return
+    const succeeded = await batchUpdateTasks(ids, patch)
+    if (succeeded) exitBatch()
+  }
+
+  const runBatchDelete = async (): Promise<void> => {
+    const ids = [...batchSelected]
+    if (ids.length === 0) return
+    const succeeded = await batchRemoveTasks(ids)
+    if (succeeded) exitBatch()
+  }
   const groups = useMemo(() => groupTasks(tasks, activeView), [activeView, dateRevision, tasks])
   const tagMap = useMemo(() => new Map(tags.map((tag) => [tag.id, tag])), [tags])
+  const selectedTasks = useMemo(() => tasks.filter((task) => batchSelected.has(task.id)), [batchSelected, tasks])
   const viewKey = useMemo(() => getViewOrderKey(activeView), [activeView])
   const workspaceId = workspace?.id ?? 'default'
   const supportsDateRange = activeView.type === 'date' && (activeView.value === 'done' || activeView.value === 'all')
@@ -84,6 +125,23 @@ export function TaskList(): JSX.Element {
     if (searchOpen) searchInputRef.current?.focus()
   }, [searchOpen])
 
+  useEffect(() => {
+    setBatchMode(false)
+    setBatchSelected(new Set())
+  }, [activeView])
+
+  useEffect(() => {
+    if (!batchMode) return undefined
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        setBatchMode(false)
+        setBatchSelected(new Set())
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [batchMode])
+
   const closeSearch = (restoreFocus = false): void => {
     setSearchKeyword('')
     setSearchOpen(false)
@@ -104,6 +162,21 @@ export function TaskList(): JSX.Element {
     setDragState(null)
   }
 
+  const batchDisabled = batchSelected.size === 0
+  const statusMenuItems: MenuProps['items'] = statusOptions.map((status) => ({
+    key: status.value,
+    icon: status.icon,
+    label: status.label,
+    disabled: batchDisabled,
+    onClick: () => void runBatchAction({ status: status.value }),
+  }))
+  const priorityMenuItems: MenuProps['items'] = priorityOptions.map((priority) => ({
+    key: priority.value,
+    label: priority.label,
+    disabled: batchDisabled,
+    onClick: () => void runBatchAction({ priority: priority.value }),
+  }))
+
   return (
     <section className="task-list-pane" aria-label="任务列表">
       {activeView.type === 'quick' ? <QuickCapture /> : null}
@@ -111,9 +184,30 @@ export function TaskList(): JSX.Element {
         {activeView.type === 'date' && activeView.value === 'week' && orderedGroups.length === 0 ? (
           <div className="task-group-empty week-empty">本周暂无待办</div>
         ) : null}
-        {orderedGroups.map((group) => (
+        {orderedGroups.map((group) => {
+          const groupIds = group.tasks.map((task) => task.id)
+          const selectedInGroup = groupIds.filter((id) => batchSelected.has(id)).length
+          const allSelected = groupIds.length > 0 && selectedInGroup === groupIds.length
+          const someSelected = selectedInGroup > 0 && !allSelected
+          const toggleGroupSelection = (): void => {
+            setBatchSelected((current) => {
+              const next = new Set(current)
+              if (allSelected) groupIds.forEach((id) => next.delete(id))
+              else groupIds.forEach((id) => next.add(id))
+              return next
+            })
+          }
+          return (
           <section className={`task-group ${group.highlighted ? 'current-weekday' : ''}`} key={group.id}>
             <div className="task-group-heading">
+              {batchMode && groupIds.length > 0 ? (
+                <Checkbox
+                  className="task-group-select-all"
+                  checked={allSelected}
+                  indeterminate={someSelected}
+                  onChange={toggleGroupSelection}
+                />
+              ) : null}
               <button className="task-group-title" type="button" aria-expanded={Boolean(!collapsed[group.id])} onClick={() => setCollapsed((value) => ({ ...value, [group.id]: !value[group.id] }))}>
                 <ChevronDown className={collapsed[group.id] ? 'collapsed' : ''} size={15} />
                 <span>{group.label}</span><small>{group.tasks.length}</small>
@@ -177,6 +271,11 @@ export function TaskList(): JSX.Element {
                   </Popover>
                 </div>
               ) : null}
+              {batchMode ? null : (
+                <button className="task-filter-icon" type="button" title="批量操作" aria-label="批量操作" onClick={() => setBatchMode(true)}>
+                  <ListChecks size={15} />
+                </button>
+              )}
             </div>
             {!collapsed[group.id] && group.tasks.length === 0 ? <div className="task-group-empty">当前筛选条件下暂无任务</div> : null}
             {!collapsed[group.id] ? group.tasks.map((task) => {
@@ -208,11 +307,11 @@ export function TaskList(): JSX.Element {
               return (
                 <Dropdown key={task.id} trigger={['contextMenu']} menu={{ items: menuItems }} destroyPopupOnHide>
                   <button
-                    className={`compact-task-row priority-${task.priority} ${task.id === selectedTaskId ? 'selected' : ''} ${task.status === 'done' ? 'done' : ''} ${dragState?.taskId === task.id ? 'dragging' : ''}`}
+                    className={`compact-task-row priority-${task.priority} ${task.id === selectedTaskId && !batchMode ? 'selected' : ''} ${batchMode && batchSelected.has(task.id) ? 'batch-checked' : ''} ${task.status === 'done' ? 'done' : ''} ${dragState?.taskId === task.id ? 'dragging' : ''}`}
                     type="button"
-                    draggable
+                    draggable={!batchMode}
                     data-task-id={task.id}
-                    onClick={() => void selectTask(task.id)}
+                    onClick={() => { if (batchMode) toggleBatchTask(task.id); else void selectTask(task.id) }}
                     onContextMenu={() => void selectTask(task.id)}
                     onDragStart={(event) => {
                       event.dataTransfer.effectAllowed = 'move'
@@ -230,9 +329,12 @@ export function TaskList(): JSX.Element {
                     onDragEnd={() => setDragState(null)}
                   >
                     <Checkbox
-                      checked={task.status === 'done'}
+                      checked={batchMode ? batchSelected.has(task.id) : task.status === 'done'}
                       onClick={(event) => event.stopPropagation()}
-                      onChange={(event) => void setTaskStatus(task.id, event.target.checked ? 'done' : 'todo')}
+                      onChange={(event) => {
+                        if (batchMode) toggleBatchTask(task.id)
+                        else void setTaskStatus(task.id, event.target.checked ? 'done' : 'todo')
+                      }}
                     />
                     <Tooltip title={task.title} mouseEnterDelay={0.35}>
                       <span className="compact-task-title">{task.title}</span>
@@ -260,9 +362,78 @@ export function TaskList(): JSX.Element {
               )
             }) : null}
           </section>
-        ))}
+          )
+        })}
       </div>
-      <div className="task-list-total">{orderedGroups.reduce((total, group) => total + group.tasks.length, 0)} 项任务</div>
+      {batchMode ? (
+        <div className="task-list-total task-batch-bar">
+          <span className="task-batch-count">已选 {batchSelected.size} 项</span>
+          <Dropdown trigger={['click']} menu={{ items: statusMenuItems }}>
+            <button className="task-batch-btn" type="button" disabled={batchDisabled}>状态</button>
+          </Dropdown>
+          <Dropdown trigger={['click']} menu={{ items: priorityMenuItems }}>
+            <button className="task-batch-btn" type="button" disabled={batchDisabled}>优先级</button>
+          </Dropdown>
+          <Popover
+            trigger="click"
+            destroyOnHidden
+            classNames={{ root: 'task-batch-popover' }}
+            content={(
+              <div className="task-batch-due">
+                <button className="task-batch-btn" type="button" disabled={batchDisabled} onClick={() => void runBatchAction({ dueDate: todayAsLocalDateString() })}>今天</button>
+                <button className="task-batch-btn" type="button" disabled={batchDisabled} onClick={() => void runBatchAction({ dueDate: dayjs().add(1, 'day').format('YYYY-MM-DD') })}>明天</button>
+                <button className="task-batch-btn" type="button" disabled={batchDisabled} onClick={() => void runBatchAction({ dueDate: '' })}>清除</button>
+                <DatePicker
+                  size="small"
+                  format="YY/MM/DD"
+                  placeholder="选择日期"
+                  disabled={batchDisabled}
+                  onChange={(value) => { if (value) void runBatchAction({ dueDate: value.format('YYYY-MM-DD') }) }}
+                />
+              </div>
+            )}
+          >
+            <button className="task-batch-btn" type="button" disabled={batchDisabled}>截止日期</button>
+          </Popover>
+          <Popover
+            trigger="click"
+            destroyOnHidden
+            classNames={{ root: 'task-batch-popover' }}
+            content={(
+              <div className="task-batch-tags">
+                {tags.length === 0 ? <span className="task-batch-empty">暂无标签</span> : null}
+                {tags.map((tag) => {
+                  const count = selectedTasks.filter((task) => task.tagIds.includes(tag.id)).length
+                  const allHave = selectedTasks.length > 0 && count === selectedTasks.length
+                  return (
+                    <Checkbox
+                      key={tag.id}
+                      checked={allHave}
+                      indeterminate={count > 0 && !allHave}
+                      onChange={() => void runBatchAction(allHave ? { removeTagIds: [tag.id] } : { addTagIds: [tag.id] })}
+                    >
+                      <span className="task-tag" style={{ color: tag.color, backgroundColor: `${tag.color}12` }}>{tag.name}</span>
+                    </Checkbox>
+                  )
+                })}
+              </div>
+            )}
+          >
+            <button className="task-batch-btn" type="button" disabled={batchDisabled}>标签</button>
+          </Popover>
+          <Popconfirm
+            title={`删除选中的 ${batchSelected.size} 项任务？`}
+            okText="删除"
+            cancelText="取消"
+            onConfirm={() => void runBatchDelete()}
+          >
+            <button className="task-batch-btn danger" type="button" disabled={batchDisabled}>删除</button>
+          </Popconfirm>
+          <button className="task-batch-btn" type="button" onClick={exitBatch}>退出</button>
+        </div>
+      ) : (
+        <div className="task-list-total">{orderedGroups.reduce((total, group) => total + group.tasks.length, 0)} 项任务</div>
+      )}
     </section>
   )
 }

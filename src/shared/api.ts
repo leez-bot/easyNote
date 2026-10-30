@@ -1,5 +1,6 @@
 import type {
   Attachment,
+  BatchTaskPatch,
   ImportResult,
   TagInput,
   Task,
@@ -20,6 +21,8 @@ export interface EasyNoteApi {
     update: (id: string, input: Partial<TaskInput>) => Promise<Task>
     remove: (id: string) => Promise<void>
     setStatus: (id: string, status: TaskStatus) => Promise<Task>
+    batchUpdate: (ids: string[], patch: BatchTaskPatch) => Promise<Task[]>
+    batchRemove: (ids: string[]) => Promise<void>
   }
   tags: {
     list: () => Promise<TaskTag[]>

@@ -12,6 +12,8 @@ const api: EasyNoteApi = {
     update: (id, input) => ipcRenderer.invoke('tasks:update', id, input),
     remove: (id) => ipcRenderer.invoke('tasks:remove', id),
     setStatus: (id, status) => ipcRenderer.invoke('tasks:setStatus', id, status),
+    batchUpdate: (ids, patch) => ipcRenderer.invoke('tasks:batchUpdate', ids, patch),
+    batchRemove: (ids) => ipcRenderer.invoke('tasks:batchRemove', ids),
   },
   tags: {
     list: () => ipcRenderer.invoke('tags:list'),

@@ -346,6 +346,22 @@ button:focus-visible, input:focus-visible { outline: 2px solid #93b4ff; outline-
 .task-groups::-webkit-scrollbar-thumb:hover,
 .task-detail::-webkit-scrollbar-thumb:hover { background: #aeb8c6; background-clip: padding-box; }
 
+/* 批量操作 */
+.task-group-select-all { flex: 0 0 auto; }
+.compact-task-row.batch-checked { position: relative; z-index: 1; border-color: #7aa2ff; background: #f3f7ff; box-shadow: 0 0 0 1px #7aa2ff; color: var(--color-primary); }
+.compact-task-row.batch-checked::before { display: none; }
+.task-batch-bar { justify-content: flex-start; gap: 6px; padding: 0 12px; }
+.task-batch-count { margin-right: 2px; color: #5f6978; font-size: 12px; white-space: nowrap; }
+.task-batch-btn { height: 26px; padding: 0 10px; border: 1px solid var(--color-border); border-radius: 5px; background: #fff; color: #4d5666; font-size: 12px; white-space: nowrap; }
+.task-batch-btn:hover:not(:disabled) { border-color: var(--color-primary); color: var(--color-primary); }
+.task-batch-btn:disabled { opacity: .5; cursor: not-allowed; }
+.task-batch-btn.danger { border-color: #f3c1c1; color: #ef4444; }
+.task-batch-btn.danger:hover:not(:disabled) { border-color: #ef4444; background: #fef2f2; color: #ef4444; }
+.task-batch-popover .task-batch-due { display: flex; flex-direction: column; gap: 6px; width: 132px; }
+.task-batch-popover .task-batch-due .task-batch-btn { width: 100%; text-align: center; }
+.task-batch-popover .task-batch-tags { display: flex; flex-direction: column; gap: 7px; max-height: 240px; overflow-y: auto; }
+.task-batch-popover .task-batch-empty { color: #8a94a3; font-size: 12px; }
+
 @media (max-width: 1180px) {
   :root { --sidebar-width: 160px; --list-width: 380px; }
   .panel-body { grid-template-columns: var(--sidebar-width) 7px minmax(390px,var(--list-width)) 7px minmax(300px,1fr); }

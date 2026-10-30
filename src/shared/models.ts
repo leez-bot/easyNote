@@ -66,6 +66,15 @@ export interface TagInput {
   color: string
 }
 
+export interface BatchTaskPatch {
+  status?: TaskStatus
+  priority?: TaskPriority
+  /** 传空字符串表示清除截止日期 */
+  dueDate?: string
+  addTagIds?: string[]
+  removeTagIds?: string[]
+}
+
 export interface LegacyAttachment extends Omit<Attachment, 'kind'> {}
 
 export interface LegacyTask extends Omit<Task, 'content' | 'priority' | 'tagIds' | 'pinned' | 'attachments'> {
